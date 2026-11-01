@@ -39,8 +39,9 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- liens personnels des chauffeurs : https://team.rafai-limousine.com/chauffeur/… -->
-            <intent-filter>
+            <!-- liens personnels des chauffeurs : https://team.rafai-limousine.com/chauffeur/… (vérifiés par
+                 team.rafai-limousine.com/.well-known/assetlinks.json : le lien ouvre directement l'appli) -->
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
