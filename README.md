@@ -15,12 +15,10 @@ factures en aperçu natif, page Contact (appel, WhatsApp, e-mail, Plans) et écr
 Chaque envoi sur `main` vérifie que l'appli compile.
 Pour envoyer une version sur TestFlight : onglet **Actions** → **iPhone** → **Run workflow**.
 
-Réglages du dépôt nécessaires (Settings → Secrets and variables → Actions), saisis par le titulaire du compte Apple :
+Seul réglage nécessaire (Settings → Secrets and variables → Actions), saisis par le titulaire du compte Apple :
 
 | Nom | Type | Contenu |
 | --- | --- | --- |
-| `ASC_KEY_ID` | Secret | Identifiant de la clé API App Store Connect |
-| `ASC_ISSUER_ID` | Secret | Issuer ID (page Clés de l'API App Store Connect) |
 | `ASC_KEY_P8` | Secret | Contenu du fichier `AuthKey_XXXX.p8` |
 
-La clé API doit avoir le rôle **Admin** (signature gérée par Apple).
+L'identifiant de la clé et l'Issuer ID (non secrets) sont dans le workflow. La clé API doit avoir le rôle **Admin** (signature gérée par Apple).
