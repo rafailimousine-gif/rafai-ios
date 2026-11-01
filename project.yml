@@ -1,0 +1,78 @@
+name: RafaiLimousine
+options:
+  bundleIdPrefix: com.rafailimousine
+  deploymentTarget:
+    iOS: "16.0"
+  developmentLanguage: fr
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+packages:
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: "12.0.0"
+targets:
+  RafaiLimousine:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+      - path: Resources
+    dependencies:
+      - package: Firebase
+        product: FirebaseMessaging
+    scheme: {}
+    entitlements:
+      path: Support/RafaiLimousine.entitlements
+      properties:
+        aps-environment: development
+        com.apple.developer.applesignin:
+          - Default
+    info:
+      path: Support/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: fr
+        CFBundleDisplayName: Rafai
+        CFBundleName: Rafai Limousine
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundlePackageType: APPL
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleLocalizations: [fr, en, ar, zh-Hans]
+        LSRequiresIPhoneOS: true
+        LSApplicationCategoryType: public.app-category.travel
+        ITSAppUsesNonExemptEncryption: false
+        FirebaseAppDelegateProxyEnabled: false
+        NSLocationWhenInUseUsageDescription: Votre position sert uniquement à remplir l'adresse de prise en charge de votre course.
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UILaunchScreen:
+          UIColorName: LaunchBG
+          UIImageName: LaunchLogo
+          UIImageRespectsSafeAreaInsets: true
+        UIBackgroundModes: [remote-notification]
+        UIRequiredDeviceCapabilities: [arm64]
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIUserInterfaceStyle: Light
+        UIStatusBarStyle: UIStatusBarStyleLightContent
+        UIViewControllerBasedStatusBarAppearance: false
+        LSApplicationQueriesSchemes: [whatsapp, waze, comgooglemaps, instagram]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.rafailimousine.client
+        PRODUCT_NAME: Rafai
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_PREVIEWS: NO
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
