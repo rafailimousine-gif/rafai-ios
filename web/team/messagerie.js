@@ -1,5 +1,5 @@
 /* ---------- Messagerie : tous les messages des chauffeurs, des clients et du site au même endroit ---------- */
-var MX = { sel: '', list: [], total: 0, sig: '', tsig: '' };
+var MX = { sel: '', list: [], total: 0, sig: '', tsig: '', sdel: {} };
 var MXI = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
 function mxCss() {
   if (document.getElementById('mxCss')) return;
@@ -17,6 +17,10 @@ function mxCss() {
     '.mxh h2{margin:0;font-size:17px}.mxh p{margin:3px 0 0;font-size:12.5px;opacity:.7}.mxr .chl{max-height:52vh}.mxf{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}' +
     '.mxr textarea{width:100%;margin-top:10px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:11px;resize:vertical;min-height:62px;box-sizing:border-box}' +
     '.mxq{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:14px;line-height:1.45}' +
+    '.mxd{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;opacity:.4;margin-left:4px;cursor:pointer}' +
+    '.mxd:hover{opacity:1;background:#FDECEA;color:#B42318}.mxd svg{width:15px;height:15px}.mxw{display:flex;align-items:center;gap:2px}' +
+    '.mxa{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.mxpk{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:11px 13px;cursor:pointer;font:inherit;color:inherit}' +
+    '.mxpk:last-child{border-bottom:0}.mxpk:hover{background:var(--paper)}.mxpk b{display:block;font-size:14px}.mxpk small{opacity:.65;font-size:12px}' +
     '.mbadge:not(:empty){display:inline-block;min-width:17px;padding:0 5px;margin-left:5px;border-radius:999px;background:#C0392B;color:#fff;font-size:11px;font-weight:800;line-height:17px;text-align:center}';
   document.head.appendChild(s);
 }
@@ -60,6 +64,7 @@ function mxBadge() {
 function mxLoad() {
   return call('inbox', {}).then(function (r) {
     MX.list = (r && r.list) || []; MX.total = (r && r.total) || 0;
+    ((r && r.sdel) || []).forEach(function (k) { MX.sdel[k] = 1; });
     mxBadge(); if (S.view === 'msgs') mxDrawList();
   }).catch(function () {});
 }
@@ -76,6 +81,7 @@ function mxItems() {
     };
   });
   mxSite().forEach(function (b) {
+    if (MX.sdel['s:' + b.ref]) return;
     a.push({
       key: 's:' + b.ref, at: mxAt(b), icon: '🌐', un: b.status === 'À confirmer' ? 1 : 0,
       title: ((b.fname || '') + ' ' + (b.lname || '')).trim() || 'Visiteur du site',
@@ -90,18 +96,80 @@ function mxDrawList() {
   if (sig === MX.sig) return; MX.sig = sig;
   L.innerHTML = it.length ? it.map(function (i) {
     return '<button type="button" class="mxi' + (i.un ? ' un' : '') + (MX.sel === i.key ? ' on' : '') + '" data-k="' + esc(i.key) + '">' +
-      '<span class="mxt"><span>' + i.icon + ' ' + esc(i.title) + (i.un ? '<i class="mxn">' + i.un + '</i>' : '') + '</span><small>' + mxWhen(i.at) + '</small></span>' +
+      '<span class="mxt"><span>' + i.icon + ' ' + esc(i.title) + (i.un ? '<i class="mxn">' + i.un + '</i>' : '') + '</span><span class="mxw"><small>' + mxWhen(i.at) + '</small>' +
+      '<span class="mxd" role="button" title="Supprimer la conversation" data-d="' + esc(i.key) + '">' + I.trash + '</span></span></span>' +
       '<span class="mxs">' + esc(i.sub) + '</span><p class="mxp">' + esc(i.text) + '</p></button>';
   }).join('') : '<p class="hint" style="padding:12px;margin:0">Aucun message pour l’instant.</p>';
   Array.prototype.forEach.call(L.querySelectorAll('.mxi'), function (b) { b.addEventListener('click', function () { mxOpen(b.dataset.k); }); });
+  Array.prototype.forEach.call(L.querySelectorAll('.mxd'), function (x) {
+    x.addEventListener('click', function (e) { e.stopPropagation(); e.preventDefault(); mxAskDel([x.dataset.d]); });
+  });
 }
 function renderMsgs() {
   mxCss(); try { chatCss(); } catch (e) {}
-  $('#app').innerHTML = '<div class="head"><div><h1>Messagerie</h1><p>Chauffeurs, clients et messages du site : tout arrive ici</p></div></div>' +
+  $('#app').innerHTML = '<div class="head"><div><h1>Messagerie</h1><p>Chauffeurs, clients et messages du site : tout arrive ici</p></div>' +
+    '<div class="mxa"><button class="btn dark" type="button" id="mxNew">+ Nouvelle conversation</button>' +
+    '<button class="btn danger" type="button" id="mxAll">' + I.trash + 'Tout supprimer</button></div></div>' +
+    '<div id="mxC"></div>' +
     '<div class="mx' + (MX.sel ? ' sel' : '') + '" id="mx"><div class="mxl" id="mxL"><p class="hint" style="padding:12px;margin:0">Chargement…</p></div>' +
     '<div class="mxr" id="mxR"><p class="hint" style="margin:0">Choisissez une conversation.</p></div></div>';
   MX.sig = ''; mxNav(); mxDrawList(); mxLoad();
+  $('#mxNew').addEventListener('click', mxNew);
+  $('#mxAll').addEventListener('click', function () {
+    var keys = mxItems().map(function (i) { return i.key; });
+    if (!keys.length) { toast('Aucune conversation à supprimer'); return; }
+    mxAskDel(keys);
+  });
   if (MX.sel) mxOpen(MX.sel);
+}
+/* ---------- supprimer : la conversation disparaît de la messagerie de l'équipe (le chauffeur et le client gardent leur fil) ---------- */
+function mxAskDel(keys) {
+  var C = document.getElementById('mxC'); if (!C) return;
+  var one = keys.length === 1, it = null;
+  if (one) mxItems().forEach(function (i) { if (i.key === keys[0]) it = i; });
+  C.innerHTML = '<div class="confirm" style="margin:0 0 14px"><b>' + (one ? 'Supprimer la conversation' + (it ? ' « ' + esc(it.title) + ' »' : '') + ' ?' : 'Supprimer les ' + keys.length + ' conversations ?') + '</b>' +
+    '<div class="hint" style="margin-top:4px">' + (one ? 'Elle disparaît' : 'Elles disparaissent') + ' de la messagerie de l’équipe. Le chauffeur et le client gardent leur fil dans leur appli ; un nouveau message ' + (one ? 'la' : 'les') + ' fait réapparaître.</div>' +
+    '<div class="row" style="margin-top:10px"><button class="btn danger" type="button" id="mxCy">' + (one ? 'Oui, supprimer' : 'Oui, tout supprimer') + '</button><button class="btn" type="button" id="mxCn">Annuler</button></div></div>';
+  try { C.scrollIntoView({ block: 'nearest' }); } catch (e) {}
+  document.getElementById('mxCn').addEventListener('click', function () { C.innerHTML = ''; });
+  document.getElementById('mxCy').addEventListener('click', function () {
+    var btn = this; busy(btn, true);
+    call('inboxDelete', { keys: keys }).then(function () {
+      C.innerHTML = '';
+      keys.forEach(function (k) { if (/^s:/.test(k)) MX.sdel[k] = 1; });
+      MX.list = MX.list.filter(function (c) { return keys.indexOf(c.key) < 0; });
+      if (keys.indexOf(MX.sel) >= 0) {
+        MX.sel = ''; var x = document.getElementById('mx'); if (x) x.classList.remove('sel');
+        var R = document.getElementById('mxR'); if (R) R.innerHTML = '<p class="hint" style="margin:0">Choisissez une conversation.</p>';
+      }
+      MX.sig = ''; mxDrawList(); mxLoad();
+      toast(one ? 'Conversation supprimée' : keys.length + ' conversations supprimées');
+    }).catch(function (e) { busy(btn, false); toast(String(e), true); });
+  });
+}
+/* ---------- + : nouvelle conversation avec n'importe quel chauffeur ---------- */
+function mxNew() {
+  MX.sel = 'new'; MX.tsig = '';
+  var X = document.getElementById('mx'), R = document.getElementById('mxR'); if (!R) return;
+  if (X) X.classList.add('sel');
+  MX.sig = ''; mxDrawList();
+  R.innerHTML = '<div class="mxh"><div><h2>Nouvelle conversation</h2><p>Choisissez le chauffeur : il reçoit votre message en notification sur son téléphone.</p></div></div>' +
+    '<label class="search">' + I.search + '<input id="mxQ" type="search" placeholder="Nom ou téléphone du chauffeur…" autocomplete="off"></label>' +
+    '<div class="mxl" id="mxD" style="margin-top:10px;max-height:56vh"></div><div class="mxf">' + mxBack() + '</div>';
+  function draw() {
+    var q = String(document.getElementById('mxQ').value || '').toLowerCase().trim(), D = document.getElementById('mxD'); if (!D) return;
+    var l = (S.drivers || []).filter(function (d) { return d.active !== 'Non'; }).map(function (d) {
+      return { id: d.id, name: ((d.fname || '') + ' ' + (d.lname || '')).trim() || 'Chauffeur ' + d.id, sub: [d.tel, d.car || d.carType, d.company].filter(Boolean).join(' · ') };
+    }).filter(function (d) { return !q || (d.name + ' ' + d.sub).toLowerCase().indexOf(q) >= 0; })
+      .sort(function (a, b) { return a.name.localeCompare(b.name, 'fr'); });
+    D.innerHTML = l.length ? l.map(function (d) {
+      return '<button type="button" class="mxpk" data-id="' + esc(d.id) + '"><b>🚗 ' + esc(d.name) + '</b><small>' + esc(d.sub || 'Chauffeur') + '</small></button>';
+    }).join('') : '<p class="hint" style="padding:12px;margin:0">Aucun chauffeur trouvé.</p>';
+    Array.prototype.forEach.call(D.querySelectorAll('.mxpk'), function (b) { b.addEventListener('click', function () { mxOpen('d:' + b.dataset.id); }); });
+  }
+  document.getElementById('mxQ').addEventListener('input', draw);
+  draw(); mxWire('new');
+  try { document.getElementById('mxQ').focus(); } catch (e) {}
 }
 function mxWho(m) {
   if (m.from === 'team') return 'Rafai Limousine';
@@ -115,11 +183,15 @@ function mxMsgs(l) {
   }).join('') : '<p class="hint" style="margin:0">Aucun message pour l’instant.</p>';
 }
 function mxBack() { return '<button class="btn" type="button" id="mxB">← Conversations</button>'; }
+function mxDelBtn() { return '<button class="btn danger" type="button" id="mxX">' + I.trash + 'Supprimer</button>'; }
 function mxWire(key) {
+  var dx = document.getElementById('mxX');
+  if (dx) dx.addEventListener('click', function () { mxAskDel([key]); });
   var bk = document.getElementById('mxB');
   if (bk) bk.addEventListener('click', function () { MX.sel = ''; var x = document.getElementById('mx'); if (x) x.classList.remove('sel'); MX.sig = ''; mxDrawList(); });
 }
 function mxOpen(key) {
+  if (key === 'new') return mxNew();
   MX.sel = key; MX.tsig = '';
   var X = document.getElementById('mx'), R = document.getElementById('mxR'); if (!R) return;
   if (X) X.classList.add('sel');
@@ -134,7 +206,7 @@ function mxOpen(key) {
       '<div class="mxf">' + (b.tel ? '<a class="btn dark" target="_blank" href="' + esc(waLink(b.tel, 'Bonjour ' + (b.fname || '') + ', Rafai Limousine suite à votre message : ')) + '">Répondre sur WhatsApp</a>' : '') +
       (b.email ? '<a class="btn" href="mailto:' + esc(b.email) + '?subject=' + encodeURIComponent('Rafai Limousine – votre message') + '">Répondre par e-mail</a>' : '') +
       (b.tel ? '<a class="btn" href="tel:' + esc(b.tel) + '">Appeler</a>' : '') +
-      '<button class="btn" type="button" id="mxO">Ouvrir la demande</button>' + mxBack() + '</div>';
+      '<button class="btn" type="button" id="mxO">Ouvrir la demande</button>' + mxDelBtn() + mxBack() + '</div>';
     document.getElementById('mxO').addEventListener('click', function () { openBooking(b.ref); });
     mxWire(key); return;
   }
@@ -152,11 +224,11 @@ function mxDraw(key, r) {
       if (bb) k = { date: bb.date, time: bb.time, from: bb.from, to: bb.to, status: bb.status, client: ((bb.fname || '') + ' ' + (bb.lname || '')).trim(), driver: bb.driver || '', tel: bb.tel || '' }; }
     head = '<div><h2>👤 ' + esc(k.client || (c && c.client) || 'Client') + ' ↔ ' + esc(k.driver || (c && c.driver) || 'chauffeur') + '</h2><p>Course ' + esc(key.slice(2)) +
       (k.date ? ' · ' + esc(String(k.date)) + (k.time ? ' ' + esc(String(k.time)) : '') : '') + (k.from ? ' · ' + esc(k.from) + (k.to ? ' → ' + esc(k.to) : '') : '') + (k.status ? ' · ' + esc(k.status) : '') + '</p></div>' +
-      '<div class="mxf"><button class="btn" type="button" id="mxO">Ouvrir la course</button>' + (k.tel ? '<a class="btn" target="_blank" href="' + esc(waLink(k.tel, '')) + '">WhatsApp client</a>' : '') + '</div>';
+      '<div class="mxf"><button class="btn" type="button" id="mxO">Ouvrir la course</button>' + (k.tel ? '<a class="btn" target="_blank" href="' + esc(waLink(k.tel, '')) + '">WhatsApp client</a>' : '') + mxDelBtn() + '</div>';
   } else {
     var d = null; try { d = driver(key.slice(2)); } catch (e) {}
     head = '<div><h2>🚗 ' + esc((c && c.driver) || (d && ((d.fname || '') + ' ' + (d.lname || '')).trim()) || 'Chauffeur') + '</h2><p>Fil entre le chauffeur et l’équipe' + (r.push ? '' : ' · notifications non activées sur son téléphone') + '</p></div>' +
-      '<div class="mxf"><button class="btn" type="button" id="mxO">Ouvrir la fiche</button>' + (d && d.tel ? '<a class="btn" target="_blank" href="' + esc(waLink(d.tel, '')) + '">WhatsApp</a>' : '') + '</div>';
+      '<div class="mxf"><button class="btn" type="button" id="mxO">Ouvrir la fiche</button>' + (d && d.tel ? '<a class="btn" target="_blank" href="' + esc(waLink(d.tel, '')) + '">WhatsApp</a>' : '') + mxDelBtn() + '</div>';
   }
   R.innerHTML = '<div class="mxh">' + head + '</div><div class="chl" id="mxM">' + mxMsgs(r.msgs || []) + '</div>' +
     '<textarea id="mxT" placeholder="' + (ride ? 'Message visible par le client et par le chauffeur…' : 'Message au chauffeur…') + '"></textarea>' +
