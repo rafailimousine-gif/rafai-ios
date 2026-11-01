@@ -24,11 +24,14 @@ final class DriverDelegate: NSObject, UIApplicationDelegate, UNUserNotificationC
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        if Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil {
-            FirebaseApp.configure()
-            Messaging.messaging().delegate = self
-            DriverDelegate.firebaseReady = true
-        }
+        // Firebase (notifications) : configuration du projet rafai-suivi (clé publique d'appli iOS, stockée à l'envers)
+        let options = FirebaseOptions(googleAppID: "1:1010543786852:ios:0f30d814e35118badc9871", gcmSenderID: "1010543786852")
+        options.apiKey = String("U9l6hc68Ce-a53S62-fvTicVTSXCj0RkAySazIA".reversed())
+        options.projectID = "rafai-suivi"
+        options.bundleID = Bundle.main.bundleIdentifier ?? ""
+        FirebaseApp.configure(options: options)
+        Messaging.messaging().delegate = self
+        DriverDelegate.firebaseReady = true
         UNUserNotificationCenter.current().delegate = self
         return true
     }

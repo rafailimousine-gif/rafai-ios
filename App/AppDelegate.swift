@@ -10,11 +10,14 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        if Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil {
-            FirebaseApp.configure()
-            Messaging.messaging().delegate = self
-            AppDelegate.firebaseReady = true
-        }
+        // Firebase (notifications) : configuration du projet rafai-suivi (clé publique d'appli iOS, stockée à l'envers)
+        let options = FirebaseOptions(googleAppID: "1:1010543786852:ios:39d4ffa91db10ea9dc9871", gcmSenderID: "1010543786852")
+        options.apiKey = String("U9l6hc68Ce-a53S62-fvTicVTSXCj0RkAySazIA".reversed())
+        options.projectID = "rafai-suivi"
+        options.bundleID = Bundle.main.bundleIdentifier ?? ""
+        FirebaseApp.configure(options: options)
+        Messaging.messaging().delegate = self
+        AppDelegate.firebaseReady = true
         UNUserNotificationCenter.current().delegate = self
         return true
     }
