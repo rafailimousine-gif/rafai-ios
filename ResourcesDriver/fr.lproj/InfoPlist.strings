@@ -1,0 +1,4 @@
+"NSLocationWhenInUseUsageDescription" = "RL Driver envoie la position de votre voiture au client et à l'équipe Rafai Limousine pendant vos courses, même quand vous utilisez Waze ou que l'écran est verrouillé.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "RL Driver envoie la position de votre voiture au client et à l'équipe Rafai Limousine pendant vos courses, même quand vous utilisez Waze ou que l'écran est verrouillé.";
+"NSCameraUsageDescription" = "Pour photographier vos documents (permis, carte VTC…) et les envoyer à Rafai Limousine.";
+"NSPhotoLibraryUsageDescription" = "Pour choisir la photo d'un document à envoyer à Rafai Limousine.";

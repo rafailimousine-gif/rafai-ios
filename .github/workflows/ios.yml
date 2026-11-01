@@ -9,6 +9,11 @@ on:
         description: "Envoyer cette version sur TestFlight"
         type: boolean
         default: true
+      appli:
+        description: "Appli à envoyer"
+        type: choice
+        options: [client, chauffeur]
+        default: client
 
 concurrency:
   group: ios-${{ github.ref }}-${{ github.event_name }}
@@ -35,23 +40,27 @@ jobs:
           key: spm-${{ hashFiles('project.yml') }}
       - name: Compilation pour le simulateur (sans signature)
         run: |
-          set -o pipefail
-          xcodebuild -project RafaiLimousine.xcodeproj -scheme RafaiLimousine -configuration Debug \
-            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
-            -clonedSourcePackagesDirPath ~/spm -skipPackagePluginValidation \
-            CODE_SIGNING_ALLOWED=NO build > build.log 2>&1 || true
-          grep -E "/App/.*(error|warning):" build.log | sort -u | head -80 || true
-          grep -E "error:" build.log | sort -u | head -40 || true
-          tail -5 build.log
-          grep -q "BUILD SUCCEEDED" build.log
+          ok=1
+          for S in RafaiLimousine RLDriver; do
+            xcodebuild -project RafaiLimousine.xcodeproj -scheme $S -configuration Debug \
+              -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+              -clonedSourcePackagesDirPath ~/spm -skipPackagePluginValidation \
+              CODE_SIGNING_ALLOWED=NO build > build-$S.log 2>&1 || true
+            echo "== $S"
+            grep -E "/(App|Driver)/.*(error|warning):" build-$S.log | sort -u | head -80 || true
+            grep -E "error:" build-$S.log | sort -u | head -40 || true
+            tail -3 build-$S.log
+            grep -q "BUILD SUCCEEDED" build-$S.log || ok=0
+          done
+          [ $ok = 1 ]
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: journal-compilation
-          path: build.log
+          path: "build-*.log"
 
   testflight:
-    name: Envoi sur TestFlight
+    name: Envoi sur TestFlight (${{ inputs.appli }})
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.testflight }}
     runs-on: macos-15
     timeout-minutes: 60
@@ -61,6 +70,7 @@ jobs:
       ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
       TEAM_ID: ${{ vars.APPLE_TEAM_ID || '4B32A333J7' }}
       BUILD_NUMBER: ${{ github.run_number }}
+      SCHEME: ${{ inputs.appli == 'chauffeur' && 'RLDriver' || 'RafaiLimousine' }}
     steps:
       - uses: actions/checkout@v4
       - name: Accès Apple présents
@@ -111,7 +121,7 @@ jobs:
             <key>manageAppVersionAndBuildNumber</key><false/>
           </dict></plist>
           EOF
-          COMMON=(-project RafaiLimousine.xcodeproj -scheme RafaiLimousine -configuration Release -destination 'generic/platform=iOS'
+          COMMON=(-project RafaiLimousine.xcodeproj -scheme "$SCHEME" -configuration Release -destination 'generic/platform=iOS'
                   -clonedSourcePackagesDirPath "$HOME/spm" -skipPackagePluginValidation)
           export_upload() {
             xcodebuild -exportArchive -archivePath "$1" -exportOptionsPlist "$RUNNER_TEMP/export.plist" \
@@ -122,7 +132,7 @@ jobs:
                DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- AD_HOC_CODE_SIGNING_ALLOWED=YES \
                PROVISIONING_PROFILE_SPECIFIER= CURRENT_PROJECT_VERSION="$BUILD_NUMBER" archive > archive-a.log 2>&1 \
              && export_upload "$RUNNER_TEMP/A.xcarchive" a; then
-            echo "Envoyé à Apple (méthode 1), version $BUILD_NUMBER"; exit 0
+            echo "Envoyé à Apple (méthode 1) : $SCHEME, version $BUILD_NUMBER"; exit 0
           fi
           echo "::warning::Méthode 1 impossible, essai de la signature automatique complète"
           tail -30 archive-a.log; tail -30 export-a.log 2>/dev/null || true
@@ -131,7 +141,7 @@ jobs:
             DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic CURRENT_PROJECT_VERSION="$BUILD_NUMBER" archive > archive-b.log 2>&1 \
             || { grep -E "error:" archive-b.log | sort -u | head -30; tail -30 archive-b.log; exit 1; }
           export_upload "$RUNNER_TEMP/B.xcarchive" b || { tail -40 export-b.log; exit 1; }
-          echo "Envoyé à Apple (méthode 2), version $BUILD_NUMBER"
+          echo "Envoyé à Apple (méthode 2) : $SCHEME, version $BUILD_NUMBER"
       - name: Effacer la clé
         if: always()
         run: rm -rf "$RUNNER_TEMP/keys"
