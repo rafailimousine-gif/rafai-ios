@@ -59,7 +59,7 @@ jobs:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
       ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
-      TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+      TEAM_ID: ${{ vars.APPLE_TEAM_ID || '4B32A333J7' }}
       BUILD_NUMBER: ${{ github.run_number }}
     steps:
       - uses: actions/checkout@v4

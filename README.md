@@ -22,6 +22,5 @@ Réglages du dépôt nécessaires (Settings → Secrets and variables → Action
 | `ASC_KEY_ID` | Secret | Identifiant de la clé API App Store Connect |
 | `ASC_ISSUER_ID` | Secret | Issuer ID (page Clés de l'API App Store Connect) |
 | `ASC_KEY_P8` | Secret | Contenu du fichier `AuthKey_XXXX.p8` |
-| `APPLE_TEAM_ID` | Variable | Identifiant d'équipe Apple (10 caractères) |
 
 La clé API doit avoir le rôle **Admin** (signature gérée par Apple).

@@ -8,6 +8,6 @@ enum Bridge {
   window.__rlNative = 'ios';
   try { delete window.PublicKeyCredential; } catch (e) {}
   try { if (window.PublicKeyCredential) window.PublicKeyCredential = undefined; } catch (e) {}
-})();"""#
+})();
+"""#
 }
-
