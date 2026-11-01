@@ -32,6 +32,8 @@ targets:
         aps-environment: development
         com.apple.developer.applesignin:
           - Default
+        com.apple.developer.associated-domains:
+          - webcredentials:booking.rafai-limousine.com
     info:
       path: Support/Info.plist
       properties:

@@ -38,6 +38,7 @@ final class WebController: NSObject, ObservableObject {
     private var pushState = "default"
     private var lastActive = Date()
     private let apple = AppleSignIn()
+    private let google = GoogleSignIn()
     private let location = LocationHelper()
     private var preview: PreviewSource?
     private let refresher = UIRefreshControl()
@@ -150,6 +151,8 @@ final class WebController: NSObject, ObservableObject {
             webLabels = d
         case "apple":
             startApple()
+        case "google":
+            startGoogle()
         case "push":
             requestPush()
         case "settings":
@@ -234,6 +237,19 @@ final class WebController: NSObject, ObservableObject {
                 self.js("window.RN&&RN.appleDone(\(self.jsJSON(["t": token, "fn": first, "ln": last])))")
             } else {
                 self.js("window.RN&&RN.appleErr(\(self.jsString(error ?? "fail")))")
+            }
+        }
+    }
+
+    // MARK: Connexion avec Google (fenêtre sécurisée exigée par Google)
+
+    private func startGoogle() {
+        google.start(anchor: keyWindow(), lang: lang) { [weak self] token, error in
+            guard let self = self else { return }
+            if let token = token {
+                self.js("window.RN&&RN.googleDone(\(self.jsJSON(["t": token])))")
+            } else {
+                self.js("window.RN&&RN.googleErr(\(self.jsString(error ?? "fail")))")
             }
         }
     }
