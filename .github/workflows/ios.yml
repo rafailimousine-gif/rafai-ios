@@ -82,8 +82,19 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/keys"
           KP="$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8"
-          printf '%s\n' "$ASC_KEY_P8" > "$KP"
           echo "KP=$KP" >> "$GITHUB_ENV"
+          # remet la clé au bon format (espaces, retours à la ligne perdus au copier-coller) ; n'affiche que des longueurs
+          KP="$KP" python3 - <<'PY'
+          import os, re, textwrap
+          s = os.environ.get('ASC_KEY_P8', '').replace('\r', '')
+          m = re.search(r'-----BEGIN PRIVATE KEY-----(.*?)-----END PRIVATE KEY-----', s, re.S)
+          body = re.sub(r'[^A-Za-z0-9+/=]', '', m.group(1) if m else s)
+          open(os.environ['KP'], 'w').write('-----BEGIN PRIVATE KEY-----\n' + '\n'.join(textwrap.wrap(body, 64)) + '\n-----END PRIVATE KEY-----\n')
+          print('Contrôle de la clé : debut=%s fin=%s lignes=%d caracteres=%d corps=%d' % ('BEGIN PRIVATE KEY' in s, 'END PRIVATE KEY' in s, s.count('\n') + 1, len(s), len(body)))
+          if not (150 <= len(body) <= 260):
+              print('::error::Le secret ASC_KEY_P8 ne ressemble pas au contenu du fichier AuthKey_.p8 (corps de %d caractères au lieu d\'environ 200).' % len(body))
+              raise SystemExit(1)
+          PY
       - name: Archive, signature et envoi à Apple
         run: |
           set -o pipefail
