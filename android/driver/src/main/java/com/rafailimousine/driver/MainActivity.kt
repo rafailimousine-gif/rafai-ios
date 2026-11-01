@@ -73,7 +73,6 @@ class MainActivity : ComponentActivity() {
         with(web.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true
-            databaseEnabled = true
             mediaPlaybackRequiresUserGesture = false
             setSupportMultipleWindows(false)
             userAgentString = "$userAgentString RLDriverAndroid/1"
