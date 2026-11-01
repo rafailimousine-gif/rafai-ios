@@ -15,7 +15,12 @@
   css.textContent='.rsv-off #payset{display:none!important}'+
     '.rsv-ok{color:#1E5B38!important;background:#E9F5EE;border:1px solid #BFE3CC;border-radius:10px;padding:10px 12px;margin-top:10px;display:block;line-height:1.45;font-size:13.5px}';
   (document.head||document.documentElement).appendChild(css);
-  var LBL='Create my account & confirm';
+  var LG=String(document.documentElement.lang||'en').slice(0,2).toLowerCase();
+  var TX={en:{l:'Create my account & confirm',c:'Please complete: ',ok:'&#10003; Last step in the page that just opened: create your account (1 minute) and confirm your ride. Rafai Limousine confirms it, then you pay securely online.'},
+    fr:{l:'Créer mon compte et confirmer',c:'Merci de compléter : ',ok:'&#10003; Dernière étape dans la page qui vient de s\u2019ouvrir : créez votre compte (1 minute) et confirmez. Après confirmation par Rafai Limousine, vous payez en ligne en toute sécurité.'},
+    zh:{l:'创建账户并确认',c:'请填写：',ok:'&#10003; 最后一步：在刚打开的页面中创建账户（1分钟）并确认行程。Rafai Limousine 确认后，您可在线安全支付。'},
+    ar:{l:'أنشئ حسابك وأكّد',c:'يرجى إكمال: ',ok:'&#10003; الخطوة الأخيرة في الصفحة التي فُتحت: أنشئ حسابك (دقيقة واحدة) وأكّد رحلتك. بعد تأكيد Rafai Limousine، تدفع عبر الإنترنت بأمان.'}};
+  var T=TX[LG]||TX.en,LBL=T.l;
   function sync(){
     var s=document.getElementById('send');if(!s)return;
     var w=md()!=='wedding';
@@ -34,7 +39,7 @@
     var em=g('email'),be=!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em);mk('email',be);if(be)miss.push('email');
     if(miss.length){
       e.preventDefault();e.stopImmediatePropagation();
-      if(er){er.classList.remove('rsv-ok');er.textContent='Please complete: '+miss.join(', ')+'.';}
+      if(er){er.classList.remove('rsv-ok');er.textContent=T.c+miss.join(', ')+'.';}
       return;
     }
     var h=md()==='hourly';
@@ -46,9 +51,7 @@
     s.href=BK+'#rsv='+b64(JSON.stringify(d));s.target='_blank';s.rel='noopener';
     e.stopImmediatePropagation();
     try{var p=cr()?price(cr()):null;adConv(p&&p.v);}catch(x){}
-    if(er){er.classList.add('rsv-ok');er.innerHTML='&#10003; Last step in the page that just opened: create your account (1 minute) and confirm your ride. '+
-      'Rafai Limousine confirms it, then you pay securely online.<br><small>Dernière étape dans la page qui vient de s’ouvrir : créez votre compte et confirmez. '+
-      'Après confirmation par Rafai Limousine, vous payez en ligne en toute sécurité.</small>';}
+    if(er){er.classList.add('rsv-ok');er.innerHTML=T.ok+(LG==='fr'?'':'<br><small>Dernière étape dans la page ouverte : créez votre compte et confirmez ; paiement en ligne après confirmation.</small>');}
   },true);
 })();
 </script>
