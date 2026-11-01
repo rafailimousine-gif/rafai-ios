@@ -1,5 +1,5 @@
-# Page de réservation : message clair quand une course est hors zone (France uniquement,
-# départ ou arrivée à Paris / Île-de-France). Le contrôle lui-même est fait par le serveur (erreur « zone »).
+# Page de réservation : message clair quand une course est hors zone (France uniquement :
+# départ et arrivée en France). Le contrôle lui-même est fait par le serveur (erreur « zone »).
 import io, os, re, sys
 H = os.path.expanduser('~')
 f = os.path.join(H, 'booking/public/index.html')
@@ -9,10 +9,10 @@ if 'errZone' in s:
 
 # 1. Textes (fr, en, ar, zh : ordre des dictionnaires dans la page)
 Z = [
-    "Nous intervenons uniquement en France : la course doit partir de Paris / Île-de-France ou y arriver.",
-    "We only operate in France: your ride must start or end in Paris / Île-de-France.",
-    "نعمل داخل فرنسا فقط: يجب أن تبدأ الرحلة أو تنتهي في باريس / إيل دو فرانس.",
-    "我们仅在法国提供服务：行程的起点或终点须在巴黎 / 法兰西岛大区。",
+    "Nous intervenons uniquement en France : le départ et l’arrivée doivent être en France.",
+    "We only operate in France: pickup and drop-off must both be in France.",
+    "نعمل داخل فرنسا فقط: يجب أن يكون مكان الانطلاق والوصول في فرنسا.",
+    "我们仅在法国提供服务：出发地和目的地都须位于法国境内。",
 ]
 it = iter(Z)
 s, n = re.subn(r"errRoute:\s*'", lambda m: "errZone: '" + next(it) + "', " + m.group(0), s)

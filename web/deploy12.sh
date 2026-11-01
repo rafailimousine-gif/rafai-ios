@@ -1,5 +1,5 @@
 #!/bin/bash
-# Zone de service : message « France uniquement, départ ou arrivée à Paris / Île-de-France » sur la page de réservation
+# Zone de service : message « France uniquement (départ et arrivée en France) » sur la page de réservation
 set -e
 cd ~
 curl -sL -o fix12.py "https://raw.githubusercontent.com/rafailimousine-gif/rafai-ios/main/web/fix12.py?$(date +%s)"
