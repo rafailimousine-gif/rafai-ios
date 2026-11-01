@@ -1,0 +1,29 @@
+<script>
+/* ---- Compteur anonyme des étapes de réservation (rlFn v1) : aucune donnée personnelle, aucun cookie.
+   Une seule fois par visite et par étape : formulaire affiché, prix, voiture, coordonnées, envoi vers la page
+   de réservation, demande mariage, clic WhatsApp, clic Appeler. Résultat dans la feuille « Entonnoir ». ---- */
+(function(){
+  if(window.__rlFn)return;window.__rlFn=1;
+  var API='https://script.google.com/macros/s/AKfycbwrVkg7W2mb0onawqUJdwA4f-5LWAEvcDkEfpwtg-LWuD7TX5NlBClvSfbxx7WiipW5/exec';
+  var LG=String(document.documentElement.lang||'en').slice(0,2).toLowerCase(),seen={};
+  try{seen=JSON.parse(sessionStorage.getItem('rl_fn')||'{}')||{};}catch(e){}
+  function fn(s){
+    if(seen[s])return;seen[s]=1;
+    try{sessionStorage.setItem('rl_fn',JSON.stringify(seen));}catch(e){}
+    try{fetch(API+'?app=cfn&s='+s+'&lg='+LG+'&src=site&_='+Date.now(),{mode:'no-cors',keepalive:true,credentials:'omit'});}catch(e){}
+  }
+  var ST={s2:'s_prix',s3:'s_car',s4:'s_coord',s5:'s_mar'};
+  function look(){Object.keys(ST).forEach(function(id){var el=document.getElementById(id);if(el&&!el.hidden&&el.offsetParent!==null)fn(ST[id]);});}
+  function init(){
+    fn('s_vue');
+    try{var mo=new MutationObserver(look);Object.keys(ST).forEach(function(id){var el=document.getElementById(id);if(el)mo.observe(el,{attributes:true,attributeFilter:['hidden','style','class']});});}catch(e){}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  window.addEventListener('click',function(e){
+    var t=e.target;if(!t||!t.closest)return;
+    if(t.closest('#send'))setTimeout(function(){var s=document.getElementById('send');if(s&&/#rsv=/.test(s.getAttribute('href')||''))fn('s_go');},0);
+    if(t.closest('#wa1,#wa2,a[href*="wa.me"],a[href*="whatsapp"]'))fn('s_wa');
+    if(t.closest('a[href^="tel:"]'))fn('s_tel');
+  },true);
+})();
+</script>
