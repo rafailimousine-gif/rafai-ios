@@ -21,6 +21,7 @@ function mxCss() {
   document.head.appendChild(s);
 }
 function mxNav() {
+  mxCss();
   var t = document.getElementById('tabs');
   if (t && !t.querySelector('[data-v="msgs"]')) {
     var b = document.createElement('button'); b.dataset.v = 'msgs'; b.type = 'button';
@@ -64,7 +65,9 @@ function mxLoad() {
 }
 function mxItems() {
   var a = MX.list.map(function (c) {
-    var ride = c.kind === 'ride', l = c.last || {};
+    var ride = c.kind === 'ride', l = c.last || {}, b = null;
+    if (ride) { try { b = booking(c.ref); } catch (e) { b = null; } }
+    if (b) { c.client = ((b.fname || '') + ' ' + (b.lname || '')).trim() || c.client; c.driver = c.driver || b.driver || ''; }
     return {
       key: c.key, at: l.at || 0, icon: ride ? '👤' : '🚗', un: c.unread || 0,
       title: ride ? (c.client || 'Client') + ' ↔ ' + (c.driver || 'chauffeur') : (c.driver || 'Chauffeur'),
@@ -128,7 +131,7 @@ function mxOpen(key) {
     R.innerHTML = '<div class="mxh"><div><h2>🌐 ' + esc(name) + '</h2><p>Message du site ou de Youri · ' + esc(b.ref) + (b.received ? ' · reçu le ' + esc(String(b.received)) : '') + '</p></div></div>' +
       '<div class="mxq">' + esc(String(b.notes || b.from || '(sans texte)')) + '</div>' +
       '<p class="hint">' + (b.tel ? esc(b.tel) + ' · ' : '') + (b.email ? esc(b.email) : '') + '</p>' +
-      '<div class="mxf">' + (b.tel ? '<a class="btn primary" target="_blank" href="' + esc(waLink(b.tel, 'Bonjour ' + (b.fname || '') + ', Rafai Limousine suite à votre message : ')) + '">Répondre sur WhatsApp</a>' : '') +
+      '<div class="mxf">' + (b.tel ? '<a class="btn dark" target="_blank" href="' + esc(waLink(b.tel, 'Bonjour ' + (b.fname || '') + ', Rafai Limousine suite à votre message : ')) + '">Répondre sur WhatsApp</a>' : '') +
       (b.email ? '<a class="btn" href="mailto:' + esc(b.email) + '?subject=' + encodeURIComponent('Rafai Limousine – votre message') + '">Répondre par e-mail</a>' : '') +
       (b.tel ? '<a class="btn" href="tel:' + esc(b.tel) + '">Appeler</a>' : '') +
       '<button class="btn" type="button" id="mxO">Ouvrir la demande</button>' + mxBack() + '</div>';
@@ -145,6 +148,8 @@ function mxDraw(key, r) {
   var head;
   if (ride) {
     var k = r.ride || {};
+    if (!r.ride) { var bb = null; try { bb = booking(key.slice(2)); } catch (e) { bb = null; }
+      if (bb) k = { date: bb.date, time: bb.time, from: bb.from, to: bb.to, status: bb.status, client: ((bb.fname || '') + ' ' + (bb.lname || '')).trim(), driver: bb.driver || '', tel: bb.tel || '' }; }
     head = '<div><h2>👤 ' + esc(k.client || (c && c.client) || 'Client') + ' ↔ ' + esc(k.driver || (c && c.driver) || 'chauffeur') + '</h2><p>Course ' + esc(key.slice(2)) +
       (k.date ? ' · ' + esc(String(k.date)) + (k.time ? ' ' + esc(String(k.time)) : '') : '') + (k.from ? ' · ' + esc(k.from) + (k.to ? ' → ' + esc(k.to) : '') : '') + (k.status ? ' · ' + esc(k.status) : '') + '</p></div>' +
       '<div class="mxf"><button class="btn" type="button" id="mxO">Ouvrir la course</button>' + (k.tel ? '<a class="btn" target="_blank" href="' + esc(waLink(k.tel, '')) + '">WhatsApp client</a>' : '') + '</div>';
@@ -155,7 +160,7 @@ function mxDraw(key, r) {
   }
   R.innerHTML = '<div class="mxh">' + head + '</div><div class="chl" id="mxM">' + mxMsgs(r.msgs || []) + '</div>' +
     '<textarea id="mxT" placeholder="' + (ride ? 'Message visible par le client et par le chauffeur…' : 'Message au chauffeur…') + '"></textarea>' +
-    '<div class="mxf"><button class="btn primary" type="button" id="mxS">Envoyer</button>' + mxBack() +
+    '<div class="mxf"><button class="btn dark" type="button" id="mxS">Envoyer</button>' + mxBack() +
     '<span class="hint" style="margin:0">' + (ride ? 'Le chauffeur reçoit une notification ; le client le voit dans le suivi de sa course.' : 'Le chauffeur reçoit une notification sur son téléphone.') + '</span></div>';
   MX.tsig = JSON.stringify(r.msgs || []);
   var M = document.getElementById('mxM'); M.scrollTop = M.scrollHeight;
