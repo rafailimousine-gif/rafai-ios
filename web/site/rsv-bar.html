@@ -1,0 +1,54 @@
+
+<script>
+/* ---- Réservation avec compte client (comme l'appli Rafai Limousine) : au dernier bouton, le client ouvre
+   booking.rafai-limousine.com avec son trajet et ses coordonnées pré-remplis, crée son compte (ou se connecte)
+   et confirme. Rafai Limousine confirme la course, puis le client paie en ligne (Stripe).
+   Mariage : demande par WhatsApp et e-mail comme avant. ---- */
+(function(){
+  if(window.__rsvBar)return;window.__rsvBar=1;
+  var BK='https://booking.rafai-limousine.com/';
+  function g(id){var e=document.getElementById(id);return e?String(e.value||'').trim():'';}
+  function md(){try{return mode;}catch(e){return 'oneway';}}
+  function cr(){try{return car||'';}catch(e){return '';}}
+  function b64(s){return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+  var css=document.createElement('style');
+  css.textContent='.rsv-off #payset{display:none!important}'+
+    '.rsv-ok{color:#1E5B38!important;background:#E9F5EE;border:1px solid #BFE3CC;border-radius:10px;padding:10px 12px;margin-top:10px;display:block;line-height:1.45;font-size:13.5px}';
+  (document.head||document.documentElement).appendChild(css);
+  var LBL='Create my account & confirm';
+  function sync(){
+    var s=document.getElementById('send');if(!s)return;
+    var w=md()!=='wedding';
+    document.documentElement.classList.toggle('rsv-off',w);
+    var t=null;for(var i=s.childNodes.length-1;i>=0;i--){var n=s.childNodes[i];if(n.nodeType===3&&n.nodeValue.trim()){t=n;break;}}
+    if(t){if(s.__lbl0==null)s.__lbl0=t.nodeValue;var want=w?LBL:s.__lbl0;if(t.nodeValue!==want)t.nodeValue=want;}
+  }
+  setInterval(sync,700);sync();
+  document.addEventListener('click',function(e){
+    var s=e.target&&e.target.closest&&e.target.closest('#send');
+    if(!s||md()==='wedding')return;
+    var miss=[],er=document.getElementById('err4');
+    function mk(id,bad){try{mark(id,bad);}catch(x){}}
+    [['lname','last name'],['fname','first name']].forEach(function(x){var bad=!g(x[0]);mk(x[0],bad);if(bad)miss.push(x[1]);});
+    var tl=g('tel').replace(/\D/g,'').length<8;mk('tel',tl);if(tl)miss.push('phone');
+    var em=g('email'),be=!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em);mk('email',be);if(be)miss.push('email');
+    if(miss.length){
+      e.preventDefault();e.stopImmediatePropagation();
+      if(er){er.classList.remove('rsv-ok');er.textContent='Please complete: '+miss.join(', ')+'.';}
+      return;
+    }
+    var h=md()==='hourly';
+    var stops=[].slice.call(document.querySelectorAll('#stops input')).map(function(x){return String(x.value||'').trim();}).filter(Boolean);
+    var notes=[g('notes'),stops.length?'Stops: '+stops.join(' > '):''].filter(Boolean).join(' · ');
+    var d={v:1,type:h?'hourly':'transfer',from:g('from'),to:h?'':g('to'),date:g('date'),time:g('time'),h:h?g('hours'):'',
+      car:cr(),pax:g('pax'),bags:g('bags'),flight:g('flight'),notes:notes,fname:g('fname'),lname:g('lname'),
+      email:em,tel:g('tel'),booker:g('booker'),src:'site'};
+    s.href=BK+'#rsv='+b64(JSON.stringify(d));s.target='_blank';s.rel='noopener';
+    e.stopImmediatePropagation();
+    try{var p=cr()?price(cr()):null;adConv(p&&p.v);}catch(x){}
+    if(er){er.classList.add('rsv-ok');er.innerHTML='&#10003; Last step in the page that just opened: create your account (1 minute) and confirm your ride. '+
+      'Rafai Limousine confirms it, then you pay securely online.<br><small>Dernière étape dans la page qui vient de s’ouvrir : créez votre compte et confirmez. '+
+      'Après confirmation par Rafai Limousine, vous payez en ligne en toute sécurité.</small>';}
+  },true);
+})();
+</script>
