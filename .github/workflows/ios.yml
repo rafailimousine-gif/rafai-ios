@@ -3,6 +3,11 @@ name: iPhone
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'android/**'
+      - '.github/workflows/android.yml'
+      - 'appstore/**'
+      - 'web/**'
   workflow_dispatch:
     inputs:
       testflight:

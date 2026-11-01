@@ -6,3 +6,11 @@ DerivedData/
 *.p8
 *.p12
 *.mobileprovision
+
+# Android
+android/.gradle/
+android/build/
+android/*/build/
+android/release.jks
+android/driver/google-services.json
+android/local.properties
