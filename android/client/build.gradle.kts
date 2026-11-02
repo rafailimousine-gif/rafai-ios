@@ -8,12 +8,12 @@ val ks = rootProject.file("release.jks")
 
 android {
     namespace = "com.rafailimousine.client"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.rafailimousine.client"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = (System.getenv("VERSION_CODE") ?: "1").toInt()
         versionName = "1.0"
     }
