@@ -16,11 +16,15 @@ EN = ('<h3>Advertising measurement</h3><p>On the booking page (booking.rafai-lim
       'For visitors located in the European Economic Area, the United Kingdom and Switzerland, this measurement is turned off by default and no '
       'advertising cookie is set. We do not use personalised advertising.</p>')
 n = 0
-for mark, blk in (('<h3>Vos droits</h3>', FR), ('<h3>Your rights</h3>', EN)):
-    i = s.find(mark)
-    if i < 0:
-        print('introuvable : ' + mark); continue
-    s = s[:i] + blk + s[i:]; n += 1
+for title, blk in (('Vos droits', FR), ('Your rights', EN)):
+    for tag in ('h3', 'h2'):
+        mark = '<%s>%s</%s>' % (tag, title, tag)
+        i = s.find(mark)
+        if i >= 0:
+            s = s[:i] + blk.replace('<h3>', '<%s>' % tag).replace('</h3>', '</%s>' % tag) + '\n\n' + s[i:]; n += 1
+            break
+    else:
+        print('introuvable : ' + title)
 s = s.replace('mise à jour le 31 octobre 2026', 'mise à jour le 2 novembre 2026').replace('updated 31 October 2026', 'updated 2 November 2026')
 if not n:
     print('ARRET aucun emplacement'); sys.exit(1)
