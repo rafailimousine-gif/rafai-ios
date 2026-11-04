@@ -4,8 +4,9 @@
    des courses passées depuis plus de 30 jours. Rien d'autre n'est touché.
    Si la date d'une course est illisible, la ligne reste telle quelle.
 
-   Mise en place : coller ce bloc à la fin de Code.gs, enregistrer, puis lancer une seule fois
-   installerPurgeGps (elle crée le passage quotidien et note dans le journal le nombre de courses concernées). */
+   Mise en place : coller ce bloc à la fin de Code.gs, enregistrer, lancer compterPurgeGps
+   (elle n'efface rien et note dans le journal le nombre de courses concernées), puis créer dans
+   Déclencheurs un passage quotidien de purgePositionsGps entre 4h et 5h. */
 var GPS_KEEP_DAYS = 30;
 var GPS_PURGE_MAX = 300; // au plus 300 courses par passage ; le reste passe le lendemain
 
@@ -41,13 +42,12 @@ function purgePositionsGps() {
   return done;
 }
 
-/* À lancer une seule fois. N'efface rien : le premier passage a lieu la nuit suivante. */
-function installerPurgeGps() {
-  ScriptApp.getProjectTriggers().forEach(function (t) {
-    if (t.getHandlerFunction() === 'purgePositionsGps') ScriptApp.deleteTrigger(t);
-  });
-  ScriptApp.newTrigger('purgePositionsGps').timeBased().everyDays(1).atHour(4).create();
-  var n = gpsPurgeList_(listBookings_(book_()), Date.now()).length;
-  Logger.log('Suppression GPS installée. Courses concernées au prochain passage : ' + n);
+/* N'efface rien : indique seulement combien de courses seraient concernées. */
+function compterPurgeGps() {
+  var list = listBookings_(book_()), now = Date.now();
+  var dates = list.filter(function (o) { return isFinite(gpsCourseMs_(o)); }).length;
+  var pos = list.filter(function (o) { return o && (o.trkPos || o.trkPosAt); }).length;
+  var n = gpsPurgeList_(list, now).length;
+  Logger.log('Courses : ' + list.length + ' · date lisible : ' + dates + ' · avec position : ' + pos + ' · à effacer au prochain passage : ' + n);
   return n;
 }
