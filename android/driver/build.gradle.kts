@@ -13,12 +13,12 @@ val ks = rootProject.file("release.jks")
 
 android {
     namespace = "com.rafailimousine.driver"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.rafailimousine.driver"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = (System.getenv("VERSION_CODE") ?: "1").toInt()
         versionName = "1.0"
     }

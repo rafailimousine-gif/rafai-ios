@@ -20,11 +20,14 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 import com.google.android.gms.location.LocationCallback
@@ -69,7 +72,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         instance = this
         web = WebView(this)
-        setContentView(web)
+        // Android 15 et plus : l'appli s'affiche derrière les barres système. On garde la page entre les barres et au-dessus du clavier.
+        val root = FrameLayout(this)
+        root.setBackgroundColor(ContextCompat.getColor(this, R.color.ic_bg))
+        root.addView(web, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        setContentView(root)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val b = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime()
+            )
+            v.setPadding(b.left, b.top, b.right, b.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
         with(web.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true

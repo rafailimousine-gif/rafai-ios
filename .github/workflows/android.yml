@@ -50,7 +50,7 @@ jobs:
           ANDROID_KEY_PASS: ${{ secrets.ANDROID_KEY_PASS }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           VERSION_CODE: ${{ github.run_number }}
-        run: gradle -p android --no-daemon --stacktrace :driver:assembleRelease :client:assembleRelease :client:bundleRelease
+        run: gradle -p android --no-daemon --stacktrace :driver:assembleRelease :driver:bundleRelease :client:assembleRelease :client:bundleRelease
 
       - name: Fichiers d'installation
         run: |
@@ -58,6 +58,7 @@ jobs:
           cp android/driver/build/outputs/apk/release/driver-release.apk out/RL-Driver.apk
           cp android/client/build/outputs/apk/release/client-release.apk out/Rafai-Limousine.apk
           cp android/client/build/outputs/bundle/release/client-release.aab out/Rafai-Limousine.aab
+          cp android/driver/build/outputs/bundle/release/driver-release.aab out/RL-Driver.aab
           ls -la out
           if [ -f android/release.jks ]; then
             keytool -list -v -keystore android/release.jks -storepass "$ANDROID_KEY_PASS" -alias "${ANDROID_KEY_ALIAS:-rafai}" | grep -E "SHA256:" | head -1 | sed 's/^.*SHA256: /Empreinte SHA-256 de la clé : /'
@@ -77,9 +78,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "play-${{ github.run_number }}" out/Rafai-Limousine.aab --prerelease --latest=false \
+          gh release create "play-${{ github.run_number }}" out/Rafai-Limousine.aab out/RL-Driver.aab --prerelease --latest=false \
             --title "Google Play ${{ github.run_number }}" \
-            --notes "Rafai Limousine pour Google Play (version ${{ github.run_number }}), fichier .aab à importer dans la Play Console."
+            --notes "Rafai Limousine et RL Driver pour Google Play (version ${{ github.run_number }}), fichiers .aab à importer dans la Play Console."
           echo "Fichier Play : https://github.com/${{ github.repository }}/releases/download/play-${{ github.run_number }}/Rafai-Limousine.aab"
 
       - name: Lien d'installation (GitHub Releases)
