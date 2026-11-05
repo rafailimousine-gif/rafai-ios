@@ -18,8 +18,18 @@ def main():
     swipe = len(sys.argv) > 3 and sys.argv[3] == "scroll"
     for i in range(tries):
         try:
-            for t, d, (a, b, c, e) in nodes():
-                if (pat.fullmatch(t.strip()) or pat.fullmatch(d.strip())) and e > b and 160 < (b + e) // 2 < 2230:
+            all_nodes = list(nodes())
+            guard = sys.argv[4] if len(sys.argv) > 4 else None
+            y_test = [y for tt, dd, (_, y, _, _) in all_nodes if guard and guard in tt + dd]
+            y_other = [y for tt, dd, (_, y, _, _) in all_nodes if guard and re.search(r"RL-\d{6}-\d{3}", tt + dd) and guard not in tt + dd]
+            for t, d, (a, b, c, e) in all_nodes:
+                if not (pat.fullmatch(t.strip()) or pat.fullmatch(d.strip())) or e <= b or not 160 < (b + e) // 2 < 2230:
+                    continue
+                # sécurité : ne jamais toucher une autre mission que la mission de test
+                if guard and (not y_test or b < min(y_test) or any(min(y_test) < y < b for y in y_other)):
+                    print("bouton ignoré : pas sur la mission de test", flush=True)
+                    continue
+                if True:
                     subprocess.run(f"adb shell input tap {(a + c) // 2} {(b + e) // 2}", shell=True)
                     print(f"touché : {sys.argv[1]}", flush=True)
                     return 0

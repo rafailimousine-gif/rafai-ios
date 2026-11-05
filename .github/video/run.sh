@@ -35,7 +35,7 @@ tap 'R.essayer' 1
 sleep 8; shot 1-accueil
 if [ -n "${DEMO_DRIVER_LINK:-}" ]; then
   adb shell input swipe 540 1700 540 1100 500; sleep 2; shot 2-mission
-  tap '.*Start trip.*' 8 scroll
+  tap '.*Start trip.*' 8 scroll RL-261105-001
   sleep 3; shot 3-apres-start
   tap '(OK|Oui|Confirmer|Autoriser.*|Lors de l.utilisation.*)' 2
   sleep 6; shot 4-suivi
