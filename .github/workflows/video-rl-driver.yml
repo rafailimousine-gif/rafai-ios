@@ -33,6 +33,8 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           VERSION_CODE: ${{ github.run_number }}
         run: gradle -p android --no-daemon :driver:assembleRelease
+      - name: Outils de la vidéo
+        run: pip install pillow
       - name: Accélération de l'émulateur
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules

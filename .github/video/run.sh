@@ -12,11 +12,8 @@ adb shell cmd uimode night yes
 adb shell settings put system screen_off_timeout 600000
 adb shell svc power stayon true
 adb emu geo fix 2.3295 48.8675
-for i in $(seq 1 40); do
-  if adb shell "ping -c 1 -W 2 team.rafai-limousine.com" >/dev/null 2>&1; then log "reseau ok apres $((i*3)) s"; break; fi
-  [ "$i" = 40 ] && log "reseau toujours absent"
-  sleep 3
-done
+adb shell settings put global hide_error_dialogs 1
+sleep 45
 adb shell setprop persist.sys.timezone Europe/Paris
 adb install -r android/driver/build/outputs/apk/release/driver-release.apk | tee -a "$L"
 for p in android.permission.POST_NOTIFICATIONS android.permission.ACCESS_FINE_LOCATION android.permission.ACCESS_COARSE_LOCATION; do adb shell pm grant "$A" "$p"; done
@@ -31,13 +28,15 @@ else
   adb shell am start -n "$A/.MainActivity" >/dev/null
 fi
 sleep 14
-tap 'R.essayer' 1
 sleep 8; shot 1-accueil
 if [ -n "${DEMO_DRIVER_LINK:-}" ]; then
-  adb shell input swipe 540 1700 540 1100 500; sleep 2; shot 2-mission
-  tap '.*Start trip.*' 8 scroll RL-261105-001
-  sleep 3; shot 3-apres-start
-  tap '(OK|Oui|Confirmer|Autoriser.*|Lors de l.utilisation.*)' 2
+  tap 'Wait' 1
+  adb shell input swipe 540 1900 540 1200 600; sleep 3; shot 2-mission
+  if ! python3 .github/video/gold.py 2>&1 | tee -a "$L" | grep -q 'touché'; then
+    adb shell input swipe 540 1700 540 1100 600; sleep 3
+    python3 .github/video/gold.py 2>&1 | tee -a "$L"
+  fi
+  sleep 4; shot 3-apres-start
   sleep 6; shot 4-suivi
   adb shell cmd statusbar expand-notifications; sleep 6; shot 5-notification
   adb shell cmd statusbar collapse; sleep 2
