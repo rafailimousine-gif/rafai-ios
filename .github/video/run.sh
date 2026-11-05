@@ -12,6 +12,12 @@ adb shell cmd uimode night yes
 adb shell settings put system screen_off_timeout 600000
 adb shell svc power stayon true
 adb emu geo fix 2.3295 48.8675
+for i in $(seq 1 40); do
+  if adb shell "ping -c 1 -W 2 team.rafai-limousine.com" >/dev/null 2>&1; then log "reseau ok apres $((i*3)) s"; break; fi
+  [ "$i" = 40 ] && log "reseau toujours absent"
+  sleep 3
+done
+adb shell setprop persist.sys.timezone Europe/Paris
 adb install -r android/driver/build/outputs/apk/release/driver-release.apk | tee -a "$L"
 for p in android.permission.POST_NOTIFICATIONS android.permission.ACCESS_FINE_LOCATION android.permission.ACCESS_COARSE_LOCATION; do adb shell pm grant "$A" "$p"; done
 ( i=0; while [ $i -lt 110 ]; do adb emu geo fix "$(python3 -c "print(round(2.3295+$i*0.0007,5))")" "$(python3 -c "print(round(48.8675+$i*0.0005,5))")" >/dev/null 2>&1; i=$((i+1)); sleep 2; done ) &
@@ -24,7 +30,9 @@ else
   log "sans lien : ouverture simple de l'appli"
   adb shell am start -n "$A/.MainActivity" >/dev/null
 fi
-sleep 16; shot 1-accueil
+sleep 14
+tap 'R.essayer' 1
+sleep 8; shot 1-accueil
 if [ -n "${DEMO_DRIVER_LINK:-}" ]; then
   adb shell input swipe 540 1700 540 1100 500; sleep 2; shot 2-mission
   tap '.*Start trip.*' 8 scroll
