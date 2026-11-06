@@ -165,6 +165,21 @@ for p in PAGES:
             e.decompose()
     for e in s.find_all(['script', 'noscript', 'link', 'style']):
         e.decompose()
+    # carte de réservation : sa colonne s'élargit sur ordinateur (voir site.css.add)
+    for e in s.select('[data-code]'):
+        c0 = e['data-code']
+        if not ('<div class="photo">' in c0 and 'id="s1"' in c0):
+            continue
+        col = e
+        while col.parent and 'LS81yb' not in (col.parent.get('class') or []):
+            col = col.parent
+        row = col.parent
+        if not row or col is e:
+            continue
+        sib = [x for x in row.find_all(recursive=False) if x is not col]
+        fond = any('<plaintext' in (d.get('data-code') or '') for x in sib for d in x.select('[data-code]'))
+        col['class'] = (col.get('class') or []) + ['rlbook']
+        row['class'] = (row.get('class') or []) + ['rlbook-bg' if fond else 'rlbook-duo']
     n = 0
     for e in s.select('[data-code]'):
         if 'id="fab"' in e['data-code'] and 'class="app"' in e['data-code']:
