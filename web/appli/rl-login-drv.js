@@ -177,7 +177,8 @@
       var m = g[k];
       h += '<div class="rlhm"><b>' + hx(m.name.charAt(0).toUpperCase() + m.name.slice(1)) + '</b><span>' + m.n + ' course' + (m.n > 1 ? 's' : '') + (m.sum ? ' · ' + eur(m.sum) : '') + '</span></div>';
       m.items.forEach(function (x) {
-        h += '<div class="rlhi"><div class="rlht"><b>' + hx(x.date || '') + (x.time ? ' · ' + hx(x.time) : '') + '</b>' +
+        var dj = x.t ? new Date(x.t).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' }) : (x.date || '');
+        h += '<div class="rlhi"><div class="rlht"><b>' + hx(dj.charAt(0).toUpperCase() + dj.slice(1)) + (x.time ? ' · ' + hx(x.time) : '') + '</b>' +
           (x.price ? '<i>' + hx(eur(parseFloat(String(x.price).replace(',', '.')) || 0)) + '</i>' : '') + '</div>' +
           '<div class="rlhs">' + hx([x.service, x.car].filter(Boolean).join(' · ')) + ' · ' + hx(x.ref || '') + '</div>' +
           '<div class="rlha">' + hx(x.from || '') + (x.to ? ' → ' + hx(x.to) : '') + '</div></div>';
