@@ -114,6 +114,8 @@ def header(p, lg):
             '<nav><ul>%s</ul></nav></header>' % (LOGO, ''.join(li(i) for i in tree)))
 
 CSSRC = None
+YCODE = None
+YV = ''
 STY = {}
 LOGO = '/img/logo.png'
 docs = []
@@ -138,6 +140,18 @@ for p in PAGES:
         e.decompose()
     n = 0
     for e in s.select('[data-code]'):
+        if 'id="fab"' in e['data-code'] and 'class="app"' in e['data-code']:
+            # Youri quitte le bas de page : il devient le bouton flottant de toutes les pages
+            if p == '/home':
+                YCODE = e['data-code']
+            col = e
+            while col.parent and 'LS81yb' not in (col.parent.get('class') or []):
+                col = col.parent
+            row = col.parent
+            col.decompose()
+            if row:
+                row['class'] = row.get('class', []) + ['rlsolo']
+            continue
         n += 1
         src = embed(e['data-code'])
         ttl = (e.find('iframe') or {}).get('title', '') if e.find('iframe') else ''
@@ -177,6 +191,18 @@ io.open(ROOT + '/atari.css', 'w', encoding='utf-8').write(css + '\n' + '\n'.join
 print('styles differents :', len(STY), 'atari', len(css))
 fonts = 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,700;1,400&display=swap'
 JS = io.open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'rl-site.js'), encoding='utf-8').read()
+# Youri : la version de la Home (la plus récente) dans les 4 langues, sans ouverture automatique ni bouton interne
+yf = OUT + embed(YCODE)
+yc = io.open(yf, encoding='utf-8').read()
+os.remove(yf)
+for x in ("function arm(){", "var L0='en'", '<html lang="en">', '</head>'):
+    assert x in yc, x
+yc = yc.replace('function arm(){', 'function arm(){return;', 1)
+yc = yc.replace('</head>', '<style>.fab,.teaser{display:none!important}body.ph .app{border-radius:0;border:0}</style></head>', 1)
+YV = sha(yc)[:8]
+for l, tag in (('en', 'en'), ('fr', 'fr'), ('zh', 'zh-CN'), ('ar', 'ar')):
+    io.open(OUT + '/e/youri-%s-%s.html' % (l, YV), 'w', encoding='utf-8').write(
+        yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1))
 open(OUT + '/img/logo.png', 'wb').write(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo.png'), 'rb').read())
 urls = []
 for p, lg, title, cls, inner in docs:
@@ -198,7 +224,11 @@ for p, lg, title, cls, inner in docs:
     if TEST:
         head.append('<meta name="robots" content="noindex">')
     head.append('</head>')
-    page = ''.join(head) + '<body class="%s">' % cls + header(p, lg) + inner + '<script src="/css/site.js" defer></script></body></html>'
+    y = CFG['youri'][lg]
+    yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/youri-%s-%s.html">Y</button>'
+          '<button type="button" id="rlytz"%s hidden><b>%s</b><span>%s</span></button>'
+          % (html.escape(y['a'], quote=True), lg, YV, ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
+    page = ''.join(head) + '<body class="%s">' % cls + header(p, lg) + inner + yb + '<script src="/css/site.js" defer></script></body></html>'
     fn = OUT + ('/index.html' if False else p + '.html')
     os.makedirs(os.path.dirname(fn), exist_ok=True)
     io.open(fn, 'w', encoding='utf-8').write(page)

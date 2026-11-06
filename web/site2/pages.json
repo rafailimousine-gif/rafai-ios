@@ -439,5 +439,27 @@
 "/fr": "Rafai Limousine | Chauffeur privé à Paris",
 "/zh": "Rafai Limousine | 巴黎私人司机",
 "/ar": "Rafai Limousine | سائق خاص في باريس"
+},
+"youri": {
+"en": {
+"a": "Chat with Youri",
+"t1": "👋 Need help?",
+"t2": "I’m Youri. I can book your chauffeur in 1 minute."
+},
+"fr": {
+"a": "Discuter avec Youri",
+"t1": "👋 Besoin d’aide ?",
+"t2": "Je suis Youri. Je réserve votre chauffeur en 1 minute."
+},
+"zh": {
+"a": "与 Youri 聊天",
+"t1": "👋 需要帮助吗？",
+"t2": "我是 Youri，1 分钟帮您预订司机。"
+},
+"ar": {
+"a": "تحدثوا مع Youri",
+"t1": "👋 هل تحتاجون مساعدة؟",
+"t2": "أنا Youri. أحجز سائقكم في دقيقة واحدة."
+}
 }
 }
