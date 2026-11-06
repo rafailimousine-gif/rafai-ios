@@ -111,8 +111,9 @@ def embed(code):
     if '<div class="photo">' in c and 'id="s1"' in c and '</head>' in c:
         c = c.replace('</head>', BIG + '</head>', 1)
         NBIG[0] += 1
-    io.open(OUT + '/e/' + k + '.html', 'w', encoding='utf-8').write(c)
-    EMB[k] = '/e/' + k + '.html'
+    n = sha(c)  # le nom suit le contenu : un bloc modifié n'est jamais servi depuis l'ancien cache
+    io.open(OUT + '/e/' + n + '.html', 'w', encoding='utf-8').write(c)
+    EMB[k] = '/e/' + n + '.html'
     return EMB[k]
 
 def unwrap(u):
