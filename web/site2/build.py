@@ -184,7 +184,7 @@ for p, lg, title, cls, inner in docs:
             '<meta property="og:type" content="website"><meta property="og:url" content="%s">' % canon,
             '<meta property="og:description" content="%s">' % html.escape(d, quote=True),
             '<meta property="og:image" content="%s/img/og.jpg">' % BASE, '<link rel="icon" href="/img/logo.png">',
-            '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s">' % fonts,
+            '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s" media="print" onload="this.media=\'all\'">' % fonts,
             '<link rel="stylesheet" href="/css/site.css">']
     for g in CFG['groups']:
         if p in g:
