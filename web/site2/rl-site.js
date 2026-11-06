@@ -37,7 +37,6 @@
       d.getElementById('fab').click();
     }
     function ouvre() {
-      if (tz) tz.hidden = true;
       h.classList.add('rly');
       if (fr) { fit(); go(); return; }
       fr = document.createElement('iframe');
@@ -58,15 +57,7 @@
       fit();
     }
     fab.addEventListener('click', ouvre);
-    if (tz) {
-      tz.addEventListener('click', ouvre);
-      var vu = false;
-      try { vu = sessionStorage.getItem('rl_ytz') === '1'; sessionStorage.setItem('rl_ytz', '1'); } catch (e) {}
-      if (!vu) setTimeout(function () {
-        if (!h.classList.contains('rly')) tz.hidden = false;
-        setTimeout(function () { tz.hidden = true; }, 9000);
-      }, 2500);
-    }
+    if (tz) tz.addEventListener('click', ouvre);
     if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
     window.addEventListener('resize', fit);
   })();

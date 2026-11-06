@@ -226,7 +226,7 @@ for p, lg, title, cls, inner in docs:
     head.append('</head>')
     y = CFG['youri'][lg]
     yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/youri-%s-%s.html">Y</button>'
-          '<button type="button" id="rlytz"%s hidden><b>%s</b><span>%s</span></button>'
+          '<button type="button" id="rlytz"%s><b>%s</b><span>%s</span></button>'
           % (html.escape(y['a'], quote=True), lg, YV, ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
     page = ''.join(head) + '<body class="%s">' % cls + header(p, lg) + inner + yb + '<script src="/css/site.js" defer></script></body></html>'
     fn = OUT + ('/index.html' if False else p + '.html')
