@@ -24,6 +24,6 @@ J
 SITE="${RL_SITE:-rafai-limousine-paris}"
 printf '{"projects":{"default":"rafai-suivi"},"targets":{"rafai-suivi":{"hosting":{"www":["%s"]}}}}' "$SITE" > .firebaserc
 firebase hosting:sites:list --project rafai-suivi 2>/dev/null | grep -q "$SITE" || firebase hosting:sites:create "$SITE" --project rafai-suivi 2>&1 | tail -2
-firebase deploy --only hosting:www --project rafai-suivi 2>&1 | tail -3
+FIREBASE_HOSTING_UPLOAD_CONCURRENCY=6 firebase deploy --only hosting:www --project rafai-suivi 2>&1 | tail -3
 du -sh public public/img public/e public/css | tr '\n' ' '; echo; wc -c public/css/site.css public/home.html | head -2
 echo "FIN-WWW https://$SITE.web.app"
