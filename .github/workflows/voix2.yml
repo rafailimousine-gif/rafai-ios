@@ -1,0 +1,37 @@
+name: Voix candidates
+
+on:
+  push:
+    branches: [voix2]
+
+permissions:
+  contents: write
+
+jobs:
+  voix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Outils
+        run: pip install -q piper-tts numpy
+      - name: Voix candidates
+        run: |
+          cd web/video/voix2
+          B=https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR
+          for v in tom/medium/fr_FR-tom-medium upmc/medium/fr_FR-upmc-medium gilles/low/fr_FR-gilles-low mls/medium/fr_FR-mls-medium; do
+            n=$(basename $v); curl -sLf -o $n.onnx $B/$v.onnx; curl -sLf -o $n.onnx.json $B/$v.onnx.json
+          done
+          python3 -c "import json;print('MLS speakers', json.load(open('fr_FR-mls-medium.onnx.json'))['num_speakers'])"
+          python3 cand.py
+      - name: Publication (branche voix2-out)
+        run: |
+          mkdir -p /tmp/out && cd /tmp/out
+          git init -q && git checkout -q -b voix2-out
+          cp -r "$GITHUB_WORKSPACE"/web/video/voix2/cand .
+          git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com add .
+          git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com commit -q -m "Voix candidates (run ${{ github.run_number }})"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" voix2-out

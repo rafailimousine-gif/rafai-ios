@@ -1,0 +1,132 @@
+[
+{
+"name": "tom",
+"model": "fr_FR-tom-medium.onnx",
+"ls": 0.95
+},
+{
+"name": "pierre",
+"model": "fr_FR-upmc-medium.onnx",
+"spk": 1,
+"ls": 0.95
+},
+{
+"name": "gilles",
+"model": "fr_FR-gilles-low.onnx",
+"ls": 0.95
+},
+{
+"name": "mls0",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 0,
+"ls": 0.95
+},
+{
+"name": "mls3",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 3,
+"ls": 0.95
+},
+{
+"name": "mls7",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 7,
+"ls": 0.95
+},
+{
+"name": "mls12",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 12,
+"ls": 0.95
+},
+{
+"name": "mls18",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 18,
+"ls": 0.95
+},
+{
+"name": "mls25",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 25,
+"ls": 0.95
+},
+{
+"name": "mls31",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 31,
+"ls": 0.95
+},
+{
+"name": "mls40",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 40,
+"ls": 0.95
+},
+{
+"name": "mls47",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 47,
+"ls": 0.95
+},
+{
+"name": "mls55",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 55,
+"ls": 0.95
+},
+{
+"name": "mls62",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 62,
+"ls": 0.95
+},
+{
+"name": "mls70",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 70,
+"ls": 0.95
+},
+{
+"name": "mls78",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 78,
+"ls": 0.95
+},
+{
+"name": "mls86",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 86,
+"ls": 0.95
+},
+{
+"name": "mls93",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 93,
+"ls": 0.95
+},
+{
+"name": "mls101",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 101,
+"ls": 0.95
+},
+{
+"name": "mls109",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 109,
+"ls": 0.95
+},
+{
+"name": "mls117",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 117,
+"ls": 0.95
+},
+{
+"name": "mls124",
+"model": "fr_FR-mls-medium.onnx",
+"spk": 124,
+"ls": 0.95
+}
+]
