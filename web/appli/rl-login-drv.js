@@ -4,9 +4,9 @@
   window.__rlLogin = 1;
   var st = document.createElement('style');
   st.textContent =
-    '.rlgbg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#111113 url(/chauffeur/rl-login-bg.jpg) 50% 0/cover no-repeat}' +
+    '.rlgbg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#111113 url(/chauffeur/rl-login-fond.jpg) 50% 0/cover no-repeat}' +
     '.rlgbg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,19,.6) 0,rgba(17,17,19,.12) 16%,rgba(17,17,19,.18) 30%,rgba(17,17,19,.82) 47%,#111113 60%)}' +
-    '@media (min-width:700px){.rlgbg{background-size:auto 100%}.rlgbg:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#111113 calc(50% - 36vh),rgba(17,17,19,0) calc(50% - 22vh),rgba(17,17,19,0) calc(50% + 22vh),#111113 calc(50% + 36vh))}}' +
+    '@media (min-width:700px){.rlgbg{background-position:50% 30%}}' +
     'html.rlgon body{background:transparent!important}' +
     '.rlg{position:relative;max-width:420px;margin:0 auto;padding:min(40vh,360px) 18px 24px;text-align:center;color:var(--txt)}' +
     '.rlg h2{margin:0 0 6px;font-size:21px}' +

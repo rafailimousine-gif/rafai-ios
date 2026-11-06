@@ -8,6 +8,8 @@ curl -sLf -o fix26.py "$B/fix26.py"
 curl -sLf -o rl-login-drv.js "$B/appli/rl-login-drv.js"
 curl -sLf -o fix27.py "$B/fix27.py"
 curl -sLf -o rl-drv-ui.js "$B/appli/rl-drv-ui.js"
+curl -sLf -o suivi/public/chauffeur/rl-login-fond.jpg "$B/appli/rl-login-fond.jpg"
+rm -f suivi/public/chauffeur/rl-login-bg.jpg
 [ -f chauffeur-index-avant-rlui.html ] || cp suivi/public/chauffeur/index.html chauffeur-index-avant-rlui.html
 python3 fix26.py
 python3 fix27.py
