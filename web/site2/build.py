@@ -82,7 +82,7 @@ def rename(c):
     return c
 
 # Carte de réservation sur ordinateur : plus grande, contenu centré dans la partie noire (le téléphone ne change pas)
-BIG = ('<style>@media (min-width:560px) and (min-height:600px){'
+BIG = ('<style>@media (min-width:440px) and (min-height:600px){'
        '.photo{display:flex;flex-direction:column;justify-content:center;padding-bottom:40px}'
        '.photo p{font-size:clamp(30px,6vw,46px);line-height:1.04;padding:24px 30px 6px}'
        '.photo p small{font-size:12.5px;letter-spacing:.18em;margin-bottom:12px}'
