@@ -1,0 +1,105 @@
+/* ---------- rlLogin v1 : RL Driver, connexion par code e-mail quand le chauffeur n'a pas de lien personnel ---------- */
+(function rlLogin() {
+  if (window.__rlLogin) return;
+  window.__rlLogin = 1;
+  var st = document.createElement('style');
+  st.textContent =
+    '.rlg{max-width:420px;margin:0 auto;padding:34px 18px 24px;text-align:center;color:var(--txt)}' +
+    '.rlg img{width:84px;height:84px;border-radius:20px;margin-bottom:14px}' +
+    '.rlg h2{margin:0 0 6px;font-size:21px}' +
+    '.rlg p{margin:0 0 18px;color:var(--mut);font-size:14.5px;line-height:1.45}' +
+    '.rlg label{display:block;text-align:start;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:0 0 6px}' +
+    '.rlg input{display:block;width:100%;box-sizing:border-box;height:52px;padding:0 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:17px;outline:none}' +
+    '.rlg input:focus{border-color:var(--gold)}' +
+    '.rlg input.rlc{text-align:center;font-size:26px;letter-spacing:.35em;font-weight:800}' +
+    '.rlg .rlb{display:block;width:100%;height:54px;margin-top:14px;border:0;border-radius:14px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#111113;font-size:16.5px;font-weight:800;cursor:pointer}' +
+    '.rlg .rlb[disabled]{opacity:.6}' +
+    '.rlg .rll{display:inline-block;margin:16px 8px 0;background:none;border:0;color:var(--gold);font-size:14px;font-weight:700;cursor:pointer}' +
+    '.rlg .rlm{min-height:20px;margin-top:12px;font-size:14px;color:var(--mut)}' +
+    '.rlg .rlm.ko{color:var(--red)}' +
+    '.rlg .rlh{margin-top:22px;font-size:13px;color:var(--dim)}';
+  (document.head || document.documentElement).appendChild(st);
+
+  var S = { step: 'mail', mail: '' };
+  try { S.mail = localStorage.getItem('rl_drv_mail') || ''; } catch (e) {}
+  function api(q) {
+    return fetch(APP + '?' + q + '&_=' + Date.now(), { cache: 'no-store', credentials: 'omit' }).then(function (r) { return r.json(); });
+  }
+  function el(id) { return document.getElementById(id); }
+  function msg(t, ko) { var m = el('rlm'); if (m) { m.textContent = t || ''; m.className = 'rlm' + (ko ? ' ko' : ''); } }
+  function busy(b) { var x = el('rlgo'); if (x) x.disabled = !!b; }
+
+  function draw() {
+    var L = el('list'); if (!L) return;
+    var sub = el('sub'); if (sub) sub.textContent = 'Connexion chauffeur';
+    var h = '<div class="rlg"><img src="/chauffeur/icon-192.png" alt="">';
+    if (S.step === 'mail') {
+      h += '<h2>Connexion</h2><p>Entrez l’adresse e-mail enregistrée chez Rafai Limousine. Vous recevrez un code à 6 chiffres.</p>' +
+        '<form id="rlf" novalidate><label for="rle">E-mail</label>' +
+        '<input id="rle" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="prenom@exemple.fr">' +
+        '<button class="rlb" id="rlgo" type="submit">Recevoir mon code</button></form>';
+    } else {
+      h += '<h2>Votre code</h2><p>Si <b></b> est enregistrée chez Rafai Limousine, un code vient d’y être envoyé. Il est valable 15 minutes.</p>' +
+        '<form id="rlf" novalidate><label for="rlk">Code à 6 chiffres</label>' +
+        '<input id="rlk" class="rlc" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••">' +
+        '<button class="rlb" id="rlgo" type="submit">Valider</button></form>' +
+        '<button class="rll" id="rlre" type="button">Renvoyer le code</button><button class="rll" id="rlch" type="button">Changer d’adresse</button>';
+    }
+    h += '<div class="rlm" id="rlm" role="status"></div>' +
+      '<div class="rlh">Un souci ? Appelez Rafai Limousine au +33 6 67 09 94 94.</div></div>';
+    L.innerHTML = h;
+    if (S.step === 'code') { L.querySelector('.rlg p b').textContent = S.mail; }
+    var f = el('rlf');
+    f.addEventListener('submit', function (ev) { ev.preventDefault(); S.step === 'mail' ? sendMail() : sendCode(); });
+    if (S.step === 'mail') { var i = el('rle'); i.value = S.mail; }
+    else {
+      var k = el('rlk');
+      k.addEventListener('input', function () { k.value = k.value.replace(/\D/g, '').slice(0, 6); if (k.value.length === 6) sendCode(); });
+      el('rlre').onclick = function () { sendMail(true); };
+      el('rlch').onclick = function () { S.step = 'mail'; draw(); };
+    }
+  }
+  function sendMail(again) {
+    var e = S.step === 'mail' ? String(el('rle').value || '').trim().toLowerCase() : S.mail;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) { msg('Vérifiez l’adresse e-mail.', true); return; }
+    busy(1); msg('Envoi…');
+    api('app=drvlogin&e=' + encodeURIComponent(e)).then(function (j) {
+      busy(0);
+      if (j && j.ok) {
+        S.mail = e; try { localStorage.setItem('rl_drv_mail', e); } catch (x) {}
+        S.step = 'code'; draw();
+        msg(again ? 'Nouveau code envoyé si l’adresse est enregistrée.' : '');
+        var k = el('rlk'); if (k) k.focus();
+      } else msg(j && j.err === 'quota' ? 'Trop de demandes. Réessayez dans une heure ou appelez Rafai Limousine.' : 'Vérifiez l’adresse e-mail.', true);
+    }).catch(function () { busy(0); msg('Pas de connexion internet. Réessayez.', true); });
+  }
+  function sendCode() {
+    var k = el('rlk'), c = String(k && k.value || '').replace(/\D/g, '');
+    if (c.length !== 6) { msg('Le code fait 6 chiffres.', true); return; }
+    if (sendCode.on) return; sendCode.on = 1;
+    busy(1); msg('Vérification…');
+    api('app=drvverify&e=' + encodeURIComponent(S.mail) + '&code=' + c).then(function (j) {
+      sendCode.on = 0; busy(0);
+      if (j && j.ok && j.auth) {
+        msg('Connexion réussie.');
+        try { localStorage.setItem('rc_auth', j.auth); } catch (x) {}
+        try { if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.rn) window.webkit.messageHandlers.rn.postMessage({ t: 'auth', auth: j.auth }); } catch (x) {}
+        location.replace('/chauffeur/' + encodeURIComponent(j.auth));
+      } else {
+        msg(j && j.err === 'expire' ? 'Code expiré ou trop d’essais. Demandez un nouveau code.' : 'Code incorrect. Vérifiez et réessayez.', true);
+        if (k) { k.value = ''; k.focus(); }
+      }
+    }).catch(function () { sendCode.on = 0; busy(0); msg('Pas de connexion internet. Réessayez.', true); });
+  }
+
+  if (typeof render === 'function') {
+    var _render = render;
+    render = function () {
+      if (!ID || !KEY) { if (!el('rlf')) draw(); return; }
+      return _render.apply(this, arguments);
+    };
+  }
+  if (!ID || !KEY) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', draw); else draw();
+  }
+})();
