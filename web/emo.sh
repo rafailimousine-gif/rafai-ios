@@ -10,7 +10,7 @@ ls p01.wav p11.wav >/dev/null
 python3 mixe.py
 python3 -c "import imageio_ffmpeg" 2>/dev/null || python3 -m pip install --user -q imageio-ffmpeg 2>&1 | tail -1
 FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
-$FF -v error -y -i image-emo.mp4 -i mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -shortest -movflags +faststart Rafai-Limousine-merci.mp4
+$FF -nostdin -v error -y -i image-emo.mp4 -i mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -shortest -movflags +faststart Rafai-Limousine-merci.mp4
 ls -la Rafai-Limousine-merci.mp4 | awk '{print "VIDEO", $5}'
 mkdir -p ~/videopub/public && cp Rafai-Limousine-merci.mp4 ~/videopub/public/
 cat > ~/videopub/public/index.html <<'EOF'
