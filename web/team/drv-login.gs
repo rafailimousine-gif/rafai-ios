@@ -55,3 +55,27 @@ function drvVerify_(q) {
   if (!d) return drvAppOut_({ ok: false, err: 'expire' });
   return drvAppOut_({ ok: true, auth: d.id + '.' + drvAppKey_(d.id), fname: d.fname || '' });
 }
+
+/* ---------- rlDrvHist v1 : RL Driver, historique des courses terminées du chauffeur (12 derniers mois) ----------
+ * Route (dans drvAppRoute_) : ?app=drvhist&id=…&k=… (même clé que le lien personnel)
+ */
+function drvHist_(id, k) {
+  try {
+    if (!id || !k || k !== drvAppKey_(id)) return drvAppOut_({ ok: false, err: 'lien' });
+    var drv = driverById_(id);
+    if (!drv || drv.active === 'Non') return drvAppOut_({ ok: false, err: 'lien' });
+    var now = Date.now(), out = [];
+    listBookings_(book_()).forEach(function (b) {
+      if (b.driverId !== id) return;
+      if (!(b.status === 'Terminée' || b.trkStatus === 'Terminée')) return;
+      var s = startDate_(b), t = s ? s.getTime() : 0;
+      if (t && t < now - 366 * 864e5) return;
+      out.push({ ref: b.ref, t: t, date: b.date, time: b.time, service: b.service, from: b.from, to: b.to,
+        car: b.car, price: String(b.drvPrice || '') });
+    });
+    out.sort(function (a, b) { return b.t - a.t; });
+    return drvAppOut_({ ok: true, list: out.slice(0, 300) });
+  } catch (e) {
+    return drvAppOut_({ ok: false, err: 'serveur' });
+  }
+}

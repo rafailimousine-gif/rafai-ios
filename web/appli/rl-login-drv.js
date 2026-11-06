@@ -155,6 +155,54 @@
     if (el('rlpset')) el('rlpset').onclick = function () { nat({ t: 'settings' }); };
     if (el('rlpset2')) el('rlpset2').onclick = function () { nat({ t: 'settings' }); };
   }
+  /* historique des courses terminées (12 derniers mois), chargé à l'ouverture de la rubrique */
+  var HIST = null;
+  var MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  function hx(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function eur(n) { return (Math.round(n * 100) / 100).toLocaleString('fr-FR') + ' €'; }
+  function histDraw() {
+    var b = el('rlhl'); if (!b) return;
+    if (!HIST) { b.textContent = 'Chargement…'; return; }
+    if (HIST.err) { b.textContent = 'Historique indisponible pour l’instant. Refermez et rouvrez la rubrique pour réessayer.'; return; }
+    if (!HIST.list.length) { b.textContent = 'Aucune course terminée sur les 12 derniers mois.'; return; }
+    var g = {}, order = [];
+    HIST.list.forEach(function (x) {
+      var d = x.t ? new Date(x.t) : null, key = d ? d.getFullYear() + '-' + d.getMonth() : 'x';
+      if (!g[key]) { g[key] = { name: d ? MOIS[d.getMonth()] + ' ' + d.getFullYear() : 'Sans date', n: 0, sum: 0, items: [] }; order.push(key); }
+      var p = parseFloat(String(x.price).replace(',', '.')) || 0;
+      g[key].n++; g[key].sum += p; g[key].items.push(x);
+    });
+    var h = '';
+    order.forEach(function (k) {
+      var m = g[k];
+      h += '<div class="rlhm"><b>' + hx(m.name.charAt(0).toUpperCase() + m.name.slice(1)) + '</b><span>' + m.n + ' course' + (m.n > 1 ? 's' : '') + (m.sum ? ' · ' + eur(m.sum) : '') + '</span></div>';
+      m.items.forEach(function (x) {
+        h += '<div class="rlhi"><div class="rlht"><b>' + hx(x.date || '') + (x.time ? ' · ' + hx(x.time) : '') + '</b>' +
+          (x.price ? '<i>' + hx(eur(parseFloat(String(x.price).replace(',', '.')) || 0)) + '</i>' : '') + '</div>' +
+          '<div class="rlhs">' + hx([x.service, x.car].filter(Boolean).join(' · ')) + ' · ' + hx(x.ref || '') + '</div>' +
+          '<div class="rlha">' + hx(x.from || '') + (x.to ? ' → ' + hx(x.to) : '') + '</div></div>';
+      });
+    });
+    b.innerHTML = h;
+  }
+  function histLoad() {
+    if (HIST && !HIST.err) { histDraw(); return; }
+    HIST = null; histDraw();
+    fetch(APP + '?app=drvhist&id=' + encodeURIComponent(ID) + '&k=' + encodeURIComponent(KEY) + '&_=' + Date.now(), { cache: 'no-store', credentials: 'omit' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { HIST = j && j.ok ? { list: j.list || [] } : { err: 1 }; histDraw(); })
+      .catch(function () { HIST = { err: 1 }; histDraw(); });
+  }
+  function histBox() {
+    var L = el('list'); if (!L || !ID || !KEY || el('rlhist')) return;
+    var d = document.createElement('details'); d.id = 'rlhist'; d.className = 'rlhx';
+    d.innerHTML = '<summary>🗂️ Historique des courses</summary><div id="rlhl"></div>';
+    var lo = el('rllo');
+    if (lo && lo.parentNode === L) L.insertBefore(d, lo); else L.appendChild(d);
+    if (HIST) d.open = !!histBox.open;
+    d.addEventListener('toggle', function () { histBox.open = d.open; if (d.open) histLoad(); });
+    if (d.open) histDraw();
+  }
   /* déconnexion : efface l'accès gardé dans le navigateur de l'appli et revient à l'écran de connexion */
   function logoutBtn() {
     var L = el('list'); if (!L || !ID || !KEY || el('rllo')) return;
@@ -178,6 +226,13 @@
     '.rlpm .rlb{display:block;width:100%;height:50px;margin-top:10px;border:0;border-radius:14px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#111113;font-size:16px;font-weight:800}' +
     '.rlpm .rlb2{background:transparent;border:1px solid var(--line);color:var(--txt)}' +
     '.rlpok{margin-top:10px;color:var(--ok);font-weight:700;font-size:15px}.rlperr{margin-top:10px;color:var(--red);font-size:14px;line-height:1.4}' +
+    '.rlhx{margin:22px 0 0;border:1px solid var(--line);border-radius:16px;background:var(--card);overflow:hidden}' +
+    '.rlhx summary{padding:15px 16px;font-size:16px;font-weight:800;color:var(--txt);cursor:pointer}' +
+    '.rlhx #rlhl{padding:0 16px 12px;color:var(--mut);font-size:14px}' +
+    '.rlhm{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 6px;padding-top:10px;border-top:1px solid var(--line)}.rlhm b{color:var(--gold);font-size:14.5px}.rlhm span{font-size:13px}' +
+    '.rlhi{padding:10px 0;border-bottom:1px solid var(--line)}.rlhi:last-child{border-bottom:0}' +
+    '.rlht{display:flex;justify-content:space-between;color:var(--txt)}.rlht i{font-style:normal;font-weight:800;color:var(--ok)}' +
+    '.rlhs{font-size:12.5px;margin-top:2px}.rlha{font-size:13px;margin-top:3px;color:var(--txt);opacity:.85}' +
     '.rllo{text-align:center;margin:26px 0 10px}.rllo button{background:none;border:1px solid var(--line);border-radius:12px;color:var(--mut);font-size:14.5px;font-weight:700;padding:11px 20px;cursor:pointer}';
   (document.head || document.documentElement).appendChild(pst);
   if (window.RN && typeof RN.push === 'function') {
@@ -191,6 +246,7 @@
       if (!ID || !KEY) { if (!el('rlf')) draw(); return; }
       var r = _render.apply(this, arguments);
       perms();
+      histBox();
       logoutBtn();
       return r;
     };
