@@ -28,7 +28,7 @@
 #rlnav{height:56px;padding:0 8px}
 #rlnav .brand{font-size:18px}
 #rlmenu{display:block}
-#rlnav nav{position:fixed;left:0;right:0;top:0;bottom:0;margin:0;background:#fff;overflow:auto;padding:64px 20px 32px;transform:translateX(-100%);transition:transform .2s;z-index:-1}
+#rlnav nav{position:fixed;left:0;right:0;top:56px;bottom:0;margin:0;background:#fff;overflow:auto;padding:12px 20px 32px;transform:translateX(-100%);transition:transform .2s;z-index:-1}
 #rlnav.open nav{transform:none}
 #rlnav.open{z-index:200}
 #rlnav.open #rlmenu{position:relative;z-index:2}
@@ -43,3 +43,4 @@
 }
 html,body{height:auto!important}
 .UtePc.RCETm.SwuGbc{margin-top:0!important}
+.zfr3Q.JYVBee[dir=rtl],.zfr3Q.OmQG5e[dir=rtl]{text-align:right!important}

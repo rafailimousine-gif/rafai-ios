@@ -176,6 +176,7 @@ open(OUT + '/img/logo.png', 'wb').write(open(os.path.join(os.path.dirname(os.pat
 urls = []
 for p, lg, title, cls, inner in docs:
     d = CFG['desc'].get(p) or CFG['desc'].get(lg, '')
+    title = CFG.get('titles', {}).get(p, title)
     canon = BASE + ('/' if p == '/home' else urllib.parse.quote(p))
     head = ['<!doctype html><html lang="%s"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' % lg,
             '<title>%s</title>' % html.escape(title), '<meta name="description" content="%s">' % html.escape(d, quote=True),

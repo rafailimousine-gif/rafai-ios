@@ -2,6 +2,8 @@
 (function () {
   var m = document.getElementById('rlmenu'), n = document.getElementById('rlnav');
   if (m) m.addEventListener('click', function () {
+    var w = n.querySelector('nav');
+    if (w) w.style.top = Math.max(0, n.getBoundingClientRect().bottom) + 'px';
     var o = n.classList.toggle('open');
     m.setAttribute('aria-expanded', o ? 'true' : 'false');
     document.body.style.overflow = o ? 'hidden' : '';
