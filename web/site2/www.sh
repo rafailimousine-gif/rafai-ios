@@ -21,7 +21,8 @@ cat > firebase.json <<J
 "rewrites":[{"source":"/","destination":"/home.html"}],
 "headers":[{"source":"/img/**","headers":[{"key":"Cache-Control","value":"public,max-age=31536000,immutable"}]},
 {"source":"/e/**","headers":[{"key":"Cache-Control","value":"public,max-age=3600"}]},
-{"source":"/css/**","headers":[{"key":"Cache-Control","value":"public,max-age=3600"}]}]}}
+{"source":"/css/**","headers":[{"key":"Cache-Control","value":"public,max-age=31536000,immutable"}]},
+{"source":"!/@(img|e|css)/**","headers":[{"key":"Cache-Control","value":"public,max-age=300"}]}]}}
 J
 SITE="${RL_SITE:-rafai-limousine-paris}"
 printf '{"projects":{"default":"rafai-suivi"},"targets":{"rafai-suivi":{"hosting":{"www":["%s"]}}}}' "$SITE" > .firebaserc
