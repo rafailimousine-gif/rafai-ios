@@ -237,6 +237,15 @@ yc = yc.replace("$('sub').textContent=t('sub');", "$('sub').textContent=t('sub')
 yc = yc.replace('<div class="av" aria-hidden="true">Y</div>', '<div class="av" aria-hidden="true" style="background:#fff url(%s) center/cover"></div>' % AV, 1)
 yc = yc.replace('</head>', '<style>.fab,.teaser{display:none!important}body.ph .app{border-radius:0;border:0}</style></head>', 1)
 YV = sha(yc)[:8]
+# contrôle : le code de l'agent doit rester du JavaScript valide après les remplacements
+import subprocess, tempfile
+for i, sc in enumerate(re.findall(r'<script>([\s\S]*?)</script>', yc)):
+    with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False, encoding='utf-8') as tf:
+        tf.write(sc)
+    r = subprocess.run(['node', '--check', tf.name], capture_output=True, text=True)
+    os.remove(tf.name)
+    if r.returncode:
+        raise SystemExit('ARRET script agent %d invalide : %s' % (i, r.stderr[:300]))
 for l, tag in (('en', 'en'), ('fr', 'fr'), ('zh', 'zh-CN'), ('ar', 'ar')):
     io.open(OUT + '/e/agent-%s-%s.html' % (l, YV), 'w', encoding='utf-8').write(
         yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1))
