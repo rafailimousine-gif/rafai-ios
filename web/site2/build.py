@@ -81,6 +81,23 @@ def rename(c):
         c = c.replace(x, y)
     return c
 
+# Carte de réservation sur ordinateur : plus grande, contenu centré dans la partie noire (le téléphone ne change pas)
+BIG = ('<style>@media (min-width:560px) and (min-height:600px){'
+       '.photo{display:flex;flex-direction:column;justify-content:center;padding-bottom:40px}'
+       '.photo p{font-size:clamp(30px,6vw,46px);line-height:1.04;padding:24px 30px 6px}'
+       '.photo p small{font-size:12.5px;letter-spacing:.18em;margin-bottom:12px}'
+       '.photo p span{font-size:16px;margin-top:12px}'
+       '.photo ul{padding:14px 30px 0;font-size:17px}'
+       '.photo li{gap:11px;margin-bottom:12px}.photo li::before{width:8px;height:8px}'
+       '.photo::after{left:30px;right:30px}'
+       '.card{padding:20px 24px 22px}'
+       '.tab{font-size:15.5px;padding:10px 20px}.note{font-size:13.5px;margin-top:4px}'
+       '#s1 .fields{gap:12px;margin-top:14px}#s1 .f{padding:11px 16px;border-radius:14px}'
+       '#s1 .f label{font-size:11px}#s1 .f input,#s1 .f select{font-size:18px}'
+       '#s1 .see{font-size:17px;padding:17px 18px;border-radius:14px}#s1 .duo{gap:12px;margin-top:12px}#s1 .duo .btn{padding:14px 16px}'
+       '}</style>')
+NBIG = [0]
+
 EMB = {}
 def embed(code):
     k = sha(code)
@@ -91,6 +108,9 @@ def embed(code):
     c = lazy_ads(c)
     c = re.sub(r'https?://(?:www\.)?rafai-limousine\.com(?=[/"\'])', '', c)
     c = rename(c)
+    if '<div class="photo">' in c and 'id="s1"' in c and '</head>' in c:
+        c = c.replace('</head>', BIG + '</head>', 1)
+        NBIG[0] += 1
     io.open(OUT + '/e/' + k + '.html', 'w', encoding='utf-8').write(c)
     EMB[k] = '/e/' + k + '.html'
     return EMB[k]
@@ -265,4 +285,5 @@ for d, _, fs in os.walk(OUT):
         if f.endswith('.html'):
             reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
 print('nom Youri restant', reste)
+print('cartes de reservation agrandies', NBIG[0])
 print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG))
