@@ -119,8 +119,6 @@ targets:
           UIApplicationSupportsMultipleScenes: false
         UILaunchScreen:
           UIColorName: LaunchBG
-          UIImageName: LaunchLogo
-          UIImageRespectsSafeAreaInsets: true
         UIBackgroundModes: [location, remote-notification]
         UIRequiredDeviceCapabilities: [arm64]
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]

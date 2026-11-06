@@ -101,7 +101,7 @@ final class DriverController: NSObject, ObservableObject {
     private let splashStart = Date()
     func hideSplash() {
         guard splash else { return }
-        let wait = 2.6 - Date().timeIntervalSince(splashStart)
+        let wait = 2.9 - Date().timeIntervalSince(splashStart)
         if wait > 0 {
             Task { @MainActor [weak self] in
                 try? await Task.sleep(nanoseconds: UInt64(wait * 1_000_000_000))
