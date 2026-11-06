@@ -123,12 +123,61 @@
     }).catch(function () { sendCode.on = 0; busy(0); msg('Pas de connexion internet. Réessayez.', true); });
   }
 
+  /* appli : une fois connecté, demander la localisation et les notifications dès l'ouverture (pas seulement au début d'une course) */
+  var LOC = { busy: 0, err: '' };
+  function locOk() { try { return localStorage.getItem('rl_loc_ok') === '1'; } catch (e) { return false; } }
+  function askLoc(auto) {
+    if (LOC.busy || !navigator.geolocation) return;
+    LOC.busy = 1; LOC.err = '';
+    navigator.geolocation.getCurrentPosition(function () {
+      LOC.busy = 0; try { localStorage.setItem('rl_loc_ok', '1'); } catch (e) {} perms();
+    }, function (e) {
+      LOC.busy = 0;
+      if (!auto) LOC.err = e && e.code === 1 ? 'Localisation refusée : ouvrez Réglages › RL Driver › Position et choisissez « Toujours ».' : 'Position introuvable pour l’instant. Réessayez dehors ou près d’une fenêtre.';
+      perms();
+    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+  }
+  function perms() {
+    var L = el('list'); if (!L || !window.__rlNative || !ID || !KEY) return;
+    var c = el('rlperm'), ps = (window.RN && RN.ps) || 'default', lo = locOk();
+    if (lo && ps === 'granted') { if (c) c.parentNode.removeChild(c); return; }
+    if (!c) { c = document.createElement('div'); c.id = 'rlperm'; c.className = 'rlpm'; }
+    if (L.firstChild !== c) L.insertBefore(c, L.firstChild);
+    var h = '<b>Préparez votre téléphone</b><span>Pour recevoir vos missions et partager la position de la voiture pendant les courses.</span>';
+    h += lo ? '<div class="rlpok">✓ Localisation activée</div>' : '<button type="button" class="rlb" id="rlploc">📍 Activer la localisation</button>';
+    if (ps === 'granted') h += '<div class="rlpok">✓ Notifications activées</div>';
+    else if (ps === 'denied') h += '<button type="button" class="rlb rlb2" id="rlpset">🔔 Autoriser les notifications dans Réglages</button>';
+    else h += '<button type="button" class="rlb" id="rlpnot">🔔 Activer les notifications</button>';
+    if (LOC.err) h += '<div class="rlperr">' + LOC.err + '</div><button type="button" class="rlb rlb2" id="rlpset2">Ouvrir les réglages</button>';
+    c.innerHTML = h;
+    if (el('rlploc')) el('rlploc').onclick = function () { askLoc(false); };
+    if (el('rlpnot')) el('rlpnot').onclick = function () { nat({ t: 'push' }); };
+    if (el('rlpset')) el('rlpset').onclick = function () { nat({ t: 'settings' }); };
+    if (el('rlpset2')) el('rlpset2').onclick = function () { nat({ t: 'settings' }); };
+  }
+  var pst = document.createElement('style');
+  pst.textContent = '.rlpm{margin:12px 0 16px;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--gold2);color:var(--txt);text-align:start}' +
+    '.rlpm b{display:block;font-size:17px;margin-bottom:4px}.rlpm span{display:block;color:var(--mut);font-size:14px;line-height:1.4;margin-bottom:6px}' +
+    '.rlpm .rlb{display:block;width:100%;height:50px;margin-top:10px;border:0;border-radius:14px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#111113;font-size:16px;font-weight:800}' +
+    '.rlpm .rlb2{background:transparent;border:1px solid var(--line);color:var(--txt)}' +
+    '.rlpok{margin-top:10px;color:var(--ok);font-weight:700;font-size:15px}.rlperr{margin-top:10px;color:var(--red);font-size:14px;line-height:1.4}';
+  (document.head || document.documentElement).appendChild(pst);
+  if (window.RN && typeof RN.push === 'function') {
+    var _push = RN.push;
+    RN.push = function () { var r = _push.apply(this, arguments); setTimeout(perms, 0); return r; };
+  }
+
   if (typeof render === 'function') {
     var _render = render;
     render = function () {
       if (!ID || !KEY) { if (!el('rlf')) draw(); return; }
-      return _render.apply(this, arguments);
+      var r = _render.apply(this, arguments);
+      perms();
+      return r;
     };
+  }
+  if (ID && KEY && window.__rlNative) {
+    setTimeout(function () { perms(); if (!locOk()) askLoc(true); }, 1200);
   }
   if (!ID || !KEY) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', draw); else draw();
