@@ -205,17 +205,20 @@ os.remove(yf)
 for x in ("function arm(){", "var L0='en'", '<html lang="en">', '</head>'):
     assert x in yc, x
 yc = yc.replace('function arm(){', 'function arm(){return;', 1)
-AGENT = {'en': ('AI agent', 'AI'), 'fr': ('Agent IA', 'IA'), 'zh': ('AI 助手', 'AI'), 'ar': ('وكيل الذكاء الاصطناعي', 'AI')}
+AGENT = {'en': 'AI agent', 'fr': 'Agent IA', 'zh': 'AI 助手', 'ar': 'وكيل الذكاء الاصطناعي'}
+avb = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'agent.webp'), 'rb').read()
+AV = '/img/agent-%s.webp' % sha(avb)[:8]
+open(OUT + AV, 'wb').write(avb)
 for x in ('<b>Youri</b>', '<div class="av" aria-hidden="true">Y</div>', "$('sub').textContent=t('sub');"):
     assert x in yc, x
 yc = yc.replace('<b>Youri</b>', '<b id="whoT">Agent</b>', 1)
-yc = yc.replace("$('sub').textContent=t('sub');", "$('sub').textContent=t('sub');$('whoT').textContent=%s[l]||'';" % json.dumps({k: v[0] for k, v in AGENT.items()}, ensure_ascii=False), 1)
+yc = yc.replace("$('sub').textContent=t('sub');", "$('sub').textContent=t('sub');$('whoT').textContent=%s[l]||'';" % json.dumps(AGENT, ensure_ascii=False), 1)
+yc = yc.replace('<div class="av" aria-hidden="true">Y</div>', '<div class="av" aria-hidden="true" style="background:#111113 url(%s) center/cover"></div>' % AV, 1)
 yc = yc.replace('</head>', '<style>.fab,.teaser{display:none!important}body.ph .app{border-radius:0;border:0}</style></head>', 1)
 YV = sha(yc)[:8]
 for l, tag in (('en', 'en'), ('fr', 'fr'), ('zh', 'zh-CN'), ('ar', 'ar')):
     io.open(OUT + '/e/agent-%s-%s.html' % (l, YV), 'w', encoding='utf-8').write(
-        yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1)
-          .replace('<div class="av" aria-hidden="true">Y</div>', '<div class="av" aria-hidden="true">%s</div>' % AGENT[l][1], 1))
+        yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1))
 open(OUT + '/img/logo.png', 'wb').write(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo.png'), 'rb').read())
 urls = []
 for p, lg, title, cls, inner in docs:
@@ -238,9 +241,9 @@ for p, lg, title, cls, inner in docs:
         head.append('<meta name="robots" content="noindex">')
     head.append('</head>')
     y = CFG['youri'][lg]
-    yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/agent-%s-%s.html">%s</button>'
+    yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/agent-%s-%s.html"><img src="%s" alt="" width="62" height="62"></button>'
           '<button type="button" id="rlytz"%s><b>%s</b><span>%s</span></button>'
-          % (html.escape(y['a'], quote=True), lg, YV, 'IA' if lg == 'fr' else 'AI', ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
+          % (html.escape(y['a'], quote=True), lg, YV, AV, ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
     page = ''.join(head) + '<body class="%s">' % cls + header(p, lg) + inner + yb + '<script src="/css/site.js" defer></script></body></html>'
     fn = OUT + ('/index.html' if False else p + '.html')
     os.makedirs(os.path.dirname(fn), exist_ok=True)

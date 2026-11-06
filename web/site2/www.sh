@@ -5,7 +5,7 @@ COMMIT="$1"
 B="https://raw.githubusercontent.com/rafailimousine-gif/rafai-ios/$COMMIT/web/site2"
 mkdir -p ~/site-www/tools ~/site-www/src ~/site-src
 cd ~/site-www/src
-for f in build.py rl-site.js site.css.add pages.json logo.png; do curl -sLf -o "$f" "$B/$f"; done
+for f in build.py rl-site.js site.css.add pages.json logo.png agent.webp; do curl -sLf -o "$f" "$B/$f"; done
 python3 -c "import bs4, PIL" 2>/dev/null || pip3 install --user --quiet beautifulsoup4 pillow
 [ -x ~/site-www/tools/node_modules/.bin/purgecss ] || npm i --silent --prefix ~/site-www/tools purgecss@6 >/dev/null 2>&1
 cd ~/site-www
