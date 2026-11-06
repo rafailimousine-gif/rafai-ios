@@ -185,6 +185,10 @@ for p, lg, title, cls, inner in docs:
             '<meta property="og:image" content="%s/img/og.jpg">' % BASE, '<link rel="icon" href="/img/logo.png">',
             '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s">' % fonts,
             '<link rel="stylesheet" href="/css/site.css">']
+    for g in CFG['groups']:
+        if p in g:
+            for l, q in zip(('en', 'fr', 'zh', 'ar'), g):
+                head.append('<link rel="alternate" hreflang="%s" href="%s">' % (l, BASE + ('/' if q == '/home' else urllib.parse.quote(q))))
     if TEST:
         head.append('<meta name="robots" content="noindex">')
     head.append('</head>')
