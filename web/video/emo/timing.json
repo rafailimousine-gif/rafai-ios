@@ -1,0 +1,215 @@
+{
+"S": [
+2.2,
+7.1,
+14.1,
+16.6,
+25.9,
+31.0,
+39.0,
+46.0,
+51.0,
+57.1,
+63.5
+],
+"D": [
+3.96,
+6.0,
+1.75,
+8.39,
+4.52,
+6.75,
+5.6,
+4.26,
+5.18,
+5.17,
+4.46
+],
+"T": 74.5,
+"C": [
+{
+"l": 0,
+"j": 0,
+"a": 2.32,
+"b": 3.73,
+"t": "Je m'appelle Yassine.",
+"h": 0
+},
+{
+"l": 0,
+"j": 1,
+"a": 3.73,
+"b": 5.94,
+"t": "Je suis chauffeur, comme vous.",
+"h": 0
+},
+{
+"l": 1,
+"j": 0,
+"a": 7.22,
+"b": 9.58,
+"t": "Pendant deux ans, jour et nuit,",
+"h": 0
+},
+{
+"l": 1,
+"j": 1,
+"a": 9.58,
+"b": 12.88,
+"t": "entre deux courses, j'ai construit quelque chose.",
+"h": 0
+},
+{
+"l": 2,
+"j": 0,
+"a": 14.22,
+"b": 15.63,
+"t": "Deux applications.",
+"h": 1
+},
+{
+"l": 3,
+"j": 0,
+"a": 16.72,
+"b": 20.69,
+"t": "La première, pour nos clients : Rafai Limousine.",
+"h": 0
+},
+{
+"l": 3,
+"j": 1,
+"a": 20.69,
+"b": 22.41,
+"t": "Réserver en une minute,",
+"h": 0
+},
+{
+"l": 3,
+"j": 2,
+"a": 22.41,
+"b": 24.77,
+"t": "et suivre son chauffeur en direct.",
+"h": 0
+},
+{
+"l": 4,
+"j": 0,
+"a": 26.02,
+"b": 28.97,
+"t": "La seconde, pour nous, les chauffeurs :",
+"h": 0
+},
+{
+"l": 4,
+"j": 1,
+"a": 28.97,
+"b": 30.2,
+"t": "RL Driver.",
+"h": 1
+},
+{
+"l": 5,
+"j": 0,
+"a": 31.12,
+"b": 33.06,
+"t": "Nos missions, nos trajets,",
+"h": 0
+},
+{
+"l": 5,
+"j": 1,
+"a": 33.06,
+"b": 35.39,
+"t": "notre bon de mission en cas de contrôle :",
+"h": 0
+},
+{
+"l": 5,
+"j": 2,
+"a": 35.39,
+"b": 37.53,
+"t": "tout est là, dans notre poche.",
+"h": 0
+},
+{
+"l": 6,
+"j": 0,
+"a": 39.12,
+"b": 41.37,
+"t": "Aujourd'hui, ces deux applications",
+"h": 0
+},
+{
+"l": 6,
+"j": 1,
+"a": 41.37,
+"b": 44.38,
+"t": "sont validées par Apple, sur l'App Store.",
+"h": 0
+},
+{
+"l": 7,
+"j": 0,
+"a": 46.12,
+"b": 49.09,
+"t": "Je voulais vous le dire, à vous, mes collègues :",
+"h": 0
+},
+{
+"l": 7,
+"j": 1,
+"a": 49.09,
+"b": 50.04,
+"t": "c'est possible.",
+"h": 1
+},
+{
+"l": 8,
+"j": 0,
+"a": 51.12,
+"b": 52.86,
+"t": "Possible de changer.",
+"h": 1
+},
+{
+"l": 8,
+"j": 1,
+"a": 52.86,
+"b": 55.96,
+"t": "Possible de créer sa propre indépendance.",
+"h": 1
+},
+{
+"l": 9,
+"j": 0,
+"a": 57.22,
+"b": 59.14,
+"t": "Tout est possible dans la vie.",
+"h": 0
+},
+{
+"l": 9,
+"j": 1,
+"a": 59.14,
+"b": 62.05,
+"t": "Main dans la main, on peut tous y arriver.",
+"h": 1
+},
+{
+"l": 10,
+"j": 0,
+"a": 63.62,
+"b": 64.8,
+"t": "Merci à vous.",
+"h": 1
+},
+{
+"l": 10,
+"j": 1,
+"a": 64.8,
+"b": 67.74,
+"t": "À très bientôt, sur Rafai Limousine.",
+"h": 1
+}
+]
+}

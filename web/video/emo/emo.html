@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<style>
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#0a0a0b;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+.L{position:absolute;inset:0}
+.ab{position:absolute}
+.bgi{position:absolute;inset:0;width:1080px;height:1920px;opacity:0}
+#glowbg{background:radial-gradient(ellipse 760px 640px at 50% 40%,rgba(201,160,99,.22),transparent 70%),radial-gradient(ellipse 900px 700px at 50% 108%,rgba(201,160,99,.10),transparent 70%)}
+#rays{left:50%;top:780px;width:2400px;height:2400px;margin:-1200px 0 0 -1200px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(243,217,166,.10) 0deg 4deg,transparent 4deg 15deg);-webkit-mask-image:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 25%,transparent 55%);opacity:0}
+.win{position:absolute;left:0;top:170px;width:1080px;height:1150px;overflow:hidden;opacity:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12%,#000 70%,transparent 100%)}
+.win img{position:absolute;left:0;top:0;transform-origin:0 0;filter:saturate(.88) contrast(1.06) brightness(.92)}
+.win .tn{position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,10,.10),rgba(10,10,12,.28))}
+#pt i{position:absolute;display:block;border-radius:50%;background:#F0CF8E}
+.gold{background:linear-gradient(180deg,#F3D9A6 0%,#E0BA6C 45%,#B68F3E 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cap{color:#E0BA6C;font-weight:700;letter-spacing:.3em;text-align:center;white-space:nowrap}
+.ctr{left:0;right:0;text-align:center}
+/* V1 */
+#v1em{left:50%;top:380px;width:300px;height:252px;margin-left:-150px}
+#v1em img{position:absolute;inset:0;width:100%;height:100%}
+#v1n{top:760px;font-family:"Inter Display",Inter;font-weight:200;font-size:178px;color:#F6F1E7;white-space:nowrap}
+#v1l{left:50%;top:1000px;height:3px;margin-left:0;background:linear-gradient(90deg,transparent,#E0BA6C,transparent)}
+#v1c{top:1040px;font-size:30px}
+/* V2 */
+#v2a{top:1150px;font-family:"Inter Display",Inter;font-weight:200;font-size:240px;line-height:1;letter-spacing:-.02em}
+#v2b{top:1405px;font-family:"Inter Display",Inter;font-weight:300;font-size:60px;color:#F3EFE6;letter-spacing:.02em}
+/* icônes */
+.ic{position:absolute;width:300px;height:300px;border-radius:22%;overflow:hidden;background:#0d0c0b;box-shadow:0 40px 90px -20px rgba(0,0,0,.9),0 0 0 2px rgba(224,186,108,.18)}
+.ic img{position:absolute;inset:0;width:100%;height:100%}
+.icl{position:absolute;width:420px;margin-left:-60px;text-align:center;color:#DCD4C4;font-weight:600;font-size:34px}
+.chk{position:absolute;width:86px;height:86px;border-radius:50%;background:linear-gradient(180deg,#F3D9A6,#B68F3E);box-shadow:0 10px 30px rgba(0,0,0,.6),0 0 30px rgba(224,186,108,.6);opacity:0}
+.chk svg{position:absolute;left:19px;top:21px;width:48px;height:44px}
+#icglow{left:50%;top:800px;width:1100px;height:900px;margin:-450px 0 0 -550px;border-radius:50%;background:radial-gradient(ellipse,rgba(224,186,108,.30),transparent 62%);opacity:0}
+#v3t{top:1110px;font-family:"Inter Display",Inter;font-weight:300;font-size:100px;color:#F6F1E7}
+#v7a{top:1110px;font-family:"Inter Display",Inter;font-weight:600;font-size:96px;color:#F6F1E7;letter-spacing:-.01em}
+#v7b{top:1250px;font-size:30px}
+/* V4 */
+#v4h{opacity:0}
+#v4i{left:50%;top:120px;width:120px;height:120px;margin-left:-60px;border-radius:22%;overflow:hidden;background:#0d0c0b}
+#v4i img{width:100%;height:100%}
+#v4t{top:262px;font-family:"Inter Display",Inter;font-weight:600;font-size:66px;color:#F6F1E7}
+#v4c{top:352px;font-size:27px}
+.card{position:absolute;left:0;top:0;width:402px;height:868px;border-radius:30px;overflow:hidden;transform-origin:50% 50%;box-shadow:0 50px 100px -20px rgba(0,0,0,.9)}
+.card img{width:402px;height:868px;display:block}
+/* V5 */
+#v5i{left:50%;top:420px;width:400px;height:400px;margin-left:-200px;border-radius:22%;overflow:hidden;background:#0d0c0b;box-shadow:0 50px 120px -20px rgba(0,0,0,.95),0 0 0 2px rgba(224,186,108,.22)}
+#v5i img{width:100%;height:100%}
+#v5a{top:930px;font-size:30px}
+#v5b{top:990px;font-family:"Inter Display",Inter;font-weight:600;font-size:150px;color:#F6F1E7;letter-spacing:-.02em}
+#v5c{top:1200px;font-weight:500;font-size:40px;color:#c9c2b5}
+/* V6 */
+#chips{left:0;right:0;top:150px;display:flex;justify-content:center;gap:18px}
+#chips span{display:block;padding:16px 30px;border-radius:999px;border:2px solid rgba(224,186,108,.55);color:#E0BA6C;font-weight:700;font-size:32px;opacity:0;white-space:nowrap}
+#chips span.on{background:linear-gradient(180deg,#E0BA6C,#B68F3E);color:#111113;border-color:transparent}
+#phw{left:220px;top:300px;width:640px;height:1279px;transform-origin:50% 50%}
+#phone{position:absolute;inset:0;border-radius:88px;background:#050506;border:2px solid #2c2c31;box-shadow:0 60px 120px -30px rgba(0,0,0,.85),0 0 0 8px rgba(255,255,255,.03),inset 0 0 0 2px #121214}
+#scr{position:absolute;left:14px;top:14px;width:608px;height:1247px;border-radius:74px;overflow:hidden;background:#111113}
+#cnt{position:absolute;left:0;top:0;width:780px;height:1600px;transform:scale(.7795);transform-origin:0 0}
+.sh{position:absolute;left:0;top:0;width:780px;height:1600px;opacity:0;overflow:hidden}
+.sh img{position:absolute;left:0;top:0;width:780px}
+#phglow{left:50%;top:940px;width:1200px;height:1400px;margin:-700px 0 0 -600px;border-radius:50%;background:radial-gradient(ellipse,rgba(224,186,108,.28),transparent 60%);opacity:0}
+/* titres V8-V10 */
+.hd{position:absolute;left:60px;right:60px;text-align:center;font-family:"Inter Display",Inter;color:#F6F1E7;opacity:0}
+#h8{top:1210px;font-weight:200;font-size:150px;letter-spacing:-.01em}
+#h9a{top:1150px;font-weight:300;font-size:92px}
+#h9b{top:1290px;font-weight:300;font-size:84px;line-height:1.12}
+#h10a{top:1220px;font-weight:300;font-size:118px}
+#h10b{top:1385px;font-weight:300;font-size:64px}
+/* V11 */
+#v11em{left:50%;top:300px;width:380px;height:320px;margin-left:-190px}
+#v11em img{position:absolute;inset:0;width:100%;height:100%}
+#v11n{top:660px;font-weight:600;font-size:40px;letter-spacing:.42em;color:#EDE6D8;text-indent:.42em}
+#v11l{left:50%;top:735px;width:360px;height:2px;margin-left:-180px;background:linear-gradient(90deg,transparent,#E0BA6C,transparent)}
+#v11a{top:820px;font-family:"Inter Display",Inter;font-weight:200;font-size:132px;color:#F6F1E7}
+#v11b{top:990px;font-family:"Inter Display",Inter;font-weight:300;font-size:66px}
+#v11r{left:0;right:0;top:1150px;height:300px}
+#v11r .ic{width:180px;height:180px}
+#v11r .icl{font-size:30px;width:360px;margin-left:-90px}
+#v11c{top:1500px;font-size:27px}
+#v11d{top:1580px;font-weight:500;font-size:31px;color:#a29b8f}
+/* sous-titres */
+#sub{position:absolute;left:70px;right:70px;top:1612px;text-align:center;color:#F6F1E7;font-weight:600;font-size:50px;line-height:1.28;text-shadow:0 2px 14px rgba(0,0,0,.9),0 0 3px rgba(0,0,0,.8)}
+#vig{background:radial-gradient(ellipse 80% 70% at 50% 45%,transparent 55%,rgba(0,0,0,.6) 100%)}
+#grain{background-image:url(a/grain.png);background-size:512px 512px;opacity:.06;mix-blend-mode:overlay}
+#black{background:#000}
+</style></head><body>
+<div class="L" id="bg0" style="background:#0a0a0b"></div>
+<img class="bgi" id="b_aero" src="a/aero-bg.jpg"><img class="bgi" id="b_hotel" src="a/hotel-bg.jpg"><img class="bgi" id="b_avec" src="a/avec-bg.jpg"><img class="bgi" id="b_team" src="a/team-bg.jpg">
+<div class="L" id="glowbg"></div>
+<div class="ab" id="rays"></div>
+<div class="win" id="w_aero"><img src="a/aero.jpg"><div class="tn"></div></div>
+<div class="win" id="w_hotel"><img src="a/hotel.jpg"><div class="tn"></div></div>
+<div class="win" id="w_avec"><img src="a/avec.jpg"><div class="tn"></div></div>
+<div class="win" id="w_team"><img src="a/team.jpg"><div class="tn"></div></div>
+<div class="L" id="pt"></div>
+
+<div class="L" id="v1">
+  <div class="ab" id="v1em"><img src="a/r.png"><img src="a/l.png"></div>
+  <div class="ab ctr" id="v1n">Yassine</div>
+  <div class="ab" id="v1l"></div>
+  <div class="ab ctr cap" id="v1c">SOCIÉTÉ RAFAI LIMOUSINE</div>
+</div>
+
+<div class="L" id="v2">
+  <div class="ab ctr gold" id="v2a">2 ans</div>
+  <div class="ab ctr" id="v2b">jour et nuit</div>
+</div>
+
+<div class="L" id="icp">
+  <div class="ab" id="icglow"></div>
+  <div class="ic" id="ica"><img src="a/icl.png"></div>
+  <div class="ic" id="icb"><img src="a/idr.png"></div>
+  <div class="chk" id="cka"><svg viewBox="0 0 48 44"><path d="M4 23 L17 36 L44 6" fill="none" stroke="#111113" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="chk" id="ckb"><svg viewBox="0 0 48 44"><path d="M4 23 L17 36 L44 6" fill="none" stroke="#111113" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="icl" id="la">Rafai Limousine</div>
+  <div class="icl" id="lb">RL Driver</div>
+  <div class="ab ctr" id="v3t">Deux applications.</div>
+  <div class="ab ctr" id="v7a">Validées par Apple</div>
+  <div class="ab ctr cap" id="v7b">DISPONIBLES SUR L’APP STORE</div>
+</div>
+
+<div class="L" id="v4">
+  <div class="L" id="v4h">
+    <div class="ab" id="v4i"><img src="a/icl.png"></div>
+    <div class="ab ctr" id="v4t">Rafai Limousine</div>
+    <div class="ab ctr cap" id="v4c">L’APPLI DES CLIENTS</div>
+  </div>
+  <div class="L" id="cards"></div>
+</div>
+
+<div class="L" id="v5">
+  <div class="ab" id="v5i"><img src="a/idr.png"></div>
+  <div class="ab ctr cap" id="v5a">POUR NOUS, LES CHAUFFEURS</div>
+  <div class="ab ctr" id="v5b">RL Driver</div>
+  <div class="ab ctr" id="v5c">L’appli des chauffeurs Rafai Limousine</div>
+</div>
+
+<div class="L" id="v6">
+  <div class="ab" id="phglow"></div>
+  <div class="ab" id="chips"><span id="cp0">Missions</span><span id="cp1">Trajets</span><span id="cp2">Bon de mission</span></div>
+  <div class="ab" id="phw"><div id="phone"><div id="scr"><div id="cnt">
+    <div class="sh" id="sc0"><img src="a/s-main.jpg"></div>
+    <div class="sh" id="sc1"><img src="a/s-detail.jpg"></div>
+    <div class="sh" id="sc2" style="background:#fff"><img id="docimg" src="a/doc-tall.png"></div>
+  </div></div></div></div>
+</div>
+
+<div class="hd" id="h8">C’est possible.</div>
+<div class="hd" id="h9a">Possible de changer.</div>
+<div class="hd" id="h9b">Possible de créer<br>sa propre <span class="gold">indépendance.</span></div>
+<div class="hd gold" id="h10a">Main dans la main,</div>
+<div class="hd" id="h10b">on peut tous y arriver.</div>
+
+<div class="L" id="v11">
+  <div class="ab" id="v11em"><img src="a/r.png"><img src="a/l.png"></div>
+  <div class="ab ctr" id="v11n">RAFAI LIMOUSINE</div>
+  <div class="ab" id="v11l"></div>
+  <div class="ab ctr" id="v11a">Merci à vous.</div>
+  <div class="ab ctr gold" id="v11b">À très bientôt.</div>
+  <div class="ab" id="v11r">
+    <div class="ic" id="ra" style="left:305px;top:0"><img src="a/icl.png"></div>
+    <div class="ic" id="rb" style="left:595px;top:0"><img src="a/idr.png"></div>
+    <div class="icl" id="rla" style="left:305px;top:205px">Rafai Limousine</div>
+    <div class="icl" id="rlb" style="left:595px;top:205px">RL Driver</div>
+  </div>
+  <div class="ab ctr cap" id="v11c">DISPONIBLES SUR L’APP STORE</div>
+  <div class="ab ctr" id="v11d">Yassine · Société Rafai Limousine</div>
+</div>
+
+<div id="sub"></div>
+<div class="L" id="vig"></div>
+<div class="L" id="grain"></div>
+<div class="L" id="black"></div>
+
+<script>
+const TL = __TIMING__;
+const $ = id => document.getElementById(id);
+const cl = (x, a, b) => Math.max(a, Math.min(b, x));
+const R = (t, a, b) => cl((t - a) / (b - a), 0, 1);               // rampe 0..1
+const E = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; // ease in-out
+const EO = x => 1 - Math.pow(1 - x, 3);                           // ease out
+const RE = (t, a, b) => E(R(t, a, b));
+const ROut = (t, a, b) => EO(R(t, a, b));
+const scene = (t, a, b, f = .35) => Math.min(R(t, a - f, a + f), 1 - R(t, b - f, b + f));
+const C = (l, j) => TL.C.find(c => c.l === l && c.j === j);
+const op = (el, v) => { el.style.opacity = v.toFixed(3); };
+function rise(el, t, a, d = .7, dy = 40, out = null) {   // apparition douce (opacité + montée)
+  let p = ROut(t, a, a + d), o = p;
+  if (out) o = Math.min(o, 1 - R(t, out[0], out[1]));
+  el.style.opacity = o.toFixed(3);
+  el.style.transform = 'translateY(' + ((1 - p) * dy).toFixed(1) + 'px)';
+}
+// scènes
+const V = {v1: [0, 6.8], v2: [6.8, 13.6], v3: [13.6, 16.2], v4: [16.2, 25.6], v5: [25.6, 30.6], v6: [30.6, 38.7], v7: [38.7, 45.7], v8: [45.7, 50.7], v9: [50.7, 56.7], v10: [56.7, 63.2], v11: [63.2, 80]};
+// images (fond flou + fenêtre)
+const IM = {
+  aero: {v: 'v2', iw: 1280, ih: 853, fx: [.66, .58], fy: [.5, .48], z: [1, 1.07]},
+  hotel: {v: 'v8', iw: 1200, ih: 960, fx: [.42, .48], fy: [.5, .5], z: [1.02, 1.09]},
+  avec: {v: 'v9', iw: 1280, ih: 720, fx: [.29, .33], fy: [.52, .5], z: [1, 1.05]},
+  team: {v: 'v10', iw: 1536, ih: 1024, fx: [.5, .5], fy: [.42, .46], z: [1.06, 1]},
+};
+// particules dorées
+const PT = [];
+(function () {
+  let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 28; i++) {
+    const e = document.createElement('i'), r = 3 + rnd() * 9;
+    e.style.width = e.style.height = (r * 2).toFixed(1) + 'px';
+    e.style.boxShadow = '0 0 ' + (r * 3).toFixed(0) + 'px ' + (r * 1.2).toFixed(0) + 'px rgba(240,207,142,.55)';
+    if (r > 8) e.style.filter = 'blur(2px)';
+    $('pt').appendChild(e);
+    PT.push({e, x: rnd() * 1080, y: rnd() * 2100, v: 14 + rnd() * 34, a: .15 + rnd() * .45, ph: rnd() * 6.28, sw: 10 + rnd() * 30});
+  }
+})();
+// cartes de l'appli client
+const CARDS = [0, 3, 2, 1, 4].map(k => { const d = document.createElement('div'); d.className = 'card'; d.innerHTML = '<img src="a/c' + k + '.jpg">'; $('cards').appendChild(d); return d; });
+
+function frame(t) {
+  // fonds
+  const dark = Math.max(scene(t, -1, V.v1[1]), scene(t, ...V.v3), scene(t, ...V.v5), scene(t, ...V.v6), scene(t, ...V.v7), scene(t, V.v11[0], 99), scene(t, ...V.v4));
+  op($('glowbg'), dark);
+  for (const k in IM) {
+    const m = IM[k], [a, b] = V[m.v], o = scene(t, a, b, .45), p = R(t, a - .45, b + .45);
+    op($('b_' + k), o); const w = $('w_' + k); op(w, o);
+    if (o > 0) {
+      const z = m.z[0] + (m.z[1] - m.z[0]) * p, fx = m.fx[0] + (m.fx[1] - m.fx[0]) * p, fy = m.fy[0] + (m.fy[1] - m.fy[0]) * p;
+      const sc = Math.max(1080 / m.iw, 1150 / m.ih) * z, W = m.iw * sc, H = m.ih * sc;
+      const x = cl(540 - fx * W, 1080 - W, 0), y = cl(575 - fy * H, 1150 - H, 0);
+      const im = w.firstElementChild; im.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + sc.toFixed(4) + ')';
+    }
+  }
+  // V2 : du jour vers la nuit
+  { const n = RE(t, 8.6, 11.6), tn = $('w_aero').lastElementChild;
+    tn.style.background = 'linear-gradient(180deg,rgba(' + Math.round(255 - 235 * n) + ',' + Math.round(170 - 135 * n) + ',' + Math.round(80 + 10 * n) + ',' + (.12 + .30 * n).toFixed(3) + '),rgba(10,10,12,' + (.15 + .2 * n).toFixed(3) + '))'; }
+  // particules
+  const pto = .25 + .5 * dark;
+  for (const q of PT) {
+    let y = ((q.y - q.v * t) % 2100 + 2100) % 2100 - 90, x = q.x + Math.sin(t * .5 + q.ph) * q.sw;
+    q.e.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+    q.e.style.opacity = (q.a * pto * (.65 + .35 * Math.sin(t * 1.7 + q.ph))).toFixed(3);
+  }
+  // V1 : ouverture
+  { const s = scene(t, -1, V.v1[1]); op($('v1'), s);
+    if (s > 0) {
+      const p = ROut(t, .5, 2.2); op($('v1em'), p); $('v1em').style.transform = 'scale(' + (.94 + .06 * p).toFixed(4) + ')';
+      const c0 = C(0, 0).a, n = ROut(t, c0 - .1, c0 + 1.4);
+      op($('v1n'), n); $('v1n').style.letterSpacing = (.14 - .14 * n).toFixed(4) + 'em';
+      const lw = 560 * RE(t, c0 + .6, c0 + 1.8); $('v1l').style.width = lw.toFixed(1) + 'px'; $('v1l').style.marginLeft = (-lw / 2).toFixed(1) + 'px';
+      rise($('v1c'), t, C(0, 1).a - .2, .9, 24);
+    } }
+  // V2 : 2 ans, jour et nuit
+  { const s = scene(t, ...V.v2); op($('v2'), s);
+    if (s > 0) { const a = C(1, 0).a; rise($('v2a'), t, a + .45, 1.1, 50); $('v2a').style.letterSpacing = (.06 - .08 * ROut(t, a + .45, a + 1.8)).toFixed(4) + 'em'; rise($('v2b'), t, a + 1.35, .9, 30); } }
+  // paire d'icônes (V3 puis V7)
+  { const s3 = scene(t, ...V.v3), s7 = scene(t, ...V.v7), s = Math.max(s3, s7); op($('icp'), s);
+    if (s > 0) {
+      const ia = $('ica'), ib = $('icb');
+      let pa, pb, base;
+      if (s3 >= s7) { base = V.v3[0]; } else { base = V.v7[0]; }
+      pa = ROut(t, base + .15, base + 1.0); pb = ROut(t, base + .4, base + 1.25);
+      const y0 = 660;
+      ia.style.left = '200px'; ib.style.left = '580px';
+      ia.style.top = (y0 + (1 - pa) * 90).toFixed(1) + 'px'; op(ia, pa);
+      ib.style.top = (y0 + (1 - pb) * 90).toFixed(1) + 'px'; op(ib, pb);
+      $('la').style.left = '200px'; $('lb').style.left = '580px'; $('la').style.top = $('lb').style.top = (y0 + 330) + 'px';
+      const lt = s3 >= s7 ? C(2, 0).a + .7 : base + .9;
+      rise($('la'), t, lt, .7, 16); rise($('lb'), t, lt + .15, .7, 16);
+      op($('icglow'), .6 + .4 * Math.sin(t * 1.3) * .5 + .2 * R(t, 41, 43));
+      // V3
+      rise($('v3t'), t, C(2, 0).a - .05, .9, 30, [V.v3[1] - .5, V.v3[1]]);
+      $('v3t').style.opacity = (parseFloat($('v3t').style.opacity) * (s3 >= s7 ? 1 : 0)).toFixed(3);
+      // V7 : coches + validées
+      const v7 = s7 > s3, k = C(6, 1).a;
+      const ca = v7 ? R(t, k + .25, k + .55) : 0, cb = v7 ? R(t, k + .45, k + .75) : 0;
+      $('cka').style.left = '440px'; $('cka').style.top = (y0 - 30) + 'px'; $('ckb').style.left = '820px'; $('ckb').style.top = (y0 - 30) + 'px';
+      const pop = x => x <= 0 ? 0 : (x < .7 ? x / .7 * 1.18 : 1.18 - .18 * (x - .7) / .3);
+      op($('cka'), Math.min(1, ca * 3)); $('cka').style.transform = 'scale(' + pop(ca).toFixed(3) + ')';
+      op($('ckb'), Math.min(1, cb * 3)); $('ckb').style.transform = 'scale(' + pop(cb).toFixed(3) + ')';
+      if (v7) { rise($('v7a'), t, k + .2, .9, 30); rise($('v7b'), t, k + 1.5, .9, 20); $('la').style.top = $('lb').style.top = (y0 + 330) + 'px'; }
+      else { op($('v7a'), 0); op($('v7b'), 0); }
+    } }
+  op($('rays'), .9 * scene(t, ...V.v7) * (.4 + .6 * R(t, C(6, 1).a, C(6, 1).a + 1.2)));
+  $('rays').style.transform = 'rotate(' + (t * 4).toFixed(2) + 'deg)';
+  // V4 : appli client
+  { const s = scene(t, ...V.v4); op($('v4'), s);
+    if (s > 0) {
+      rise($('v4h'), t, V.v4[0] + .1, .9, 24);
+      const c1 = C(3, 1).a, c2 = C(3, 2).a;
+      const ci = RE(t, c1 - .75, c1 + .05) + RE(t, c2 - .65, c2 + .15) + .12 * R(t, V.v4[0], V.v4[1]) - .06;
+      const enter = ROut(t, V.v4[0], V.v4[0] + 1.2);
+      CARDS.forEach((d, i) => {
+        const off = i - ci, ad = Math.abs(off), sc = 1.12 - .2 * Math.min(1, ad), x = 540 + off * 470 - 201, y = 470 + (1 - enter) * 120;
+        d.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + sc.toFixed(4) + ')';
+        d.style.opacity = (enter * (1 - .55 * Math.min(1, ad))).toFixed(3);
+        d.style.zIndex = String(10 - Math.round(ad * 2));
+      });
+    } }
+  // V5 : RL Driver
+  { const s = scene(t, ...V.v5); op($('v5'), s);
+    if (s > 0) {
+      const p = ROut(t, V.v5[0] + .1, V.v5[0] + 1.3); op($('v5i'), p); $('v5i').style.transform = 'translateY(' + ((1 - p) * 60).toFixed(1) + 'px) scale(' + (.9 + .1 * p + .03 * R(t, V.v5[0], V.v5[1])).toFixed(4) + ')';
+      rise($('v5a'), t, C(4, 0).a + 1.2, .8, 20);
+      rise($('v5b'), t, C(4, 1).a - .1, .9, 40); $('v5b').style.letterSpacing = (.04 - .06 * ROut(t, C(4, 1).a - .1, C(4, 1).a + 1.2)).toFixed(4) + 'em';
+      rise($('v5c'), t, C(4, 1).a + .5, .9, 20);
+    } }
+  // V6 : téléphone
+  { const s = scene(t, ...V.v6); op($('v6'), s);
+    if (s > 0) {
+      const a = C(5, 0).a, b = C(5, 1).a, c = C(5, 2).a, mid = a + (b - a) * .5;
+      const ent = ROut(t, V.v6[0], V.v6[0] + 1.1), big = RE(t, c, c + 1.5);
+      $('phw').style.transform = 'translateY(' + ((1 - ent) * 160 + 30 * big).toFixed(1) + 'px) scale(' + (.95 + .05 * big).toFixed(4) + ')';
+      op($('phw'), ent);
+      op($('phglow'), .35 + .65 * big);
+      const tc = [a - .1, mid - .1, b - .1];
+      ['cp0', 'cp1', 'cp2'].forEach((id, i) => { const e = $(id); rise(e, t, tc[i], .5, 14); e.className = (t >= tc[i] && (i === 2 || t < tc[i + 1])) && t < c ? 'on' : ''; });
+      op($('sc0'), 1 - R(t, mid - .2, mid + .15));
+      op($('sc1'), Math.min(R(t, mid - .2, mid + .15), 1 - R(t, b, b + .35)));
+      op($('sc2'), R(t, b, b + .35));
+      $('docimg').style.transform = 'translateY(' + (-535 * RE(t, b + .5, b + 2.4)).toFixed(1) + 'px)';
+    } }
+  // V8 – V10 : titres sur photo
+  { const k = C(7, 1).a; rise($('h8'), t, k - .15, 1, 30, [V.v8[1] - .45, V.v8[1] + .1]); $('h8').style.letterSpacing = (.05 - .06 * ROut(t, k - .15, k + 1.4)).toFixed(4) + 'em'; }
+  { const a = C(8, 0).a, b = C(8, 1).a, out = [V.v9[1] - .45, V.v9[1] + .1];
+    rise($('h9a'), t, a - .1, .8, 26, out); if (t > b) $('h9a').style.opacity = (parseFloat($('h9a').style.opacity) * (1 - .55 * R(t, b - .1, b + .5))).toFixed(3);
+    rise($('h9b'), t, b - .1, .9, 26, out); }
+  { const a = C(9, 1).a, out = [V.v10[1] - .45, V.v10[1] + .1]; rise($('h10a'), t, a - .1, 1, 30, out); rise($('h10b'), t, a + 1.0, .9, 20, out); }
+  // V11 : fin
+  { const s = scene(t, V.v11[0], 99); op($('v11'), s);
+    if (s > 0) {
+      const a = V.v11[0], p = ROut(t, a + .1, a + 1.6); op($('v11em'), p); $('v11em').style.transform = 'scale(' + (.92 + .08 * p).toFixed(4) + ')';
+      rise($('v11n'), t, a + .6, 1, 16); const lw = RE(t, a + .9, a + 2.0); $('v11l').style.transform = 'scaleX(' + lw.toFixed(3) + ')';
+      rise($('v11a'), t, C(10, 0).a - .1, 1, 30); rise($('v11b'), t, C(10, 1).a - .05, 1, 24);
+      const r0 = C(10, 1).a + 1.6; rise($('ra'), t, r0, .8, 30); rise($('rb'), t, r0 + .2, .8, 30); rise($('rla'), t, r0 + .4, .7, 12); rise($('rlb'), t, r0 + .55, .7, 12);
+      rise($('v11c'), t, r0 + 1.2, .9, 14); rise($('v11d'), t, r0 + 2.0, 1, 14);
+    } }
+  // sous-titres
+  { let txt = '', o = 0;
+    for (const c of TL.C) { if (c.h) continue; if (t >= c.a - .12 && t < c.b + .25) { txt = c.t; o = Math.min(R(t, c.a - .12, c.a + .08), 1 - R(t, c.b + .05, c.b + .25)); break; } }
+    txt = txt.replace(/ ([:;?!])/g, '\u00a0$1'); const sb = $('sub'); if (sb.textContent !== txt) sb.textContent = txt; op(sb, o); }
+  // grain + noir
+  const g = Math.floor(t * 30); $('grain').style.backgroundPosition = ((g * 137) % 512) + 'px ' + ((g * 251) % 512) + 'px';
+  op($('black'), Math.max(1 - R(t, 0, 1.1), R(t, TL.T - 1.6, TL.T - .1)));
+}
+frame(0);
+</script>
+</body></html>
