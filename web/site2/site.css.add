@@ -1,0 +1,43 @@
+#rlbar{display:flex;align-items:center;justify-content:center;gap:16px;background:#0c0c0e;color:#fff;padding:8px 16px;font:500 14px/1.35 Manrope,system-ui,sans-serif}
+#rlbar p{margin:0}
+#rlbar a{flex:none;color:#fff;border:1px solid #fff;border-radius:4px;padding:6px 20px;font-size:13px;text-decoration:none}
+#rlnav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px;height:64px;padding:0 24px;background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.06);font:500 15px/1 Manrope,system-ui,sans-serif;color:#111}
+#rlnav .brand{display:flex;align-items:center;gap:12px;color:#111;text-decoration:none;font-size:20px}
+#rlnav .brand img{border-radius:6px}
+#rlnav nav{margin-left:auto}
+#rlnav ul{list-style:none;margin:0;padding:0}
+#rlnav nav>ul{display:flex;align-items:center;gap:22px}
+#rlnav li{position:relative}
+#rlnav a{color:#111;text-decoration:none}
+#rlnav nav a.on{font-weight:800}
+#rlnav li.dd>button{width:18px;height:18px;margin-left:2px;padding:0;border:0;background:none;cursor:pointer;vertical-align:middle;position:relative}
+#rlnav li.dd>button:after{content:"";position:absolute;left:5px;top:3px;width:6px;height:6px;border:solid #111;border-width:0 2px 2px 0;transform:rotate(45deg)}
+#rlnav li ul{display:none;position:absolute;top:100%;left:0;min-width:210px;margin-top:10px;padding:8px 0;background:#fff;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+#rlnav li ul a{display:block;padding:10px 16px;white-space:nowrap}
+#rlnav li ul li.dd>a{padding-right:30px}
+#rlnav li ul li.dd>button{position:absolute;right:8px;top:9px}
+#rlnav li ul ul{position:static;margin:0 0 0 12px;box-shadow:none;padding:0}
+#rlnav li.open>ul{display:block}
+@media (hover:hover) and (min-width:900px){#rlnav nav>ul>li:hover>ul{display:block}#rlnav li ul:before{content:"";position:absolute;left:0;right:0;top:-12px;height:12px}}
+#rlmenu{display:none;width:40px;height:40px;padding:10px;border:0;background:none;cursor:pointer}
+#rlmenu i{display:block;height:2px;margin:4px 0;background:#111}
+.rlif{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+@media (max-width:899px){
+#rlbar{gap:10px;padding:8px 12px;font-size:12.5px}
+#rlbar a{padding:6px 12px}
+#rlnav{height:56px;padding:0 8px}
+#rlnav .brand{font-size:18px}
+#rlmenu{display:block}
+#rlnav nav{position:fixed;left:0;right:0;top:0;bottom:0;margin:0;background:#fff;overflow:auto;padding:64px 20px 32px;transform:translateX(-100%);transition:transform .2s;z-index:-1}
+#rlnav.open nav{transform:none}
+#rlnav.open{z-index:200}
+#rlnav.open #rlmenu{position:relative;z-index:2}
+#rlnav nav>ul{display:block}
+#rlnav nav li{padding:0}
+#rlnav nav a{display:inline-block;padding:13px 0;font-size:17px}
+#rlnav li.dd>button{position:absolute;right:0;top:6px;width:40px;height:40px}
+#rlnav li.dd>button:after{left:16px;top:13px}
+#rlnav li ul{position:static;box-shadow:none;margin:0 0 0 14px;padding:0;min-width:0}
+#rlnav li ul a{padding:11px 0;white-space:normal}
+#rlnav li ul li.dd>button{top:2px}
+}

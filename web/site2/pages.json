@@ -1,0 +1,302 @@
+{
+"pages": [
+"/home",
+"/about",
+"/contact",
+"/cgv",
+"/confidentialite",
+"/mentions-legales",
+"/fleet",
+"/fleet/sedan",
+"/fleet/first-sedan",
+"/fleet/mpv",
+"/fleet/grand-touring",
+"/services",
+"/services/airport-transfers",
+"/services/business-travel",
+"/services/weddings-events",
+"/services/hourly-hire",
+"/fr",
+"/fr/a-propos",
+"/fr/contact",
+"/fr/flotte",
+"/fr/flotte/berline",
+"/fr/flotte/berline-first",
+"/fr/flotte/van",
+"/fr/flotte/grand-tourisme",
+"/fr/services",
+"/fr/services/transferts-aeroport",
+"/fr/services/voyages-affaires",
+"/fr/services/mariages-evenements",
+"/fr/services/mise-a-disposition",
+"/zh",
+"/zh/zh-about",
+"/zh/zh-contact",
+"/zh/zh-fleet",
+"/zh/zh-fleet/轿车",
+"/zh/zh-fleet/豪华轿车",
+"/zh/zh-fleet/商务mpv",
+"/zh/zh-fleet/豪华长途",
+"/zh/zh-services",
+"/zh/zh-services/机场接送",
+"/zh/zh-services/商务出行",
+"/zh/zh-services/婚礼与活动",
+"/zh/zh-services/按小时包车",
+"/ar",
+"/ar/ar-about",
+"/ar/ar-contact",
+"/ar/ar-fleet",
+"/ar/ar-fleet/سيدان",
+"/ar/ar-fleet/سيدان-فاخرة",
+"/ar/ar-fleet/فان",
+"/ar/ar-fleet/الرحلات-الطويلة",
+"/ar/ar-services",
+"/ar/ar-services/التوصيل-إلى-المطار",
+"/ar/ar-services/رحلات-الأعمال",
+"/ar/ar-services/حفلات-الزفاف-والمناسبات",
+"/ar/ar-services/الحجز-بالساعة"
+],
+"nav": [
+{
+"t": "Home",
+"u": "/home"
+},
+{
+"t": "Français",
+"u": "/fr",
+"c": [
+{
+"t": "Flotte",
+"u": "/fr/flotte",
+"c": [
+{
+"t": "Berline",
+"u": "/fr/flotte/berline"
+},
+{
+"t": "Berline First",
+"u": "/fr/flotte/berline-first"
+},
+{
+"t": "Van",
+"u": "/fr/flotte/van"
+},
+{
+"t": "Grand Tourisme",
+"u": "/fr/flotte/grand-tourisme"
+}
+]
+},
+{
+"t": "Services",
+"u": "/fr/services",
+"c": [
+{
+"t": "Transferts aéroport",
+"u": "/fr/services/transferts-aeroport"
+},
+{
+"t": "Voyages d'affaires",
+"u": "/fr/services/voyages-affaires"
+},
+{
+"t": "Mariages et événements",
+"u": "/fr/services/mariages-evenements"
+},
+{
+"t": "Mise à disposition",
+"u": "/fr/services/mise-a-disposition"
+}
+]
+},
+{
+"t": "À propos",
+"u": "/fr/a-propos"
+},
+{
+"t": "Contact",
+"u": "/fr/contact"
+}
+]
+},
+{
+"t": "中文",
+"u": "/zh",
+"c": [
+{
+"t": "车队",
+"u": "/zh/zh-fleet",
+"c": [
+{
+"t": "轿车",
+"u": "/zh/zh-fleet/轿车"
+},
+{
+"t": "豪华轿车",
+"u": "/zh/zh-fleet/豪华轿车"
+},
+{
+"t": "商务MPV",
+"u": "/zh/zh-fleet/商务mpv"
+},
+{
+"t": "豪华长途",
+"u": "/zh/zh-fleet/豪华长途"
+}
+]
+},
+{
+"t": "服务",
+"u": "/zh/zh-services",
+"c": [
+{
+"t": "机场接送",
+"u": "/zh/zh-services/机场接送"
+},
+{
+"t": "商务出行",
+"u": "/zh/zh-services/商务出行"
+},
+{
+"t": "婚礼与活动",
+"u": "/zh/zh-services/婚礼与活动"
+},
+{
+"t": "按小时包车",
+"u": "/zh/zh-services/按小时包车"
+}
+]
+},
+{
+"t": "关于我们",
+"u": "/zh/zh-about"
+},
+{
+"t": "联系我们",
+"u": "/zh/zh-contact"
+}
+]
+},
+{
+"t": "العربية",
+"u": "/ar",
+"c": [
+{
+"t": "الأسطول",
+"u": "/ar/ar-fleet",
+"c": [
+{
+"t": "سيدان",
+"u": "/ar/ar-fleet/سيدان"
+},
+{
+"t": "سيدان فاخرة",
+"u": "/ar/ar-fleet/سيدان-فاخرة"
+},
+{
+"t": "فان",
+"u": "/ar/ar-fleet/فان"
+},
+{
+"t": "الرحلات الطويلة",
+"u": "/ar/ar-fleet/الرحلات-الطويلة"
+}
+]
+},
+{
+"t": "الخدمات",
+"u": "/ar/ar-services",
+"c": [
+{
+"t": "التوصيل إلى المطار",
+"u": "/ar/ar-services/التوصيل-إلى-المطار"
+},
+{
+"t": "رحلات الأعمال",
+"u": "/ar/ar-services/رحلات-الأعمال"
+},
+{
+"t": "حفلات الزفاف والمناسبات",
+"u": "/ar/ar-services/حفلات-الزفاف-والمناسبات"
+},
+{
+"t": "الحجز بالساعة",
+"u": "/ar/ar-services/الحجز-بالساعة"
+}
+]
+},
+{
+"t": "من نحن",
+"u": "/ar/ar-about"
+},
+{
+"t": "اتصل بنا",
+"u": "/ar/ar-contact"
+}
+]
+},
+{
+"t": "Fleet",
+"u": "/fleet",
+"c": [
+{
+"t": "Sedan",
+"u": "/fleet/sedan"
+},
+{
+"t": "First Sedan",
+"u": "/fleet/first-sedan"
+},
+{
+"t": "MPV",
+"u": "/fleet/mpv"
+},
+{
+"t": "Grand Touring",
+"u": "/fleet/grand-touring"
+}
+]
+},
+{
+"t": "Services",
+"u": "/services",
+"c": [
+{
+"t": "Airport transfers",
+"u": "/services/airport-transfers"
+},
+{
+"t": "Business travel",
+"u": "/services/business-travel"
+},
+{
+"t": "Weddings & events",
+"u": "/services/weddings-events"
+},
+{
+"t": "Hourly hire",
+"u": "/services/hourly-hire"
+}
+]
+},
+{
+"t": "About",
+"u": "/about"
+},
+{
+"t": "Contact",
+"u": "/contact"
+}
+],
+"bar": {
+"t": "📱 Notre appli est disponible sur iPhone, Android bientôt · Our app is now on iPhone, Android coming soon",
+"b": "App Store",
+"u": "https://apps.apple.com/fr/app/rafai-limousine/id6829341896"
+},
+"desc": {
+"en": "Private chauffeur in Paris: airport transfers, business travel, weddings and hourly hire. Fixed price, Mercedes and Range Rover, 24/7.",
+"fr": "Chauffeur privé à Paris : transferts aéroport, voyages d'affaires, mariages et mise à disposition. Prix fixe, Mercedes et Range Rover, 7j/7 et 24h/24.",
+"zh": "巴黎私人司机服务：机场接送、商务出行、婚礼活动与按小时包车。固定价格，奔驰与路虎车型，全天候服务。",
+"ar": "سائق خاص في باريس: التوصيل من وإلى المطار، رحلات الأعمال، حفلات الزفاف والحجز بالساعة. سعر ثابت، مرسيدس ورينج روفر، على مدار الساعة."
+}
+}
