@@ -191,7 +191,7 @@ function rise(el, t, a, d = .7, dy = 40, out = null) {   // apparition douce (op
   el.style.transform = 'translateY(' + ((1 - p) * dy).toFixed(1) + 'px)';
 }
 // scènes
-const V = {v1: [0, 6.8], v2: [6.8, 13.6], v3: [13.6, 16.2], v4: [16.2, 25.6], v5: [25.6, 30.6], v6: [30.6, 38.7], v7: [38.7, 45.7], v8: [45.7, 50.7], v9: [50.7, 56.7], v10: [56.7, 63.2], v11: [63.2, 80]};
+const V = {}; for (let k = 1; k <= 11; k++) V['v' + k] = [k === 1 ? 0 : TL.S[k - 1] - 0.35, k === 11 ? 999 : TL.S[k] - 0.35];
 // images (fond flou + fenêtre)
 const IM = {
   aero: {v: 'v2', iw: 1280, ih: 853, fx: [.66, .58], fy: [.5, .48], z: [1, 1.07]},
@@ -230,7 +230,7 @@ function frame(t) {
     }
   }
   // V2 : du jour vers la nuit
-  { const n = RE(t, 8.6, 11.6), tn = $('w_aero').lastElementChild;
+  { const n = RE(t, C(1, 0).a + 1.0, C(1, 1).a + 0.6), tn = $('w_aero').lastElementChild;
     tn.style.background = 'linear-gradient(180deg,rgba(' + Math.round(255 - 235 * n) + ',' + Math.round(170 - 135 * n) + ',' + Math.round(80 + 10 * n) + ',' + (.12 + .30 * n).toFixed(3) + '),rgba(10,10,12,' + (.15 + .2 * n).toFixed(3) + '))'; }
   // particules
   const pto = .25 + .5 * dark;
@@ -242,7 +242,7 @@ function frame(t) {
   // V1 : ouverture
   { const s = scene(t, -1, V.v1[1]); op($('v1'), s);
     if (s > 0) {
-      const p = ROut(t, .5, 2.2); op($('v1em'), p); $('v1em').style.transform = 'scale(' + (.94 + .06 * p).toFixed(4) + ')';
+      const p = ROut(t, .3, TL.S[0]); op($('v1em'), p); $('v1em').style.transform = 'scale(' + (.94 + .06 * p).toFixed(4) + ')';
       const c0 = C(0, 0).a, n = ROut(t, c0 - .1, c0 + 1.4);
       op($('v1n'), n); $('v1n').style.letterSpacing = (.14 - .14 * n).toFixed(4) + 'em';
       const lw = 560 * RE(t, c0 + .6, c0 + 1.8); $('v1l').style.width = lw.toFixed(1) + 'px'; $('v1l').style.marginLeft = (-lw / 2).toFixed(1) + 'px';
@@ -265,7 +265,7 @@ function frame(t) {
       $('la').style.left = '200px'; $('lb').style.left = '580px'; $('la').style.top = $('lb').style.top = (y0 + 330) + 'px';
       const lt = s3 >= s7 ? C(2, 0).a + .7 : base + .9;
       rise($('la'), t, lt, .7, 16); rise($('lb'), t, lt + .15, .7, 16);
-      op($('icglow'), .6 + .4 * Math.sin(t * 1.3) * .5 + .2 * R(t, 41, 43));
+      op($('icglow'), .6 + .4 * Math.sin(t * 1.3) * .5 + .2 * R(t, C(6, 1).a, C(6, 1).a + 2));
       // V3
       rise($('v3t'), t, C(2, 0).a - .05, .9, 30, [V.v3[1] - .5, V.v3[1]]);
       $('v3t').style.opacity = (parseFloat($('v3t').style.opacity) * (s3 >= s7 ? 1 : 0)).toFixed(3);
