@@ -271,7 +271,7 @@ for p, lg, title, cls, inner in docs:
         head.append('<meta name="robots" content="noindex">')
     head.append('</head>')
     y = CFG['youri'][lg]
-    yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/agent-%s-%s.html"><img src="%s" alt="" width="62" height="62"></button>'
+    yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/agent-%s-%s.html"><img src="%s" alt="" width="62" height="62"><span class="rlwave" aria-hidden="true">👋</span></button>'
           '<button type="button" id="rlytz"%s><b>%s</b><span>%s</span></button>'
           % (html.escape(y['a'], quote=True), lg, YV, AV, ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
     page = ''.join(head) + '<body class="%s">' % cls + header(p, lg) + inner + yb + '<script src="/css/site.js" defer></script></body></html>'
