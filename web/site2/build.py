@@ -234,7 +234,7 @@ for x in ('<b>Youri</b>', '<div class="av" aria-hidden="true">Y</div>', "$('sub'
     assert x in yc, x
 yc = yc.replace('<b>Youri</b>', '<b id="whoT">Agent</b>', 1)
 yc = yc.replace("$('sub').textContent=t('sub');", "$('sub').textContent=t('sub');$('whoT').textContent=%s[l]||'';" % json.dumps(AGENT, ensure_ascii=False), 1)
-yc = yc.replace('<div class="av" aria-hidden="true">Y</div>', '<div class="av" aria-hidden="true" style="background:#111113 url(%s) center/cover"></div>' % AV, 1)
+yc = yc.replace('<div class="av" aria-hidden="true">Y</div>', '<div class="av" aria-hidden="true" style="background:#fff url(%s) center/cover"></div>' % AV, 1)
 yc = yc.replace('</head>', '<style>.fab,.teaser{display:none!important}body.ph .app{border-radius:0;border:0}</style></head>', 1)
 YV = sha(yc)[:8]
 for l, tag in (('en', 'en'), ('fr', 'fr'), ('zh', 'zh-CN'), ('ar', 'ar')):
