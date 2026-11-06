@@ -442,42 +442,42 @@
 },
 "youri": {
 "en": {
-"a": "Chat with our AI agent",
+"a": "Chat with the Agent AI Concierge",
 "t1": "Need a hand?",
-"t2": "Your AI agent"
+"t2": "Your Agent AI Concierge"
 },
 "fr": {
-"a": "Discuter avec notre agent IA",
+"a": "Discuter avec l’Agent AI Concierge",
 "t1": "Besoin d’un coup de main ?",
-"t2": "Votre agent IA"
+"t2": "Votre Agent AI Concierge"
 },
 "zh": {
-"a": "与 AI 助手聊天",
+"a": "与 Agent AI Concierge 聊天",
 "t1": "需要帮助吗？",
-"t2": "您的 AI 助手"
+"t2": "您的 Agent AI Concierge"
 },
 "ar": {
-"a": "تحدثوا مع وكيل الذكاء الاصطناعي",
+"a": "تحدثوا مع Agent AI Concierge",
 "t1": "هل تحتاجون مساعدة؟",
-"t2": "مساعدكم بالذكاء الاصطناعي"
+"t2": "Agent AI Concierge في خدمتكم"
 }
 },
 "rename": [
 [
 "Youri prepares your booking.",
-"Our AI agent prepares your booking."
+"The Agent AI Concierge prepares your booking."
 ],
 [
 "Hello, I'm Youri, the booking assistant of Rafai Limousine.",
-"Hello, I'm the AI agent of Rafai Limousine."
+"Hello, I'm the Agent AI Concierge of Rafai Limousine."
 ],
 [
 "I’m Youri. I can book",
-"I’m your AI agent. I can book"
+"I’m the Agent AI Concierge. I can book"
 ],
 [
 "Hello, I am Youri, your Rafai Limousine concierge.",
-"Hello, I am your Rafai Limousine AI agent."
+"Hello, I am the Agent AI Concierge of Rafai Limousine."
 ],
 [
 "Chat with Youri, our booking assistant, or contact us directly.",
@@ -485,7 +485,7 @@
 ],
 [
 "Chat with Youri",
-"Chat with our AI agent"
+"Chat with the Agent AI Concierge"
 ],
 [
 "or with Youri, our booking assistant, 24/7",
@@ -505,19 +505,19 @@
 ],
 [
 "Youri prépare votre réservation.",
-"Notre agent IA prépare votre réservation."
+"L’Agent AI Concierge prépare votre réservation."
 ],
 [
 "Bonjour, je suis Youri, l'assistant de réservation de Rafai Limousine.",
-"Bonjour, je suis l'agent IA de Rafai Limousine."
+"Bonjour, je suis l'Agent AI Concierge de Rafai Limousine."
 ],
 [
 "Je suis Youri. Je réserve",
-"Je suis votre agent IA. Je réserve"
+"Je suis l’Agent AI Concierge. Je réserve"
 ],
 [
 "Bonjour, je suis Youri, votre concierge Rafai Limousine.",
-"Bonjour, je suis votre agent IA Rafai Limousine."
+"Bonjour, je suis l'Agent AI Concierge de Rafai Limousine."
 ],
 [
 "Discutez avec Youri, notre assistant de réservation, ou contactez-nous",
@@ -537,19 +537,19 @@
 ],
 [
 "يُحضّر Youri حجزكم",
-"يُحضّر وكيل الذكاء الاصطناعي حجزكم"
+"يُحضّر Agent AI Concierge حجزكم"
 ],
 [
 "مرحبًا، أنا Youri، مساعد الحجز لدى Rafai Limousine.",
-"مرحبًا، أنا وكيل الذكاء الاصطناعي لدى Rafai Limousine."
+"مرحبًا، أنا Agent AI Concierge لدى Rafai Limousine."
 ],
 [
 "أنا Youri. أحجز",
-"أنا وكيل الذكاء الاصطناعي. أحجز"
+"أنا Agent AI Concierge. أحجز"
 ],
 [
 "مرحبًا، أنا Youri، الكونسيرج الخاص بكم لدى Rafai Limousine.",
-"مرحبًا، أنا وكيل الذكاء الاصطناعي لدى Rafai Limousine."
+"مرحبًا، أنا Agent AI Concierge لدى Rafai Limousine."
 ],
 [
 "تحدثوا مع Youri، مساعد الحجز لدينا، أو",
@@ -565,19 +565,19 @@
 ],
 [
 "Youri 为您准备预订",
-"AI 助手为您准备预订"
+"Agent AI Concierge 为您准备预订"
 ],
 [
 "您好，我是 Youri，Rafai Limousine 的预订助手。",
-"您好，我是 Rafai Limousine 的 AI 助手。"
+"您好，我是 Rafai Limousine 的 Agent AI Concierge。"
 ],
 [
 "我是 Youri，1 分钟",
-"我是 AI 助手，1 分钟"
+"我是 Agent AI Concierge，1 分钟"
 ],
 [
 "您好，我是 Youri，Rafai Limousine 的专属礼宾。",
-"您好，我是 Rafai Limousine 的 AI 助手。"
+"您好，我是 Rafai Limousine 的 Agent AI Concierge。"
 ],
 [
 "与我们的预订助手 Youri 聊天，",

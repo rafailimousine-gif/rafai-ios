@@ -56,8 +56,38 @@
       document.body.appendChild(fr);
       fit();
     }
-    fab.addEventListener('click', ouvre);
-    if (tz) tz.addEventListener('click', ouvre);
+    /* Ouverture automatique : 15 s après l'arrivée, une seule fois par visite,
+       sauf si le visiteur a déjà touché à la réservation (ou à un autre bloc) ou ouvert l'agent */
+    var auto = null, fini = false;
+    try { fini = sessionStorage.getItem('rl_yauto') === '1'; } catch (e) {}
+    function stop() {
+      fini = true;
+      if (auto) { clearTimeout(auto); auto = null; }
+      try { sessionStorage.setItem('rl_yauto', '1'); } catch (e) {}
+    }
+    function arme(ms) {
+      if (fini) return;
+      auto = setTimeout(function () {
+        auto = null;
+        if (fini) return;
+        var nav = document.getElementById('rlnav');
+        if (document.hidden || (nav && nav.classList.contains('open'))) { arme(4000); return; }
+        stop();
+        ouvre();
+      }, ms);
+    }
+    window.addEventListener('blur', function () {
+      setTimeout(function () {
+        var a = document.activeElement;
+        if (a && a.tagName === 'IFRAME' && a.classList.contains('rlif')) stop();
+      }, 0);
+    });
+    document.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a[href*="booking.rafai-limousine.com"]')) stop();
+    }, true);
+    arme(15000);
+    fab.addEventListener('click', function () { stop(); ouvre(); });
+    if (tz) tz.addEventListener('click', function () { stop(); ouvre(); });
     if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
     window.addEventListener('resize', fit);
   })();

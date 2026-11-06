@@ -226,7 +226,7 @@ os.remove(yf)
 for x in ("function arm(){", "var L0='en'", '<html lang="en">', '</head>'):
     assert x in yc, x
 yc = yc.replace('function arm(){', 'function arm(){return;', 1)
-AGENT = {'en': 'AI agent', 'fr': 'Agent IA', 'zh': 'AI 助手', 'ar': 'وكيل الذكاء الاصطناعي'}
+AGENT = {'en': 'Agent AI Concierge', 'fr': 'Agent AI Concierge', 'zh': 'Agent AI Concierge', 'ar': 'Agent AI Concierge'}
 avb = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'agent.webp'), 'rb').read()
 AV = '/img/agent-%s.webp' % sha(avb)[:8]
 open(OUT + AV, 'wb').write(avb)
