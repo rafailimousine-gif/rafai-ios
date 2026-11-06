@@ -155,12 +155,30 @@
     if (el('rlpset')) el('rlpset').onclick = function () { nat({ t: 'settings' }); };
     if (el('rlpset2')) el('rlpset2').onclick = function () { nat({ t: 'settings' }); };
   }
+  /* déconnexion : efface l'accès gardé dans le navigateur de l'appli et revient à l'écran de connexion */
+  function logoutBtn() {
+    var L = el('list'); if (!L || !ID || !KEY || el('rllo')) return;
+    var d = document.createElement('div'); d.id = 'rllo'; d.className = 'rllo';
+    d.innerHTML = '<button type="button" id="rllogout">Se déconnecter</button>';
+    L.appendChild(d);
+    el('rllogout').onclick = function () {
+      if (!confirm('Se déconnecter de RL Driver ? Vous pourrez revenir avec un code reçu par e-mail.')) return;
+      try {
+        var ks = [];
+        for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (/^rc_/.test(k)) ks.push(k); }
+        ks.forEach(function (k) { localStorage.removeItem(k); });
+      } catch (e) {}
+      nat({ t: 'logout' });
+      location.replace('/chauffeur/');
+    };
+  }
   var pst = document.createElement('style');
   pst.textContent = '.rlpm{margin:12px 0 16px;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--gold2);color:var(--txt);text-align:start}' +
     '.rlpm b{display:block;font-size:17px;margin-bottom:4px}.rlpm span{display:block;color:var(--mut);font-size:14px;line-height:1.4;margin-bottom:6px}' +
     '.rlpm .rlb{display:block;width:100%;height:50px;margin-top:10px;border:0;border-radius:14px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#111113;font-size:16px;font-weight:800}' +
     '.rlpm .rlb2{background:transparent;border:1px solid var(--line);color:var(--txt)}' +
-    '.rlpok{margin-top:10px;color:var(--ok);font-weight:700;font-size:15px}.rlperr{margin-top:10px;color:var(--red);font-size:14px;line-height:1.4}';
+    '.rlpok{margin-top:10px;color:var(--ok);font-weight:700;font-size:15px}.rlperr{margin-top:10px;color:var(--red);font-size:14px;line-height:1.4}' +
+    '.rllo{text-align:center;margin:26px 0 10px}.rllo button{background:none;border:1px solid var(--line);border-radius:12px;color:var(--mut);font-size:14.5px;font-weight:700;padding:11px 20px;cursor:pointer}';
   (document.head || document.documentElement).appendChild(pst);
   if (window.RN && typeof RN.push === 'function') {
     var _push = RN.push;
@@ -173,6 +191,7 @@
       if (!ID || !KEY) { if (!el('rlf')) draw(); return; }
       var r = _render.apply(this, arguments);
       perms();
+      logoutBtn();
       return r;
     };
   }
