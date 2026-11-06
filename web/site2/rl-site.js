@@ -20,7 +20,7 @@
     if (window.innerWidth < 900 || (e.target.closest && e.target.closest('#rlnav'))) return;
     Array.prototype.forEach.call(document.querySelectorAll('#rlnav li.open'), function (x) { x.classList.remove('open'); });
   });
-  /* Youri : le bouton suit le visiteur sur toutes les pages, la conversation se charge au premier clic */
+  /* Agent IA : le bouton suit le visiteur sur toutes les pages, la conversation se charge au premier clic */
   (function () {
     var fab = document.getElementById('rlyfab'), tz = document.getElementById('rlytz');
     var h = document.documentElement, vv = window.visualViewport, fr = null;
@@ -41,7 +41,7 @@
       if (fr) { fit(); go(); return; }
       fr = document.createElement('iframe');
       fr.id = 'rlyframe';
-      fr.title = 'Youri';
+      fr.title = fab.getAttribute('aria-label');
       fr.allow = 'geolocation; clipboard-write';
       fr.src = fab.getAttribute('data-src');
       fr.addEventListener('load', function () {

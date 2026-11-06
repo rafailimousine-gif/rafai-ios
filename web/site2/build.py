@@ -76,6 +76,11 @@ def lazy_ads(c):
             '["pointerdown","keydown","focusin"].forEach(function(e){addEventListener(e,l,{once:true,passive:true})})})();</script>' % a.group(1))
     return c[:a.start()] + load + c[a.end():]
 
+def rename(c):
+    for x, y in CFG['rename']:
+        c = c.replace(x, y)
+    return c
+
 EMB = {}
 def embed(code):
     k = sha(code)
@@ -85,6 +90,7 @@ def embed(code):
     c = RE_LH.sub(lh_img, c)
     c = lazy_ads(c)
     c = re.sub(r'https?://(?:www\.)?rafai-limousine\.com(?=[/"\'])', '', c)
+    c = rename(c)
     io.open(OUT + '/e/' + k + '.html', 'w', encoding='utf-8').write(c)
     EMB[k] = '/e/' + k + '.html'
     return EMB[k]
@@ -179,6 +185,7 @@ for p in PAGES:
     cls = ' '.join(body.get('class', []))
     inner = body.decode_contents()
     inner = RE_LH.sub(lh_img, inner)
+    inner = rename(inner)
     lg = lang(p)
     docs.append((p, lg, title, cls, inner))
 
@@ -198,11 +205,17 @@ os.remove(yf)
 for x in ("function arm(){", "var L0='en'", '<html lang="en">', '</head>'):
     assert x in yc, x
 yc = yc.replace('function arm(){', 'function arm(){return;', 1)
+AGENT = {'en': ('AI agent', 'AI'), 'fr': ('Agent IA', 'IA'), 'zh': ('AI 助手', 'AI'), 'ar': ('وكيل الذكاء الاصطناعي', 'AI')}
+for x in ('<b>Youri</b>', '<div class="av" aria-hidden="true">Y</div>', "$('sub').textContent=t('sub');"):
+    assert x in yc, x
+yc = yc.replace('<b>Youri</b>', '<b id="whoT">Agent</b>', 1)
+yc = yc.replace("$('sub').textContent=t('sub');", "$('sub').textContent=t('sub');$('whoT').textContent=%s[l]||'';" % json.dumps({k: v[0] for k, v in AGENT.items()}, ensure_ascii=False), 1)
 yc = yc.replace('</head>', '<style>.fab,.teaser{display:none!important}body.ph .app{border-radius:0;border:0}</style></head>', 1)
 YV = sha(yc)[:8]
 for l, tag in (('en', 'en'), ('fr', 'fr'), ('zh', 'zh-CN'), ('ar', 'ar')):
-    io.open(OUT + '/e/youri-%s-%s.html' % (l, YV), 'w', encoding='utf-8').write(
-        yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1))
+    io.open(OUT + '/e/agent-%s-%s.html' % (l, YV), 'w', encoding='utf-8').write(
+        yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1)
+          .replace('<div class="av" aria-hidden="true">Y</div>', '<div class="av" aria-hidden="true">%s</div>' % AGENT[l][1], 1))
 open(OUT + '/img/logo.png', 'wb').write(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo.png'), 'rb').read())
 urls = []
 for p, lg, title, cls, inner in docs:
@@ -225,9 +238,9 @@ for p, lg, title, cls, inner in docs:
         head.append('<meta name="robots" content="noindex">')
     head.append('</head>')
     y = CFG['youri'][lg]
-    yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/youri-%s-%s.html">Y</button>'
+    yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/agent-%s-%s.html">%s</button>'
           '<button type="button" id="rlytz"%s><b>%s</b><span>%s</span></button>'
-          % (html.escape(y['a'], quote=True), lg, YV, ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
+          % (html.escape(y['a'], quote=True), lg, YV, 'IA' if lg == 'fr' else 'AI', ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
     page = ''.join(head) + '<body class="%s">' % cls + header(p, lg) + inner + yb + '<script src="/css/site.js" defer></script></body></html>'
     fn = OUT + ('/index.html' if False else p + '.html')
     os.makedirs(os.path.dirname(fn), exist_ok=True)
@@ -243,4 +256,10 @@ io.open(OUT + '/css/site.js', 'w', encoding='utf-8').write(JS)
 io.open(OUT + '/sitemap.xml', 'w', encoding='utf-8').write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
     ''.join('<url><loc>%s</loc></url>' % html.escape(u) for u in urls) + '</urlset>')
 io.open(OUT + '/robots.txt', 'w', encoding='utf-8').write('User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n' % BASE)
+reste = 0
+for d, _, fs in os.walk(OUT):
+    for f in fs:
+        if f.endswith('.html'):
+            reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
+print('nom Youri restant', reste)
 print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG))
