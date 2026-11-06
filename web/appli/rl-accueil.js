@@ -1,17 +1,19 @@
-/* ---------- rlAccueil v1 : appli Rafai Limousine, écran de bienvenue animé et photo de fond de l'onglet Réserver ---------- */
+/* ---------- rlAccueil v2 : appli Rafai Limousine, écran de bienvenue animé et photo de fond de la page de connexion ---------- */
 (function rlAccueil() {
   var inApp = window.__rlPv || window.__rlNative || window.__rlTwa || /RafaiApp\//.test(navigator.userAgent);
   if (!inApp || window.__rlAccueil) return;
   window.__rlAccueil = 1;
   var FOND = window.__rlFond || '/rl-fond.jpg', LOGO = window.__rlLogo || '/icon-192.png';
   var css =
-    'html:has(#v-book:not(.hide)) body{background:#0c0c0e}' +
-    '#rlBg{display:none;position:fixed;inset:0;z-index:0;pointer-events:none;background:#0c0c0e url(' + FOND + ') center top/100% auto no-repeat}' +
-    'html:has(#v-book:not(.hide)) #rlBg{display:block}' +
-    '#rlBg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,12,14,.5) 0,rgba(12,12,14,.12) 22%,rgba(12,12,14,.3) 36%,rgba(12,12,14,.9) 52%,#0c0c0e 62%)}' +
-    '.wrap{position:relative;z-index:1}' +
-    '#v-book .hero{background:none;box-shadow:none;border:0;min-height:236px;padding-top:6px;text-shadow:0 2px 14px rgba(0,0,0,.75)}' +
-    'html:has(#v-book:not(.hide)) .legal,html:has(#v-book:not(.hide)) .legal a{color:#b9b4aa}' +
+    '.gate.on{background:#0c0c0e}' +
+    '.gate:before,.gate:after{content:"";position:fixed;top:0;left:0;right:0;height:min(177vw,88vh);z-index:0;pointer-events:none}' +
+    '.gate:before{background:url(' + FOND + ') 65% 0/auto 100% no-repeat}' +
+    '.gate:after{background:linear-gradient(180deg,rgba(12,12,14,.8) 0,rgba(12,12,14,.66) 31%,rgba(12,12,14,.06) 43%,rgba(12,12,14,.1) 59%,rgba(12,12,14,.86) 72%,#0c0c0e 85%)}' +
+    '.gate .gw{z-index:1}' +
+    '.gate .glogo{width:72px;height:72px;margin:0 auto 12px}' +
+    '.gate h1{font-size:22px}' +
+    '.gate .gs{margin-bottom:0;font-size:14px}' +
+    '#gateF{margin-top:min(62vw,30vh)}' +
     '#rlBv{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(70% 45% at 50% 44%,#2a2115 0,#0c0c0e 70%);animation:rlOut .55s ease-in 2.35s forwards;-webkit-user-select:none;user-select:none}' +
     '#rlBv .lg{position:relative;width:128px;height:128px;border-radius:28px;overflow:hidden;box-shadow:0 18px 50px -14px rgba(201,160,99,.55);animation:rlIn .8s cubic-bezier(.2,.8,.2,1) both}' +
     '#rlBv .lg img{display:block;width:100%;height:100%}' +
@@ -19,6 +21,7 @@
     '#rlBv .tx{margin-top:26px;font:700 25px/1.25 Manrope,-apple-system,system-ui,sans-serif;letter-spacing:-.01em;color:#fff;opacity:0;animation:rlUp .6s ease-out .55s forwards}' +
     '#rlBv .tx b{font-weight:800;background:linear-gradient(90deg,#E4C47E,#B8904F);-webkit-background-clip:text;background-clip:text;color:transparent}' +
     '#rlBv .ln{width:72px;height:2px;margin-top:16px;background:linear-gradient(90deg,transparent,#C9A063,transparent);transform:scaleX(0);animation:rlLn .7s ease-out .95s forwards}' +
+    '#rlBv:not(.go),#rlBv:not(.go) *{animation-play-state:paused}' +
     '@keyframes rlIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}' +
     '@keyframes rlUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}' +
     '@keyframes rlLn{to{transform:scaleX(1)}}' +
@@ -29,9 +32,6 @@
   st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
   function start() {
-    var bg = document.createElement('div');
-    bg.id = 'rlBg';
-    document.body.insertBefore(bg, document.body.firstChild);
     var vu = false;
     try { vu = sessionStorage.getItem('rl_bv') === '1'; sessionStorage.setItem('rl_bv', '1'); } catch (e) {}
     if (vu && !window.__rlPv) return;
@@ -57,7 +57,8 @@
     document.body.appendChild(o);
     function fin() { if (o.parentNode) o.parentNode.removeChild(o); }
     o.addEventListener('click', fin);
-    setTimeout(fin, 3000);
+    function go() { o.classList.add('go'); setTimeout(fin, 3000); }
+    if (document.readyState === 'complete') setTimeout(go, 120); else window.addEventListener('load', function () { setTimeout(go, 120); });
   }
   if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
 })();
