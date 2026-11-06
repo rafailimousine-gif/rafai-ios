@@ -1,0 +1,52 @@
+
+<!-- ---- Appli Rafai Limousine : écran de choix à l'arrivée sur téléphone (une fois par visite).
+     Il couvre tout le bloc de réservation : un élément intégré Google Sites ne peut pas couvrir le reste de la page.
+     iPhone et iPad pour l'instant. Pour Android : mettre l'adresse Google Play dans PL une fois l'appli validée. ---- -->
+<div id="rlCh" class="rlc" hidden role="dialog" aria-modal="true" aria-labelledby="rlcT">
+  <img src="https://booking.rafai-limousine.com/icon-192.png" alt="" width="84" height="84">
+  <h2 id="rlcT"></h2>
+  <p id="rlcP"></p>
+  <a id="rlcO" target="_blank" rel="noopener"></a>
+  <button type="button" id="rlcS"></button>
+</div>
+<style>
+.rlc{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;box-sizing:border-box;text-align:center;border-radius:18px;border:1px solid rgba(201,164,92,.4);background:radial-gradient(120% 80% at 50% 0%,#2A2418 0%,#121212 55%,#0B0B0C 100%);color:#F5F1E8;font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.rlc[hidden]{display:none}
+.rlc img{width:84px;height:84px;border-radius:19px;box-shadow:0 0 0 1px rgba(201,164,92,.45)}
+.rlc h2{margin:6px 0 0;font-size:22px;line-height:1.2;font-weight:800;color:#fff}
+.rlc p{margin:0 0 8px;font-size:14.5px;line-height:1.45;color:rgba(245,241,232,.8)}
+.rlc a,.rlc button{display:block;width:100%;max-width:300px;box-sizing:border-box;padding:14px 16px;border-radius:14px;font:inherit;font-size:15.5px;font-weight:800;text-align:center;text-decoration:none;cursor:pointer}
+.rlc a{border:0;background:linear-gradient(90deg,#E7C27A,#C79A4A);color:#16110A}
+.rlc button{border:1px solid rgba(245,241,232,.35);background:none;color:#F5F1E8;font-weight:700}
+</style>
+<script>
+(function () {
+  if (window.__rlCh) return; window.__rlCh = 1;
+  var AS = 'https://apps.apple.com/fr/app/rafai-limousine/id6829341896', PL = '';
+  var K = 'rl_app_choix_v1', p = document.getElementById('rlCh'); if (!p) return;
+  var ua = navigator.userAgent || '';
+  var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var url = ios ? AS : (/Android/.test(ua) ? PL : '');
+  if (!url) return;
+  try { if (sessionStorage.getItem(K)) return; } catch (e) {}
+  var TX = {
+    fr: ['Continuer sur l’application', 'Réservez plus vite et suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Continuer sur le site'],
+    en: ['Continue in the app', 'Book faster and follow your chauffeur live.', 'Open the app', 'Continue on the website'],
+    zh: ['在应用中继续', '更快预订，实时查看您的司机。', '打开应用', '继续使用网站'],
+    ar: ['تابع في التطبيق', 'احجز بسرعة أكبر وتابع سائقك مباشرة.', 'فتح التطبيق', 'المتابعة على الموقع']
+  };
+  var g = String(navigator.language || 'en').slice(0, 2).toLowerCase(), T = TX[g] || TX.en;
+  p.dir = g === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById('rlcT').textContent = T[0];
+  document.getElementById('rlcP').textContent = T[1];
+  var o = document.getElementById('rlcO'), s = document.getElementById('rlcS');
+  o.textContent = T[2]; o.href = url; s.textContent = T[3];
+  function close() {
+    p.hidden = true;
+    try { sessionStorage.setItem(K, '1'); } catch (e) {}
+  }
+  o.addEventListener('click', close);
+  s.addEventListener('click', close);
+  p.hidden = false;
+})();
+</script>
