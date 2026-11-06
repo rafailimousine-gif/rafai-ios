@@ -154,8 +154,13 @@ for p in PAGES:
                 del e[k]
     imgs = s.find_all('img')
     for i, e in enumerate(imgs):
-        e['loading'] = 'lazy'
+        if i:
+            e['loading'] = 'lazy'
         e['decoding'] = 'async'
+        if not e.get('alt'):
+            sec = e.find_parent('section')
+            h = sec.find(['h1', 'h2', 'h3']) if sec else None
+            e['alt'] = (h.get_text(' ', strip=True) if h else '') or title
     body = s.body
     cls = ' '.join(body.get('class', []))
     inner = body.decode_contents()
