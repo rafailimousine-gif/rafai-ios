@@ -131,6 +131,9 @@ for p in PAGES:
     hd = s.find('header', id='atIdViewHeader')
     if hd:
         hd.decompose()
+    for c in ('p9b27', 'BuY5Fd', 'TbNlJb', 'M63kCb', 'dZA9kd', 'JPdR6b', 'Q0cSn', 'hBW7Hb', 'lhbLEe'):
+        for e in s.select('.' + c):
+            e.decompose()
     for e in s.find_all(['script', 'noscript', 'link', 'style']):
         e.decompose()
     n = 0
