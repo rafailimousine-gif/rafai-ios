@@ -35,8 +35,9 @@
     var vu = false;
     try { vu = sessionStorage.getItem('rl_bv') === '1'; sessionStorage.setItem('rl_bv', '1'); } catch (e) {}
     if (vu && !window.__rlPv) return;
-    var lg = 'fr';
-    try { lg = L; } catch (e) { lg = (document.documentElement.lang || 'fr').slice(0, 2); }
+    var lg = '';
+    try { lg = localStorage.getItem('rl_lang') || ''; } catch (e) {}
+    if (!lg) lg = String(navigator.language || 'fr').slice(0, 2).toLowerCase();
     var TX = { fr: 'Bienvenue sur', en: 'Welcome to', zh: '欢迎来到', ar: 'مرحبًا بكم في' };
     var o = document.createElement('div');
     o.id = 'rlBv';
