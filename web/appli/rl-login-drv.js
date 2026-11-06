@@ -210,17 +210,21 @@
     var d = document.createElement('div'); d.id = 'rllo'; d.className = 'rllo';
     d.innerHTML = '<button type="button" id="rllogout">Se déconnecter</button>';
     L.appendChild(d);
-    el('rllogout').onclick = function () {
-      if (!confirm('Se déconnecter de RL Driver ? Vous pourrez revenir avec un code reçu par e-mail.')) return;
-      try {
-        var ks = [];
-        for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (/^rc_/.test(k)) ks.push(k); }
-        ks.forEach(function (k) { localStorage.removeItem(k); });
-      } catch (e) {}
-      nat({ t: 'logout' });
-      location.replace('/chauffeur/');
-    };
+    el('rllogout').onclick = doLogout;
   }
+  function doLogout() {
+    if (!confirm('Se déconnecter de RL Driver ? Vous pourrez revenir avec un code reçu par e-mail.')) return;
+    try {
+      var ks = [];
+      for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (/^rc_/.test(k)) ks.push(k); }
+      ks.forEach(function (k) { localStorage.removeItem(k); });
+    } catch (e) {}
+    nat({ t: 'logout' });
+    location.replace('/chauffeur/');
+  }
+  RLL.logout = doLogout;
+  RLL.locOk = locOk;
+  RLL.askLoc = askLoc;
   var pst = document.createElement('style');
   pst.textContent = '.rlpm{margin:12px 0 16px;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--gold2);color:var(--txt);text-align:start}' +
     '.rlpm b{display:block;font-size:17px;margin-bottom:4px}.rlpm span{display:block;color:var(--mut);font-size:14px;line-height:1.4;margin-bottom:6px}' +
@@ -247,8 +251,7 @@
       if (!ID || !KEY) { if (!el('rlf')) draw(); return; }
       var r = _render.apply(this, arguments);
       perms();
-      histBox();
-      logoutBtn();
+      if (!window.__rlUI) { histBox(); logoutBtn(); }
       return r;
     };
   }
