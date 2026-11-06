@@ -20,7 +20,12 @@
     '.rlg .rlh{margin-top:22px;font-size:13px;color:var(--dim)}';
   (document.head || document.documentElement).appendChild(st);
 
-  var S = { step: 'mail', mail: '' };
+  var S = { step: 'mail', mail: '' }, FACE = window.__rlFace || '';
+  function nat(m) { try { window.webkit.messageHandlers.rn.postMessage(m); return true; } catch (e) { return false; } }
+  /* appli iPhone : Face ID (si le chauffeur l'a activé) et collage du lien personnel */
+  window.RLL = {
+    faceOff: function (still) { if (!still) FACE = ''; S.step = 'mail'; draw(); msg(still ? '' : 'Connectez-vous avec le code reçu par e-mail.'); }
+  };
   try { S.mail = localStorage.getItem('rl_drv_mail') || ''; } catch (e) {}
   function api(q) {
     return fetch(APP + '?' + q + '&_=' + Date.now(), { cache: 'no-store', credentials: 'omit' }).then(function (r) { return r.json(); });
@@ -34,10 +39,18 @@
     var sub = el('sub'); if (sub) sub.textContent = 'Connexion chauffeur';
     var h = '<div class="rlg"><img src="/chauffeur/icon-192.png" alt="">';
     if (S.step === 'mail') {
+      if (FACE) h += '<button class="rlb" id="rlface" type="button" style="margin:0 0 22px">Entrer avec ' + FACE + '</button>';
       h += '<h2>Connexion</h2><p>Entrez l’adresse e-mail enregistrée chez Rafai Limousine. Vous recevrez un code à 6 chiffres.</p>' +
         '<form id="rlf" novalidate><label for="rle">E-mail</label>' +
         '<input id="rle" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="prenom@exemple.fr">' +
-        '<button class="rlb" id="rlgo" type="submit">Recevoir mon code</button></form>';
+        '<button class="rlb" id="rlgo" type="submit">Recevoir mon code</button></form>' +
+        '<button class="rll" id="rllk" type="button">J’ai reçu un lien personnel</button>';
+    } else if (S.step === 'link') {
+      h += '<h2>Lien personnel</h2><p>Collez le lien reçu de Rafai Limousine par SMS, WhatsApp ou e-mail.</p>' +
+        '<form id="rlf" novalidate><label for="rlu">Lien</label>' +
+        '<input id="rlu" type="url" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="https://team.rafai-limousine.com/chauffeur/…">' +
+        '<button class="rlb" id="rlgo" type="submit">Ouvrir mes missions</button></form>' +
+        '<button class="rll" id="rlch" type="button">Recevoir un code par e-mail</button>';
     } else {
       h += '<h2>Votre code</h2><p>Si <b></b> est enregistrée chez Rafai Limousine, un code vient d’y être envoyé. Il est valable 15 minutes.</p>' +
         '<form id="rlf" novalidate><label for="rlk">Code à 6 chiffres</label>' +
@@ -50,14 +63,27 @@
     L.innerHTML = h;
     if (S.step === 'code') { L.querySelector('.rlg p b').textContent = S.mail; }
     var f = el('rlf');
-    f.addEventListener('submit', function (ev) { ev.preventDefault(); S.step === 'mail' ? sendMail() : sendCode(); });
-    if (S.step === 'mail') { var i = el('rle'); i.value = S.mail; }
+    f.addEventListener('submit', function (ev) { ev.preventDefault(); S.step === 'mail' ? sendMail() : S.step === 'link' ? useLink() : sendCode(); });
+    if (S.step === 'mail') {
+      var i = el('rle'); i.value = S.mail;
+      el('rllk').onclick = function () { S.step = 'link'; draw(); };
+      if (el('rlface')) el('rlface').onclick = function () { msg(''); if (!nat({ t: 'faceid' })) { FACE = ''; draw(); } };
+    } else if (S.step === 'link') {
+      el('rlch').onclick = function () { S.step = 'mail'; draw(); };
+    }
     else {
       var k = el('rlk');
       k.addEventListener('input', function () { k.value = k.value.replace(/\D/g, '').slice(0, 6); if (k.value.length === 6) sendCode(); });
       el('rlre').onclick = function () { sendMail(true); };
       el('rlch').onclick = function () { S.step = 'mail'; draw(); };
     }
+  }
+  function useLink() {
+    var v = String(el('rlu').value || '').trim(), m = v.match(/\/chauffeur\/([^\/?#\s]+)/), a = m ? m[1] : v;
+    try { a = decodeURIComponent(a); } catch (e) {}
+    if (!/^[^.]+\.[A-Za-z0-9_-]{16,}$/.test(a)) { msg('Ce n’est pas un lien Rafai Limousine valide. Copiez le lien complet, puis réessayez.', true); return; }
+    try { localStorage.setItem('rc_auth', a); } catch (e) {}
+    location.replace('/chauffeur/' + encodeURIComponent(a));
   }
   function sendMail(again) {
     var e = S.step === 'mail' ? String(el('rle').value || '').trim().toLowerCase() : S.mail;
@@ -83,7 +109,7 @@
       if (j && j.ok && j.auth) {
         msg('Connexion réussie.');
         try { localStorage.setItem('rc_auth', j.auth); } catch (x) {}
-        try { if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.rn) window.webkit.messageHandlers.rn.postMessage({ t: 'auth', auth: j.auth }); } catch (x) {}
+        nat({ t: 'auth', auth: j.auth });
         location.replace('/chauffeur/' + encodeURIComponent(j.auth));
       } else {
         msg(j && j.err === 'expire' ? 'Code expiré ou trop d’essais. Demandez un nouveau code.' : 'Code incorrect. Vérifiez et réessayez.', true);

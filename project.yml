@@ -114,6 +114,7 @@ targets:
         NSLocationAlwaysAndWhenInUseUsageDescription: RL Driver envoie la position de votre voiture au client et à l'équipe Rafai Limousine pendant vos courses, même quand vous utilisez Waze ou que l'écran est verrouillé.
         NSCameraUsageDescription: Pour photographier vos documents (permis, carte VTC…) et les envoyer à Rafai Limousine.
         NSPhotoLibraryUsageDescription: Pour choisir la photo d'un document à envoyer à Rafai Limousine.
+        NSFaceIDUsageDescription: RL Driver utilise Face ID pour vous connecter sans code, si vous l'activez.
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         UILaunchScreen:
@@ -130,6 +131,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.rafailimousine.driver
+        MARKETING_VERSION: "1.1"
         DEVELOPMENT_TEAM: 4B32A333J7
         PRODUCT_NAME: RLDriver
         TARGETED_DEVICE_FAMILY: "1"

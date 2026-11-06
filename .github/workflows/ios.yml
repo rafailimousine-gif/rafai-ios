@@ -27,7 +27,7 @@ concurrency:
 jobs:
   compile:
     name: Compilation (vérification)
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' || !inputs.testflight }}
     runs-on: macos-15
     timeout-minutes: 45
     steps:

@@ -24,6 +24,8 @@ final class DriverController: NSObject, ObservableObject {
     private var pushToken: String?
     private var pushState = "default"
     private var lastStatus: [String: Any]?
+    private var faceTried = false
+    private var newAuth: String?
     private let gps = DriverGPS()
     private let refresher = UIRefreshControl()
 
@@ -82,6 +84,15 @@ final class DriverController: NSObject, ObservableObject {
         content.removeAllUserScripts()
         guard on else { return }
         content.addUserScript(WKUserScript(source: DriverBridge.start, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        if DriverFaceID.saved {
+            content.addUserScript(WKUserScript(source: "window.__rlFace=\(jsString(DriverFaceID.name));",
+                                               injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        }
+    }
+
+    private func refreshScripts() {
+        scriptsOn = false
+        setScripts(true)
     }
 
     var isOnSite: Bool { (webView.url?.host ?? "").lowercased() == Self.host }
@@ -101,6 +112,15 @@ final class DriverController: NSObject, ObservableObject {
             hideSplash()
             sendPushState()
             if let h = pendingHash { pendingHash = nil; js("location.hash=\(jsString(h))") }
+            let logged = (b["id"] as? Bool) ?? true
+            if !logged && DriverFaceID.saved && !faceTried {
+                faceTried = true
+                Task { @MainActor [weak self] in
+                    try? await Task.sleep(nanoseconds: 450_000_000)
+                    self?.faceUnlock()
+                }
+            }
+            if logged, let a = newAuth { newAuth = nil; offerFaceID(a) }
         case "gps":
             let on = (b["on"] as? Bool) ?? false
             if on, let ref = b["ref"] as? String, let k = b["k"] as? String, let api = b["api"] as? String {
@@ -120,6 +140,12 @@ final class DriverController: NSObject, ObservableObject {
         case "paste":
             let s = UIPasteboard.general.string ?? ""
             js("window.RN&&RN.pasted(\(jsString(s)))")
+        case "faceid":
+            faceUnlock()
+        case "auth":
+            if let a = b["auth"] as? String, a.range(of: #"^[^.]+\.[A-Za-z0-9_-]{16,}$"#, options: .regularExpression) != nil {
+                newAuth = a
+            }
         case "open":
             if let s = b["url"] as? String, let u = URL(string: s) { route(u) }
         default:
@@ -153,6 +179,36 @@ final class DriverController: NSObject, ObservableObject {
                 self.js("window.RN&&RN.geo(\(id),false,{code:\(code)})")
             }
         }
+    }
+
+    // MARK: Face ID
+
+    /// Face ID reconnu : l'accès gardé ouvre directement les missions, sans code e-mail
+    func faceUnlock() {
+        DriverFaceID.unlock { [weak self] auth in
+            guard let self = self else { return }
+            if let a = auth {
+                let p = self.jsString(a)
+                self.js("try{localStorage.setItem('rc_auth',\(p))}catch(e){};location.replace('/chauffeur/'+encodeURIComponent(\(p)))")
+            } else {
+                self.refreshScripts()
+                self.js("window.RLL&&RLL.faceOff&&RLL.faceOff(\(DriverFaceID.saved ? "true" : "false"))")
+            }
+        }
+    }
+
+    /// Après la première connexion par code : proposer Face ID pour les fois suivantes
+    private func offerFaceID(_ auth: String) {
+        guard DriverFaceID.available, !DriverFaceID.saved else { return }
+        let n = DriverFaceID.name
+        let a = UIAlertController(title: "Activer \(n) ?",
+                                  message: "La prochaine fois, entrez dans RL Driver avec \(n), sans code par e-mail.",
+                                  preferredStyle: .alert)
+        a.addAction(UIAlertAction(title: "Plus tard", style: .cancel))
+        a.addAction(UIAlertAction(title: "Activer \(n)", style: .default) { [weak self] _ in
+            if DriverFaceID.save(auth) { self?.refreshScripts() }
+        })
+        drvTopViewController()?.present(a, animated: true)
     }
 
     // MARK: Liens
