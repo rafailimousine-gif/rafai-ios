@@ -4,8 +4,10 @@
   window.__rlLogin = 1;
   var st = document.createElement('style');
   st.textContent =
-    '.rlg{max-width:420px;margin:0 auto;padding:34px 18px 24px;text-align:center;color:var(--txt)}' +
-    '.rlg img{width:84px;height:84px;border-radius:20px;margin-bottom:14px}' +
+    '.rlgbg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#111113 url(/chauffeur/rl-login-bg.jpg) 50% 0/cover no-repeat}' +
+    '.rlgbg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,19,.6) 0,rgba(17,17,19,.12) 16%,rgba(17,17,19,.18) 30%,rgba(17,17,19,.82) 47%,#111113 60%)}' +
+    '@media (min-width:700px){.rlgbg{background-size:auto 100%}}' +
+    '.rlg{position:relative;max-width:420px;margin:0 auto;padding:min(40vh,360px) 18px 24px;text-align:center;color:var(--txt)}' +
     '.rlg h2{margin:0 0 6px;font-size:21px}' +
     '.rlg p{margin:0 0 18px;color:var(--mut);font-size:14.5px;line-height:1.45}' +
     '.rlg label{display:block;text-align:start;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:0 0 6px}' +
@@ -37,7 +39,8 @@
   function draw() {
     var L = el('list'); if (!L) return;
     var sub = el('sub'); if (sub) sub.textContent = 'Connexion chauffeur';
-    var h = '<div class="rlg"><img src="/chauffeur/icon-192.png" alt="">';
+    if (!el('rlgbg')) { var bgd = document.createElement('div'); bgd.id = 'rlgbg'; bgd.className = 'rlgbg'; document.body.insertBefore(bgd, document.body.firstChild); }
+    var h = '<div class="rlg">';
     if (S.step === 'mail') {
       if (FACE) h += '<button class="rlb" id="rlface" type="button" style="margin:0 0 22px">Entrer avec ' + FACE + '</button>';
       h += '<h2>Connexion</h2><p>Entrez l’adresse e-mail enregistrée chez Rafai Limousine. Vous recevrez un code à 6 chiffres.</p>' +
