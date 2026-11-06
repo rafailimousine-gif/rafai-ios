@@ -97,9 +97,19 @@ final class DriverController: NSObject, ObservableObject {
 
     var isOnSite: Bool { (webView.url?.host ?? "").lowercased() == Self.host }
 
+    /// L'animation d'ouverture (R, L, DRIVER, Rafai Limousine) se joue en entier avant d'afficher les missions
+    private let splashStart = Date()
     func hideSplash() {
         guard splash else { return }
-        withAnimation(.easeOut(duration: 0.35)) { splash = false }
+        let wait = 2.6 - Date().timeIntervalSince(splashStart)
+        if wait > 0 {
+            Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds: UInt64(wait * 1_000_000_000))
+                self?.hideSplash()
+            }
+            return
+        }
+        withAnimation(.easeOut(duration: 0.45)) { splash = false }
     }
 
     // MARK: Échanges avec la page
