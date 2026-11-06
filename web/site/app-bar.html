@@ -17,6 +17,9 @@
 .rlb button{flex:none;padding:3px 0;border:0;background:none;color:rgba(245,241,232,.72);font:inherit;text-decoration:underline;cursor:pointer}
 @media (max-width:340px){.rlb img{display:none}}
 @media (prefers-reduced-motion:reduce){.rlb{transition:none}}
+/* Bloc plus large que haut : le contenu défile dans la carte, surtout sur téléphone (page Home seulement) */
+.page>.card{flex:0 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+@media (max-height:500px){.page>.photo{display:none}.page>.card{margin-top:0;border-radius:18px;flex:1 1 auto}}
 </style>
 <script>
 (function () {
