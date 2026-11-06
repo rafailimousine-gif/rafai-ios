@@ -203,6 +203,12 @@ for p, lg, title, cls, inner in docs:
     os.makedirs(os.path.dirname(fn), exist_ok=True)
     io.open(fn, 'w', encoding='utf-8').write(page)
     urls.append(canon)
+nf = ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+      '<title>Rafai Limousine</title><meta name="robots" content="noindex"><link rel="icon" href="/img/logo.png"><link rel="stylesheet" href="/css/site.css"></head><body>' +
+      header('/home', 'en') + '<main style="max-width:560px;margin:0 auto;padding:72px 24px;text-align:center;font:500 17px/1.7 Manrope,system-ui,sans-serif;color:#111">'
+      '<h1 style="font-size:26px;margin:0 0 16px">Page not found</h1><p style="margin:0 0 24px">Page introuvable · 页面未找到 · <span dir="rtl">الصفحة غير موجودة</span></p>'
+      '<p style="margin:0"><a href="/" style="color:#8a6a2f">Rafai Limousine</a></p></main><script src="/css/site.js" defer></script></body></html>')
+io.open(OUT + '/404.html', 'w', encoding='utf-8').write(nf)
 io.open(OUT + '/css/site.js', 'w', encoding='utf-8').write(JS)
 io.open(OUT + '/sitemap.xml', 'w', encoding='utf-8').write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
     ''.join('<url><loc>%s</loc></url>' % html.escape(u) for u in urls) + '</urlset>')
