@@ -9,7 +9,7 @@
 #rlnav nav>ul{display:flex;align-items:center;gap:22px}
 #rlnav li{position:relative}
 #rlnav a{color:#111;text-decoration:none}
-#rlnav nav>ul>li>a{display:inline-block;padding:5px 0}
+@media (min-width:900px){#rlnav nav>ul>li>a{display:inline-block;padding:5px 0}}
 #rlnav nav a.on{font-weight:800}
 #rlnav li.dd>button{width:24px;height:24px;margin-left:0;padding:0;border:0;background:none;cursor:pointer;vertical-align:middle;position:relative}
 #rlnav li.dd>button:after{content:"";position:absolute;left:8px;top:6px;width:6px;height:6px;border:solid #111;border-width:0 2px 2px 0;transform:rotate(45deg)}
