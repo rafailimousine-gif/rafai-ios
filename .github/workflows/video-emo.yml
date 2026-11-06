@@ -1,0 +1,42 @@
+name: Video emotion
+
+on:
+  push:
+    branches: [video-emo]
+
+permissions:
+  contents: write
+
+jobs:
+  voix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Outils
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q piper-tts numpy
+      - name: Voix (Piper fr_FR-tom-medium), mixage, montage
+        run: |
+          mkdir -p work && cd work
+          cp ../web/video/narration.txt texte.txt
+          cp ../web/video/voix.py ../web/video/emo/mixe.py ../web/video/emo/timing.json ../web/video/emo/musique-emo.wav ../web/video/emo/image-emo.mp4 .
+          B=https://huggingface.co/rhasspy/piper-voices/resolve/main/fr/fr_FR/tom/medium
+          curl -sLf -o fr_FR-tom-medium.onnx $B/fr_FR-tom-medium.onnx
+          curl -sLf -o fr_FR-tom-medium.onnx.json $B/fr_FR-tom-medium.onnx.json
+          python3 voix.py fr_FR-tom-medium.onnx 1.12
+          python3 mixe.py
+          ffmpeg -nostdin -v error -y -i image-emo.mp4 -i mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -shortest -movflags +faststart Rafai-Limousine-merci.mp4
+          ls -la Rafai-Limousine-merci.mp4
+      - name: Publication (branche video-emo-out)
+        run: |
+          mkdir -p /tmp/out && cd /tmp/out
+          git init -q && git checkout -q -b video-emo-out
+          cp "$GITHUB_WORKSPACE"/work/Rafai-Limousine-merci.mp4 "$GITHUB_WORKSPACE"/work/p*.wav .
+          git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com add .
+          git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com commit -q -m "Vidéo émotion avec voix (run ${{ github.run_number }})"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" video-emo-out
