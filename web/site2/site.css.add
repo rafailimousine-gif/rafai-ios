@@ -5,7 +5,7 @@
 #rlbar .st a{border:0;padding:0;border-radius:0;display:block;line-height:0}
 #rlbar .st img{height:30px;width:auto;display:block}
 .rlgp{display:block;margin-top:10px;line-height:0}
-.rlgp img{height:40px;width:auto;display:block}
+.rlgp img{height:58px;width:auto;display:block}
 #rlnav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px;height:64px;padding:0 24px;background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.06);font:500 15px/1 Manrope,system-ui,sans-serif;color:#111}
 #rlnav .brand{display:flex;align-items:center;gap:12px;color:#111;text-decoration:none;font-size:20px}
 #rlnav .brand img{border-radius:6px}
