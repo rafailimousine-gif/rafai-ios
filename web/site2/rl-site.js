@@ -13,8 +13,9 @@
     });
     po.observe({ type: 'paint', buffered: true });
   } catch (e) {}
-  addEventListener('load', charge);
-  setTimeout(charge, 2500);
+  /* secours : après le chargement, une fois une image affichée (deux images d'animation plus tard) */
+  addEventListener('load', function () { requestAnimationFrame(function () { requestAnimationFrame(function () { setTimeout(charge, 0); }); }); });
+  setTimeout(charge, 4000);
 })();
 /* Photos de fond des sections plus bas : chargées quand le visiteur s'en approche */
 (function () {

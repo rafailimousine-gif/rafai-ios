@@ -76,6 +76,17 @@ def lazy_ads(c):
             '["pointerdown","keydown","focusin"].forEach(function(e){addEventListener(e,l,{once:true,passive:true})})})();</script>' % a.group(1))
     return c[:a.start()] + load + c[a.end():]
 
+def fonts_async(c):
+    # police Google des blocs : chargée sans bloquer l'affichage (sinon la page entière attend le serveur de polices)
+    def f(m):
+        t = m.group(0)
+        if 'fonts.googleapis.com' in t and 'stylesheet' in t and 'media=' not in t:
+            t = t[:-1].rstrip().rstrip('/').rstrip() + ' media="print" onload="this.media=\'all\'">'
+            NFA[0] += 1
+        return t
+    return re.sub(r'<link\b[^>]*>', f, c)
+NFA = [0]
+
 def rename(c):
     for x, y in CFG['rename']:
         c = c.replace(x, y)
@@ -109,6 +120,7 @@ def embed(code):
     c = RE_DATA.sub(data_img, code)
     c = RE_LH.sub(lh_img, c)
     c = lazy_ads(c)
+    c = fonts_async(c)
     c = re.sub(r'https?://(?:www\.)?rafai-limousine\.com(?=[/"\'])', '', c)
     c = rename(c)
     # l'ancien écran de choix (dans le bloc de réservation, iPhone seulement) est remplacé par celui de toute la page (rl-site.js)
@@ -412,4 +424,4 @@ for d, _, fs in os.walk(OUT):
             reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
 print('nom Youri restant', reste)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
-print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0], '· recadrees telephone', len([1 for v in HM.values() if v]), '· photos de fond differees', NLZ[0])
+print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0], '· recadrees telephone', len([1 for v in HM.values() if v]), '· photos de fond differees', NLZ[0], '· polices des blocs sans blocage', NFA[0])
