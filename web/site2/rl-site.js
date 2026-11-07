@@ -16,6 +16,17 @@
   addEventListener('load', charge);
   setTimeout(charge, 2500);
 })();
+/* Photos de fond des sections plus bas : chargées quand le visiteur s'en approche */
+(function () {
+  var l = document.querySelectorAll('[data-bg]');
+  if (!l.length) return;
+  function met(e) { e.style.backgroundImage = 'url("' + e.getAttribute('data-bg') + '")'; e.removeAttribute('data-bg'); }
+  if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(l, met); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (x) { if (x.isIntersecting) { io.unobserve(x.target); met(x.target); } });
+  }, { rootMargin: '700px 0px' });
+  Array.prototype.forEach.call(l, function (e) { io.observe(e); });
+})();
 /* Menu du site et mesure d'audience chargée après l'affichage */
 (function () {
   var m = document.getElementById('rlmenu'), n = document.getElementById('rlnav');

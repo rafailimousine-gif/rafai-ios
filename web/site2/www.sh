@@ -22,8 +22,8 @@ find public -name '*.html' -not -path 'public/e/*' -print0 | xargs -0 sed -i "s#
 python3 -c "
 from PIL import Image
 im = Image.open('public/img/og.jpg').convert('RGB'); w, h = im.size
-im = im.crop((0, 0, round(w * .52), h)); im = im.resize((800, round(im.height * 800 / im.width)), Image.LANCZOS)
-im.save('public/img/rlch-1.webp', 'WEBP', quality=74, method=6)"
+im = im.crop((0, 0, round(w * .52), h)); im = im.resize((720, round(im.height * 720 / im.width)), Image.LANCZOS)
+im.save('public/img/rlch-2.webp', 'WEBP', quality=66, method=6)"
 cat > firebase.json <<J
 {"hosting":{"target":"www","public":"public","cleanUrls":true,"trailingSlash":false,
 "rewrites":[{"source":"/","destination":"/home.html"}],

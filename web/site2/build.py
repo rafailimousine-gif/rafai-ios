@@ -97,6 +97,8 @@ BIG = ('<style>@media (min-width:440px) and (min-height:600px){'
        '#s1 .see{font-size:17px;padding:17px 18px;border-radius:14px}#s1 .duo{gap:12px;margin-top:12px}#s1 .duo .btn{padding:14px 16px}'
        '}</style>')
 NBIG = [0]
+NLZ = [0]
+HERO = {}
 NCH = [0]
 
 EMB = {}
@@ -253,6 +255,22 @@ for p in PAGES:
         for k in ('jscontroller', 'jsaction', 'jsname', 'jsdata', 'jsmodel', 'jsshadow', 'jsslot', 'data-tile-id'):
             if e.has_attr(k):
                 del e[k]
+    # photos de fond des sections : la première (haut de page) reste, les suivantes se chargent quand on s'en approche (rl-site.js)
+    hero = None
+    for k, e in enumerate(s.find_all(style=re.compile('background-image'))):
+        st = RE_LH.sub(lh_img, e['style'])
+        m = re.search(r'background-image:\s*url\((["\']?)(/img/[^"\')]+)\1\)\s*;?', st)
+        if not m:
+            e['style'] = st
+            continue
+        if hero is None:
+            hero = m.group(2)
+            e['style'] = st
+        else:
+            e['style'] = (st[:m.start()] + st[m.end():]).strip()
+            e['data-bg'] = m.group(2)
+            NLZ[0] += 1
+    HERO[p] = hero
     imgs = s.find_all('img')
     for i, e in enumerate(imgs):
         if i:
@@ -319,8 +337,25 @@ for _, _, _, _, inner in docs:
         break
 print('badges Google Play ajoutes', NGP[0], '· barre', 'badges' if (AB and GP) else 'bouton texte', '· badge Play', GP)
 # grande photo du haut de page (image LCP) : demandée en priorité dès le début du chargement
-RE_BG = re.compile(r'background-image:\s*url\((?:&quot;|["\'])?(/img/[^"\'&)]+)')
 NPRE = [0]
+HM = {}
+def hero_m(path):
+    # sur téléphone la photo couvre une section haute et étroite : seule la bande du milieu se voit, on n'envoie qu'elle
+    if path in HM:
+        return HM[path]
+    out = None
+    try:
+        im = Image.open(OUT + path).convert('RGB')
+        w, h = im.size
+        cw = min(w, round(h * 0.5))
+        if cw < w * 0.8:
+            x = (w - cw) // 2
+            out = path[:-5] + '-m.webp'
+            im.crop((x, 0, x + cw, h)).save(OUT + out, 'WEBP', quality=72, method=6)
+    except Exception as e:
+        print('photo du haut non recadree', path, e)
+    HM[path] = out
+    return out
 urls = []
 for p, lg, title, cls, inner in docs:
     d = CFG['desc'].get(p) or CFG['desc'].get(lg, '')
@@ -334,9 +369,15 @@ for p, lg, title, cls, inner in docs:
             '<meta property="og:image" content="%s/img/og.jpg">' % BASE, '<link rel="icon" href="/img/logo.png">',
             '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s" media="print" onload="this.media=\'all\'">' % fonts,
             '<link rel="stylesheet" href="/css/site.css">']
-    mb = RE_BG.search(inner)
-    if mb:
-        head.append('<link rel="preload" as="image" href="%s" fetchpriority="high">' % mb.group(1))
+    hp = HERO.get(p)
+    if hp and hp.endswith('.webp') and os.path.exists(OUT + hp):
+        mp = hero_m(hp)
+        if mp:
+            head.append('<link rel="preload" as="image" href="%s" media="(max-width:600px)" fetchpriority="high">' % mp)
+            head.append('<link rel="preload" as="image" href="%s" media="(min-width:601px)" fetchpriority="high">' % hp)
+            head.append('<style>@media (max-width:600px){[style*="%s"]{background-image:url(%s)!important}}</style>' % (hp, mp))
+        else:
+            head.append('<link rel="preload" as="image" href="%s" fetchpriority="high">' % hp)
         NPRE[0] += 1
     for g in CFG['groups']:
         if p in g:
@@ -371,4 +412,4 @@ for d, _, fs in os.walk(OUT):
             reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
 print('nom Youri restant', reste)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
-print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0])
+print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0], '· recadrees telephone', len([1 for v in HM.values() if v]), '· photos de fond differees', NLZ[0])

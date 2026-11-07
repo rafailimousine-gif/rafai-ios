@@ -76,7 +76,7 @@ html,body{height:auto!important}
 .rlbook-duo>.rlbook{width:56%!important}
 .rlbook-duo>:not(.rlbook){width:44%!important}
 }
-#rlch{position:fixed;inset:0;z-index:2147483600;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;padding:calc(28px + env(safe-area-inset-top)) 24px calc(22px + env(safe-area-inset-bottom));--w:min(196vw,150vh);--t:calc(env(safe-area-inset-top) + 70px);background:linear-gradient(180deg,#0B0B0C 0,rgba(11,11,12,.3) 20%,rgba(11,11,12,.04) 42%,rgba(11,11,12,.5) 70%,#0B0B0C 100%) 0 var(--t)/100% calc(var(--w)*.5907 + 3px) no-repeat,#0B0B0C url(/img/rlch-1.webp) 0 var(--t)/calc(var(--w)*.52) auto no-repeat;color:#fff;font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:center;overflow:auto}
+#rlch{position:fixed;inset:0;z-index:2147483600;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;padding:calc(28px + env(safe-area-inset-top)) 24px calc(22px + env(safe-area-inset-bottom));--w:min(196vw,150vh);--t:calc(env(safe-area-inset-top) + 70px);background:linear-gradient(180deg,#0B0B0C 0,rgba(11,11,12,.3) 20%,rgba(11,11,12,.04) 42%,rgba(11,11,12,.5) 70%,#0B0B0C 100%) 0 var(--t)/100% calc(var(--w)*.5907 + 3px) no-repeat,#0B0B0C url(/img/rlch-2.webp) 0 var(--t)/calc(var(--w)*.52) auto no-repeat;color:#fff;font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:center;overflow:auto}
 #rlch:before{content:none}
 #rlch h2,#rlch p{text-shadow:0 2px 14px rgba(0,0,0,.75)}
 #rlch>div{position:relative;display:flex;flex-direction:column;align-items:center}
