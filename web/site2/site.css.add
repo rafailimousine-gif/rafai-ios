@@ -1,6 +1,11 @@
 #rlbar{display:flex;align-items:center;justify-content:center;gap:16px;background:#0c0c0e;color:#fff;padding:8px 16px;font:500 14px/1.35 Manrope,system-ui,sans-serif}
 #rlbar p{margin:0}
 #rlbar a{flex:none;color:#fff;border:1px solid #fff;border-radius:4px;padding:6px 20px;font-size:13px;text-decoration:none}
+#rlbar .st{display:flex;gap:8px;flex:none;align-items:center}
+#rlbar .st a{border:0;padding:0;border-radius:0;display:block;line-height:0}
+#rlbar .st img{height:30px;width:auto;display:block}
+.rlgp{display:block;margin-top:10px;line-height:0}
+.rlgp img{height:40px;width:auto;display:block}
 #rlnav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px;height:64px;padding:0 24px;background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.06);font:500 15px/1 Manrope,system-ui,sans-serif;color:#111}
 #rlnav .brand{display:flex;align-items:center;gap:12px;color:#111;text-decoration:none;font-size:20px}
 #rlnav .brand img{border-radius:6px}
@@ -26,6 +31,9 @@
 @media (max-width:899px){
 #rlbar{gap:10px;padding:8px 12px;font-size:12.5px}
 #rlbar a{padding:6px 12px}
+#rlbar .st a{padding:0}
+#rlbar .st{gap:6px}
+#rlbar .st img{height:26px}
 #rlnav{height:56px;padding:0 8px}
 #rlnav .brand{font-size:18px}
 #rlmenu{display:block}

@@ -289,9 +289,11 @@
 }
 ],
 "bar": {
-"t": "📱 Notre appli est disponible sur iPhone, Android bientôt · Our app is now on iPhone, Android coming soon",
+"t": "📱 Notre appli est disponible sur iPhone et Android · Our app is now on iPhone and Android",
 "b": "App Store",
-"u": "https://apps.apple.com/fr/app/rafai-limousine/id6829341896"
+"u": "https://apps.apple.com/fr/app/rafai-limousine/id6829341896",
+"b2": "Google Play",
+"u2": "https://play.google.com/store/apps/details?id=com.rafailimousine.client"
 },
 "desc": {
 "en": "Private chauffeur in Paris: airport transfers, business travel, weddings and hourly hire. Fixed price, Mercedes and Range Rover, 24/7.",

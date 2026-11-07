@@ -116,6 +116,28 @@ def embed(code):
     EMB[k] = '/e/' + n + '.html'
     return EMB[k]
 
+# Badges des stores : Google Play (badge officiel téléchargé par www.sh) et App Store (repris de Google Sites), marges retirées
+def trim(raw):
+    im = Image.open(io.BytesIO(raw)).convert('RGBA')
+    a = im.getchannel('A')
+    if a.getextrema()[0] < 250:
+        box = a.point(lambda v: 255 if v > 16 else 0).getbbox()
+    else:
+        bg = Image.new('RGBA', im.size, im.getpixel((0, 0)))
+        from PIL import ImageChops
+        box = ImageChops.difference(im, bg).convert('L').point(lambda v: 255 if v > 24 else 0).getbbox()
+    return im.crop(box) if box else im
+def badge(raw, key):
+    im = trim(raw)
+    b = io.BytesIO(); im.save(b, 'PNG')
+    path = webp(b.getvalue(), key, maxw=800)
+    return path, im.width, im.height
+GPF = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'gplay.png')
+GP = badge(open(GPF, 'rb').read(), 'gplay') if os.path.exists(GPF) else None
+GPU = CFG['bar'].get('u2', '')
+AB = None
+NGP = [0]
+
 def unwrap(u):
     m = re.match(r'https?://www\.google\.com/url\?q=([^&]+)', u)
     if m:
@@ -135,7 +157,13 @@ def header(p, lg):
         return ('<li class="dd"><a href="%s"%s>%s</a><button type="button" aria-label="%s" aria-expanded="false"></button><ul>%s</ul></li>'
                 % (it['u'], cur, html.escape(it['t']), html.escape(it['t']), ''.join(li(k) for k in kids)))
     bar = CFG['bar']
-    return ('<div id="rlbar"><p>%s</p><a href="%s" target="_blank" rel="noopener">%s</a></div>' % (html.escape(bar['t']), bar['u'], bar['b']) +
+    if AB and GP and GPU:
+        btn = ('<span class="st"><a href="%s" target="_blank" rel="noopener"><img src="%s" alt="Download on the App Store" width="%d" height="30"></a>'
+               '<a href="%s" target="_blank" rel="noopener"><img src="%s" alt="Get it on Google Play" width="%d" height="30"></a></span>'
+               % (bar['u'], AB[0], round(AB[1] * 30 / AB[2]), GPU, GP[0], round(GP[1] * 30 / GP[2])))
+    else:
+        btn = '<a href="%s" target="_blank" rel="noopener">%s</a>' % (bar['u'], bar['b'])
+    return ('<div id="rlbar"><p>%s</p>%s</div>' % (html.escape(bar['t']), btn) +
             '<header id="rlnav"><button type="button" id="rlmenu" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>'
             '<a class="brand" href="/home"><img src="%s" alt="Rafai Limousine" width="40" height="40"><span>Rafai Limousine</span></a>'
             '<nav><ul>%s</ul></nav></header>' % (LOGO, ''.join(li(i) for i in tree)))
@@ -204,6 +232,16 @@ for p in PAGES:
         e.replace_with(new)
     for a in s.find_all('a', href=True):
         a['href'] = unwrap(a['href'])
+    if GP and GPU:
+        for a in s.find_all('a', href=re.compile(r'apps\.apple\.com')):
+            if not a.find('img') or 'rlgp' in (a.get('class') or []):
+                continue
+            g = s.new_tag('a', href=GPU, target='_blank', rel='noopener')
+            g['class'] = ['rlgp']
+            gi = s.new_tag('img', src=GP[0], alt='Get it on Google Play', width=str(round(GP[1] * 40 / GP[2])), height='40')
+            g.append(gi)
+            a.insert_after(g)
+            NGP[0] += 1
     for e in s.find_all(True):
         for k in ('jscontroller', 'jsaction', 'jsname', 'jsdata', 'jsmodel', 'jsshadow', 'jsslot', 'data-tile-id'):
             if e.has_attr(k):
@@ -222,6 +260,8 @@ for p in PAGES:
     inner = body.decode_contents()
     inner = RE_LH.sub(lh_img, inner)
     inner = rename(inner)
+    if GP:
+        inner = inner.replace('and App Store are trademarks of Apple Inc.', 'and App Store are trademarks of Apple Inc. Google Play and the Google Play logo are trademarks of Google LLC.')
     lg = lang(p)
     docs.append((p, lg, title, cls, inner))
 
@@ -265,6 +305,12 @@ for l, tag in (('en', 'en'), ('fr', 'fr'), ('zh', 'zh-CN'), ('ar', 'ar')):
     io.open(OUT + '/e/agent-%s-%s.html' % (l, YV), 'w', encoding='utf-8').write(
         yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1))
 open(OUT + '/img/logo.png', 'wb').write(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo.png'), 'rb').read())
+for _, _, _, _, inner in docs:
+    m = re.search(r'<img[^>]*alt="Download on the App Store"[^>]*src="(/img/[^"]+)"', inner)
+    if m and os.path.exists(OUT + m.group(1)):
+        AB = badge(open(OUT + m.group(1), 'rb').read(), 'appstore-bar')
+        break
+print('badges Google Play ajoutes', NGP[0], '· barre', 'badges' if (AB and GP) else 'bouton texte', '· badge Play', GP)
 urls = []
 for p, lg, title, cls, inner in docs:
     d = CFG['desc'].get(p) or CFG['desc'].get(lg, '')
