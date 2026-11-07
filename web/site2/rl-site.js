@@ -130,7 +130,7 @@
   var d = document, h = d.documentElement, p = d.createElement('div');
   p.id = 'rlch'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'rlchT');
   p.dir = g === 'ar' ? 'rtl' : 'ltr';
-  p.innerHTML = '<div class="tp"><img src="/img/logo.png" alt="" width="64" height="64"><b>RAFAI LIMOUSINE</b></div>' +
+  p.innerHTML = '<div class="tp"><span class="lg"><img src="/img/logo.png" alt="" width="72" height="72"></span><b>RAFAI LIMOUSINE</b></div>' +
     '<div class="bt"><h2 id="rlchT"></h2><p></p><a class="go" target="_blank" rel="noopener"></a><small class="sto"></small>' +
     '<button type="button" class="st"></button></div>';
   p.querySelector('h2').textContent = T[0];
