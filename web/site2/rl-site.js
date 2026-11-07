@@ -121,10 +121,10 @@
   if (!ios && !and) return;
   if (!f) { try { if (sessionStorage.getItem(K)) return; } catch (e) {} }
   var TX = {
-    fr: ['Votre chauffeur privé à Paris', 'Réservez en quelques secondes, prix fixe annoncé à l’avance, suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Rester sur le site', 'Gratuit sur l’'],
-    en: ['Your private chauffeur in Paris', 'Book in seconds, fixed price upfront, follow your chauffeur live.', 'Open the app', 'Stay on the website', 'Free on the '],
-    zh: ['您在巴黎的私人司机', '几秒钟完成预订，价格提前确定，实时查看您的司机。', '打开应用', '留在网站', '免费下载 · '],
-    ar: ['سائقك الخاص في باريس', 'احجز في ثوانٍ، سعر ثابت مسبقًا، وتابع سائقك مباشرة.', 'فتح التطبيق', 'البقاء على الموقع', 'مجاني على ']
+    fr: ['Votre chauffeur privé à Paris', 'Réservez en quelques secondes, prix fixe annoncé à l’avance, suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Rester sur le site', ['Gratuit sur l’App Store', 'Gratuit sur Google Play']],
+    en: ['Your private chauffeur in Paris', 'Book in seconds, fixed price upfront, follow your chauffeur live.', 'Open the app', 'Stay on the website', ['Free on the App Store', 'Free on Google Play']],
+    zh: ['您在巴黎的私人司机', '几秒钟完成预订，价格提前确定，实时查看您的司机。', '打开应用', '留在网站', ['免费下载 · App Store', '免费下载 · Google Play']],
+    ar: ['سائقك الخاص في باريس', 'احجز في ثوانٍ، سعر ثابت مسبقًا، وتابع سائقك مباشرة.', 'فتح التطبيق', 'البقاء على الموقع', ['مجاني على App Store', 'مجاني على Google Play']]
   };
   var g = String(document.documentElement.lang || navigator.language || 'en').slice(0, 2).toLowerCase(), T = TX[g] || TX.en;
   var d = document, h = d.documentElement, p = d.createElement('div');
@@ -137,7 +137,7 @@
   p.querySelector('p').textContent = T[1];
   var o = p.querySelector('a'), s = p.querySelector('button');
   o.textContent = T[2]; o.href = ios ? AS : PL; s.textContent = T[3];
-  p.querySelector('.sto').textContent = T[4] + (ios ? 'App Store' : 'Google Play');
+  p.querySelector('.sto').textContent = T[4][ios ? 0 : 1];
   function close() {
     p.remove(); h.classList.remove('rlchon');
     try { sessionStorage.setItem(K, '1'); } catch (e) {}
