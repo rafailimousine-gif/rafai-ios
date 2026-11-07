@@ -75,7 +75,7 @@
     '.gate .gs{grid-column:1;grid-row:4;margin:18px 0 0;max-width:28em;font-size:19px;line-height:1.5;text-align:start}' +
     '.gate .rlperks{grid-column:1;grid-row:5;margin-top:26px}' +
     '.gate #gateF{grid-column:2;grid-row:1/span 6;align-self:center;margin:0;padding:32px;border-radius:26px;background:rgba(16,16,18,.76);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 90px -30px rgba(0,0,0,.75)}' +
-    '.gate #gCall{grid-column:2;grid-row:7;margin:16px 0 0}' +
+    '.gate #gCall{grid-column:2;grid-row:7;margin:16px 0 0;align-items:stretch}.gate #gCall>.btn{margin:0}' +
     '.gate #gLegal{grid-column:1/-1;grid-row:8;margin-top:40px}' +
     '}' +
     /* entre 900 et 1179 px : texte au-dessus, carte en dessous ; en-tête plus compact */
