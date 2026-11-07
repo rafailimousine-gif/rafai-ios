@@ -1,5 +1,6 @@
 /* ---------- rlGrand v2 : page de réservation sur ordinateur, grande mise en page (site uniquement)
-   v2 : dès 900 px de large (avant 1024), page de connexion en pleine page (texte à gauche, connexion à droite) ---------- */
+   v2 : dès 900 px de large (avant 1024), page de connexion en pleine page (texte à gauche, connexion à droite,
+   boutons Appeler et WhatsApp de même taille juste sous la connexion) ---------- */
 (function rlGrand() {
   if (window.__rlAccueil || window.__rlNative || window.__rlTwa || /RafaiApp\//.test(navigator.userAgent)) return;
   var FOND = window.__rlFond || '/rl-fond.jpg';
@@ -10,7 +11,7 @@
     ar: ['استقبال بلوحة تحمل اسمكم', 'إذا تأخرت رحلتكم، ننتظركم', 'ساعة انتظار دون رسوم إضافية', 'أسطول مرسيدس ورينج روفر']
   };
   var css =
-    '.rlperks{display:none}' +
+    '.rlperks{display:none}#rlgR{display:contents}' +
     '@media (min-width:900px){' +
     'body{padding-bottom:0;background:#0c0c0e}' +
     'body:before,body:after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none}' +
@@ -67,16 +68,18 @@
     '.gate:before,.gate:after{height:auto;bottom:0}' +
     '.gate:before{background:url(' + FOND + ') 50% 38%/cover no-repeat}' +
     '.gate:after{background:linear-gradient(90deg,rgba(12,12,14,.9) 0,rgba(12,12,14,.72) 50%,rgba(12,12,14,.5) 100%)}' +
-    '.gate .gw{position:relative;max-width:1240px;min-height:100vh;box-sizing:border-box;margin:0 auto;padding:96px 48px 30px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);grid-template-rows:1fr auto auto auto auto 1fr auto auto;column-gap:clamp(40px,6vw,104px);align-items:start;text-align:start}' +
+    '.gate .gw{position:relative;max-width:1240px;min-height:100vh;box-sizing:border-box;margin:0 auto;padding:96px 48px 30px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);grid-template-rows:1fr auto auto auto auto 1fr auto;column-gap:clamp(40px,6vw,104px);align-items:start;text-align:start}' +
     '.gate .glang{position:absolute;top:26px;inset-inline-end:48px;margin:0}' +
     '.gate .gback{position:absolute;top:26px;inset-inline-start:48px;margin:0}' +
     '.gate .glogo{grid-column:1;grid-row:2;width:96px;height:96px;margin:0 0 24px}' +
     '.gate h1{grid-column:1;grid-row:3;margin:0;font-size:clamp(38px,4.2vw,62px);line-height:1.06;letter-spacing:-.02em;text-align:start}' +
     '.gate .gs{grid-column:1;grid-row:4;margin:18px 0 0;max-width:28em;font-size:19px;line-height:1.5;text-align:start}' +
     '.gate .rlperks{grid-column:1;grid-row:5;margin-top:26px}' +
-    '.gate #gateF{grid-column:2;grid-row:1/span 6;align-self:center;margin:0;padding:32px;border-radius:26px;background:rgba(16,16,18,.76);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 90px -30px rgba(0,0,0,.75)}' +
-    '.gate #gCall{grid-column:2;grid-row:7;margin:16px 0 0;align-items:stretch}.gate #gCall>.btn{margin:0}' +
-    '.gate #gLegal{grid-column:1/-1;grid-row:8;margin-top:40px}' +
+    '.gate #rlgR{display:flex;flex-direction:column;gap:16px;grid-column:2;grid-row:1/span 6;align-self:center}' +
+    '.gate #gateF{margin:0;padding:32px;border-radius:26px;background:rgba(16,16,18,.76);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 90px -30px rgba(0,0,0,.75)}' +
+    '.gate #gCall:not(.hide){display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0}' +
+    '.gate #gCall>.btn{margin:0;height:56px;min-height:0;box-sizing:border-box;padding:0 16px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;line-height:1}' +
+    '.gate #gLegal{grid-column:1/-1;grid-row:7;margin-top:40px}' +
     '}' +
     /* entre 900 et 1179 px : texte au-dessus, carte en dessous ; en-tête plus compact */
     '@media (min-width:900px) and (max-width:1179px){' +
@@ -118,7 +121,16 @@
     kids.slice(i).forEach(function (n) { d.appendChild(n); });
     c.appendChild(g); c.appendChild(d); b.appendChild(c);
   }
+  function droite() {
+    var gw = document.querySelector('.gate .gw'), f = byId('gateF'), c = byId('gCall');
+    if (!gw || !f || !c || byId('rlgR') || f.parentNode !== gw || c.parentNode !== gw) return;
+    var w = document.createElement('div');
+    w.id = 'rlgR';
+    gw.insertBefore(w, f);
+    w.appendChild(f); w.appendChild(c);
+  }
   function go() {
+    droite();
     perks();
     colonnes();
     if (sel) sel.addEventListener('change', function () { setTimeout(perks, 0); });
