@@ -109,3 +109,40 @@
   ['pointerdown', 'keydown', 'scroll'].forEach(function (e) { addEventListener(e, go, { once: true, passive: true }); });
   setTimeout(go, 3500);
 })();
+/* Écran de choix sur téléphone : ouvrir l'appli (App Store sur iPhone, Google Play sur Android) ou rester sur le site.
+   Une fois par visite. Test : ?appchoix=ios ou ?appchoix=android */
+(function () {
+  var AS = 'https://apps.apple.com/fr/app/rafai-limousine/id6829341896';
+  var PL = 'https://play.google.com/store/apps/details?id=com.rafailimousine.client';
+  var K = 'rl_app_choix_v2', ua = navigator.userAgent || '', f = '';
+  try { f = (location.search.match(/[?&]appchoix=(ios|android)/) || [])[1] || ''; } catch (e) {}
+  var ios = f === 'ios' || (!f && (/iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)));
+  var and = f === 'android' || (!f && /Android/.test(ua));
+  if (!ios && !and) return;
+  if (!f) { try { if (sessionStorage.getItem(K)) return; } catch (e) {} }
+  var TX = {
+    fr: ['Continuer sur l’application', 'Réservez plus vite et suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Continuer sur le site'],
+    en: ['Continue in the app', 'Book faster and follow your chauffeur live.', 'Open the app', 'Continue on the website'],
+    zh: ['在应用中继续', '更快预订，实时查看您的司机。', '打开应用', '继续使用网站'],
+    ar: ['تابع في التطبيق', 'احجز بسرعة أكبر وتابع سائقك مباشرة.', 'فتح التطبيق', 'المتابعة على الموقع']
+  };
+  var g = String(document.documentElement.lang || navigator.language || 'en').slice(0, 2).toLowerCase(), T = TX[g] || TX.en;
+  var d = document, h = d.documentElement, p = d.createElement('div');
+  p.id = 'rlch'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'rlchT');
+  p.dir = g === 'ar' ? 'rtl' : 'ltr';
+  p.innerHTML = '<div class="in"><img src="/img/logo.png" alt="" width="84" height="84"><h2 id="rlchT"></h2><p></p>' +
+    '<a class="go" target="_blank" rel="noopener"></a><button type="button" class="st"></button><small></small></div>';
+  p.querySelector('h2').textContent = T[0];
+  p.querySelector('p').textContent = T[1];
+  var o = p.querySelector('a'), s = p.querySelector('button');
+  o.textContent = T[2]; o.href = ios ? AS : PL; s.textContent = T[3];
+  p.querySelector('small').textContent = ios ? 'App Store' : 'Google Play';
+  function close() {
+    p.remove(); h.classList.remove('rlchon');
+    try { sessionStorage.setItem(K, '1'); } catch (e) {}
+  }
+  o.addEventListener('click', function () { setTimeout(close, 300); });
+  s.addEventListener('click', close);
+  d.body.appendChild(p); h.classList.add('rlchon');
+  try { o.focus({ preventScroll: true }); } catch (e) {}
+})();

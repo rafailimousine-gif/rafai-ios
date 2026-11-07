@@ -97,6 +97,7 @@ BIG = ('<style>@media (min-width:440px) and (min-height:600px){'
        '#s1 .see{font-size:17px;padding:17px 18px;border-radius:14px}#s1 .duo{gap:12px;margin-top:12px}#s1 .duo .btn{padding:14px 16px}'
        '}</style>')
 NBIG = [0]
+NCH = [0]
 
 EMB = {}
 def embed(code):
@@ -108,6 +109,10 @@ def embed(code):
     c = lazy_ads(c)
     c = re.sub(r'https?://(?:www\.)?rafai-limousine\.com(?=[/"\'])', '', c)
     c = rename(c)
+    # l'ancien écran de choix (dans le bloc de réservation, iPhone seulement) est remplacé par celui de toute la page (rl-site.js)
+    if 'if (window.__rlCh) return; window.__rlCh = 1;' in c:
+        c = c.replace('if (window.__rlCh) return; window.__rlCh = 1;', 'return;', 1)
+        NCH[0] += 1
     if '<div class="photo">' in c and 'id="s1"' in c and '</head>' in c:
         c = c.replace('</head>', BIG + '</head>', 1)
         NBIG[0] += 1
@@ -356,5 +361,5 @@ for d, _, fs in os.walk(OUT):
         if f.endswith('.html'):
             reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
 print('nom Youri restant', reste)
-print('cartes de reservation agrandies', NBIG[0])
+print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
 print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG))
