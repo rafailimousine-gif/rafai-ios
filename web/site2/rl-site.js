@@ -1,3 +1,21 @@
+/* Blocs (réservation, cartes…) : chargés juste après le premier affichage de la page, pour que le texte et la photo s'affichent d'abord */
+(function () {
+  var fait = false;
+  function charge() {
+    if (fait) return; fait = true;
+    Array.prototype.forEach.call(document.querySelectorAll('iframe[data-src]'), function (f) {
+      f.src = f.getAttribute('data-src'); f.removeAttribute('data-src');
+    });
+  }
+  try {
+    var po = new PerformanceObserver(function (l) {
+      if (l.getEntries().some(function (e) { return e.name === 'first-contentful-paint'; })) { po.disconnect(); setTimeout(charge, 0); }
+    });
+    po.observe({ type: 'paint', buffered: true });
+  } catch (e) {}
+  addEventListener('load', charge);
+  setTimeout(charge, 2500);
+})();
 /* Menu du site et mesure d'audience chargée après l'affichage */
 (function () {
   var m = document.getElementById('rlmenu'), n = document.getElementById('rlnav');

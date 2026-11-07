@@ -18,6 +18,12 @@ cat public/css/atari.css src/site.css.add > public/css/site.css && rm public/css
 V=$(cat public/css/site.css public/css/site.js | md5sum | cut -c1-8)
 find public -name '*.html' -not -path 'public/e/*' -print0 | xargs -0 sed -i "s#/css/site\.css\"#/css/site.css?v=$V\"#; s#/css/site\.js\"#/css/site.js?v=$V\"#"
 [ -f public/img/og.jpg ] || curl -sLf -o public/img/og.jpg "https://raw.githubusercontent.com/rafailimousine-gif/rafai-ios/$COMMIT/web/site/rafai-accueil-5.jpg"
+# écran appli sur téléphone : seulement la partie gauche de la photo (le monsieur et la dame), en WebP léger
+python3 -c "
+from PIL import Image
+im = Image.open('public/img/og.jpg').convert('RGB'); w, h = im.size
+im = im.crop((0, 0, round(w * .52), h)); im = im.resize((800, round(im.height * 800 / im.width)), Image.LANCZOS)
+im.save('public/img/rlch-1.webp', 'WEBP', quality=74, method=6)"
 cat > firebase.json <<J
 {"hosting":{"target":"www","public":"public","cleanUrls":true,"trailingSlash":false,
 "rewrites":[{"source":"/","destination":"/home.html"}],

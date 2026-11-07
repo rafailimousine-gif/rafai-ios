@@ -230,7 +230,9 @@ for p in PAGES:
         n += 1
         src = embed(e['data-code'])
         ttl = (e.find('iframe') or {}).get('title', '') if e.find('iframe') else ''
-        new = s.new_tag('iframe', src=src, title='Rafai Limousine', scrolling='no', frameborder='0', allow='geolocation; clipboard-write')
+        # le bloc se charge juste après le premier affichage de la page (rl-site.js) : la page s'affiche plus vite
+        new = s.new_tag('iframe', title='Rafai Limousine', scrolling='no', frameborder='0', allow='geolocation; clipboard-write')
+        new['data-src'] = src
         new['class'] = 'rlif'
         if n > 2:
             new['loading'] = 'lazy'
@@ -316,6 +318,9 @@ for _, _, _, _, inner in docs:
         AB = badge(open(OUT + m.group(1), 'rb').read(), 'appstore-bar')
         break
 print('badges Google Play ajoutes', NGP[0], '· barre', 'badges' if (AB and GP) else 'bouton texte', '· badge Play', GP)
+# grande photo du haut de page (image LCP) : demandée en priorité dès le début du chargement
+RE_BG = re.compile(r'background-image:\s*url\((?:&quot;|["\'])?(/img/[^"\'&)]+)')
+NPRE = [0]
 urls = []
 for p, lg, title, cls, inner in docs:
     d = CFG['desc'].get(p) or CFG['desc'].get(lg, '')
@@ -329,6 +334,10 @@ for p, lg, title, cls, inner in docs:
             '<meta property="og:image" content="%s/img/og.jpg">' % BASE, '<link rel="icon" href="/img/logo.png">',
             '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s" media="print" onload="this.media=\'all\'">' % fonts,
             '<link rel="stylesheet" href="/css/site.css">']
+    mb = RE_BG.search(inner)
+    if mb:
+        head.append('<link rel="preload" as="image" href="%s" fetchpriority="high">' % mb.group(1))
+        NPRE[0] += 1
     for g in CFG['groups']:
         if p in g:
             for l, q in zip(('en', 'fr', 'zh', 'ar'), g):
@@ -362,4 +371,4 @@ for d, _, fs in os.walk(OUT):
             reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
 print('nom Youri restant', reste)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
-print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG))
+print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0])
