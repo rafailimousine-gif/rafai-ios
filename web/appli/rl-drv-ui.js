@@ -1,4 +1,4 @@
-/* ---------- rlUI v1 : RL Driver, courses en lignes, onglets, petit calendrier, menu et page « Mon compte » ---------- */
+/* ---------- rlUI v1 : RL Driver, courses en lignes, onglets, petit calendrier, menu et page « Mon compte » (+ rlTheme v1 : sombre / clair / auto) ---------- */
 (function rlUI() {
   if (window.__rlUI || typeof render !== 'function') return;
   window.__rlUI = 1;
@@ -20,6 +20,7 @@
     out: sv('<path d="M14 4h4.5a1.5 1.5 0 0 1 1.5 1.5v13a1.5 1.5 0 0 1-1.5 1.5H14"/><path d="M10 8l-4 4 4 4M6 12h10"/>'),
     bell: sv('<path d="M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>'),
     pin: sv('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>'),
+    moon: sv('<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>'),
     face: sv('<path d="M4 8.5V5.5A1.5 1.5 0 0 1 5.5 4h3M15.5 4h3A1.5 1.5 0 0 1 20 5.5v3M20 15.5v3a1.5 1.5 0 0 1-1.5 1.5h-3M8.5 20h-3A1.5 1.5 0 0 1 4 18.5v-3"/><path d="M9 9v1.5M15 9v1.5M12 9v4h-1M9.5 15.5a4 4 0 0 0 5 0"/>'),
     back: sv('<path d="M15 5l-7 7 7 7"/>'),
     prev: sv('<path d="M14.5 6l-6 6 6 6"/>'),
@@ -236,6 +237,10 @@
       h += '<div class="rlac-r"><span>' + I.pin + 'Localisation</span>' + (lo ? '<em class="ok">Activée ✓</em>' : '<button type="button" data-rlact="loc">Activer</button>') + '</div>';
       if (window.__rlFace) h += '<div class="rlac-r"><span>' + I.face + hx(window.__rlFace) + '</span><em class="ok">Activé ✓</em></div>';
     }
+    var tv = thGet();
+    h += '<div class="rlac-r rlth"><span>' + I.moon + 'Apparence</span><div class="rlseg" role="group" aria-label="Apparence">' +
+      [['dark', 'Sombre'], ['light', 'Clair'], ['auto', 'Auto']].map(function (o) { return '<button type="button" data-rlth="' + o[0] + '"' + (tv === o[0] ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') + '>' + o[1] + '</button>'; }).join('') + '</div></div>';
+    if (tv === 'auto') h += '<p class="rlth-n">' + (TH_APP ? 'Auto : clair le jour (7 h – 19 h 30), sombre la nuit.' : 'Auto : suit le réglage de votre téléphone.') + '</p>';
     h += '<button type="button" class="rlac-r" data-rlgo="cal"><span>' + I.cal + 'Calendrier du mois</span>' + I.next + '</button>';
     h += '<button type="button" class="rlac-r" data-rlgo="done"><span>' + I.hist + 'Historique des courses</span>' + I.next + '</button>';
     b.innerHTML = h;
@@ -247,6 +252,137 @@
     a.setAttribute('aria-hidden', on ? 'false' : 'true');
     document.documentElement.classList.toggle('rlac-on', !!on);
   }
+
+  /* ---------- rlTheme v1 : apparence sombre / claire / auto ---------- */
+  var TH_K = 'rlTheme', TH_APP = /RLDriver/.test(navigator.userAgent), TH_CSS = null;
+  function thGet() { try { var v = localStorage.getItem(TH_K); return v === 'light' || v === 'auto' ? v : 'dark'; } catch (e) { return 'dark'; } }
+  function thLight() {
+    var v = thGet();
+    if (v === 'light') return true;
+    if (v !== 'auto') return false;
+    if (!TH_APP && window.matchMedia) {
+      if (window.matchMedia('(prefers-color-scheme: light)').matches) return true;
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) return false;
+    }
+    var d = new Date(), h = d.getHours() + d.getMinutes() / 60;
+    return h >= 7 && h < 19.5;
+  }
+  function thHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, h = 0, s = 0, d = mx - mn;
+    if (d) {
+      s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+      h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60;
+    }
+    return [h, s, l];
+  }
+  function thRgb(h, s, l) {
+    function f(n) { var k = (n + h / 30) % 12, a = s * Math.min(l, 1 - l); return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))); }
+    return [f(0), f(8), f(4)];
+  }
+  function thCol(m, r, g, b, a, kind) {
+    var x = thHsl(r, g, b), h = x[0], s = x[1], l = x[2], gold = h >= 28 && h <= 56 && s > 0.3 && l > 0.3;
+    if (kind === 'sh') { if (l > 0.35) return m; a = Math.round(a * 0.3 * 100) / 100; return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')'; }
+    if (kind === 'tx') {
+      if (gold) l = Math.min(l, 0.42);
+      else if (l > 0.55) { l = 1.03 - l; s = Math.min(s, 0.25); }
+      else return m;
+    } else {
+      if (gold) return m;
+      if (l >= 0.5) return m;
+      l = 0.985 - l * 0.55; s = Math.min(s, 0.3) * 0.6;
+    }
+    var c = thRgb(h, s, l);
+    return a < 1 ? 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')' : 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+  }
+  var TH_RE = /rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:\s*[,\/]\s*([\d.]+%?))?\s*\)|#([0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{3,4})\b/gi;
+  function thVal(v, kind) {
+    return v.replace(TH_RE, function (m, r, g, b, a, hx) {
+      if (hx) {
+        if (hx.length < 6) hx = hx.split('').map(function (c) { return c + c; }).join('');
+        r = parseInt(hx.slice(0, 2), 16); g = parseInt(hx.slice(2, 4), 16); b = parseInt(hx.slice(4, 6), 16);
+        a = hx.length === 8 ? parseInt(hx.slice(6), 16) / 255 : 1;
+      } else a = a == null ? 1 : (/%$/.test(a) ? parseFloat(a) / 100 : parseFloat(a));
+      return thCol(m, +r, +g, +b, a, kind);
+    });
+  }
+  function thKind(p) {
+    if (/^(color|caret-color|-webkit-text-fill-color|text-decoration-color)$/.test(p)) return 'tx';
+    if (/shadow/.test(p)) return 'sh';
+    if (/^(background|border|outline|fill|stroke|column-rule)/.test(p)) return 'bg';
+    return '';
+  }
+  function thSel(sel) {
+    return sel.split(',').map(function (x) {
+      x = x.trim();
+      if (/^:root\b/.test(x)) return 'html.rllight.rlui' + x.slice(5);
+      if (/^html\b/.test(x)) return 'html.rllight.rlui' + x.slice(4);
+      return 'html.rllight.rlui ' + x;
+    }).join(',');
+  }
+  function thRules(list, out) {
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i];
+      if (r.cssRules && r.media) { var o = []; thRules(r.cssRules, o); if (o.length) out.push('@media ' + r.media.mediaText + '{' + o.join('') + '}'); continue; }
+      if (!r.style || !r.selectorText) continue;
+      var d = [];
+      for (var j = 0; j < r.style.length; j++) {
+        var p = r.style[j], k = thKind(p); if (!k) continue;
+        var v = r.style.getPropertyValue(p); if (!v || v.indexOf('var(') >= 0 && !TH_RE.test(v)) { TH_RE.lastIndex = 0; continue; }
+        TH_RE.lastIndex = 0;
+        var n = thVal(v, k); if (n !== v) d.push(p + ':' + n + ' !important');
+      }
+      if (d.length) out.push(thSel(r.selectorText) + '{' + d.join(';') + '}');
+    }
+  }
+  function thBuild() {
+    var out = [];
+    for (var i = 0; i < document.styleSheets.length; i++) {
+      var ss = document.styleSheets[i], rs;
+      if (ss.ownerNode && ss.ownerNode.id === 'rlthcss') continue;
+      try { rs = ss.cssRules; } catch (e) { continue; }
+      if (rs) thRules(rs, out);
+    }
+    var base = 'html.rllight.rlui{--bg:#f2efe8;--card:#ffffff;--line:#e2ddd2;--txt:#17161a;--mut:#6b655c;--dim:#9a948a;--gold:#a67d2c;--gold2:#8a6620;--ok:#23854f;--blue:#2c6aa8;--red:#c0392b;color-scheme:light}' +
+      'html.rllight.rlui,html.rllight.rlui body{background:#f2efe8 !important}' +
+      'html.rllight.rlui .rlac-lo{background:#17161a !important;color:#f2efe8 !important}' +
+      'html.rllight.rlui #rlsb{display:block}';
+    var t = document.createElement('style'); t.id = 'rlthcss'; t.textContent = base + out.join('\n');
+    (document.head || document.documentElement).appendChild(t);
+    TH_CSS = t;
+  }
+  function thInline() {
+    var on = document.documentElement.classList.contains('rllight');
+    var els = document.querySelectorAll('[style]');
+    for (var i = 0; i < els.length; i++) {
+      var e = els[i];
+      if (e.id === 'rlsb' || e.closest('#rlthcss')) continue;
+      var cur = e.getAttribute('style') || '', org = e.getAttribute('data-rlsty');
+      if (on) {
+        if (org == null) { org = cur; e.setAttribute('data-rlsty', org); }
+        else if (cur !== e.getAttribute('data-rlstn')) { org = cur; e.setAttribute('data-rlsty', org); }
+        var n = org.replace(/(^|;)\s*([a-z-]+)\s*:([^;]*)/gi, function (m, a, p, v) { var k = thKind(p.toLowerCase()); return k ? a + p + ':' + thVal(v, k) : m; });
+        if (n !== cur) e.setAttribute('style', n);
+        e.setAttribute('data-rlstn', n);
+      } else if (org != null) {
+        if (cur === e.getAttribute('data-rlstn')) e.setAttribute('style', org);
+        e.removeAttribute('data-rlsty'); e.removeAttribute('data-rlstn');
+      }
+    }
+  }
+  function thApply() {
+    var li = thLight();
+    if (li && !TH_CSS) thBuild();
+    document.documentElement.classList.toggle('rllight', li);
+    if (TH_APP && !el('rlsb')) {
+      var sb = document.createElement('div'); sb.id = 'rlsb'; sb.setAttribute('aria-hidden', 'true');
+      document.body && document.body.appendChild(sb);
+    }
+    try { thInline(); } catch (e) {}
+  }
+  function thSet(v) { try { localStorage.setItem(TH_K, v); } catch (e) {} thApply(); accRows(); }
+  setInterval(function () { if (thGet() === 'auto') thApply(); }, 60000);
+  try { window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function () { if (thGet() === 'auto') thApply(); }); } catch (e) {}
 
   /* ---------- mise en place ---------- */
   var st = document.createElement('style');
@@ -310,7 +446,12 @@
     '.rlac-r button{height:34px;padding:0 14px;border:0;border-radius:10px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#111113;font:inherit;font-size:14px;font-weight:800;cursor:pointer}' +
     '.rlac-lo{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:54px;margin:26px 0 0;border:0;border-radius:14px;background:#f3efe6;color:#111113;font:inherit;font-size:16px;font-weight:800;cursor:pointer}.rlac-lo svg{width:20px;height:20px}' +
     '.rlac-v{margin:14px 0 0;text-align:center;font-size:12.5px;color:var(--dim)}' +
-    '#rlacc #pf{margin-top:8px}html.rlsel #rlperm{display:none}';
+    '#rlacc #pf{margin-top:8px}html.rlsel #rlperm{display:none}' +
+    '.rlseg{display:flex;gap:3px;padding:3px;border:1px solid var(--line);border-radius:11px;background:var(--bg)}' +
+    '.rlac-r .rlseg button{height:32px;padding:0 11px;border:0;border-radius:8px;background:none;color:var(--mut);font:inherit;font-size:14px;font-weight:700;cursor:pointer}' +
+    '.rlac-r .rlseg button.on{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#111113}' +
+    '.rlth-n{margin:0;padding:0 14px 12px 46px;font-size:12.5px;color:var(--mut);border-bottom:1px solid var(--line)}.rlac-r.rlth:has(+ .rlth-n){border-bottom:0}' +
+    '#rlsb{display:none;position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top);background:#111113;z-index:40;pointer-events:none}';
   (document.head || document.documentElement).appendChild(st);
 
   function setup() {
@@ -362,6 +503,7 @@
     if (t.closest('#rlme')) { accOpen(true); return; }
     if (t.closest('[data-rlclose]')) { navOpen(false); return; }
     if (t.closest('[data-rlacx]')) { accOpen(false); return; }
+    if ((b = t.closest('[data-rlth]'))) { thSet(b.getAttribute('data-rlth')); return; }
     if ((b = t.closest('[data-rlgo]'))) { go(b.getAttribute('data-rlgo')); return; }
     if ((b = t.closest('[data-rlact]'))) {
       var a = b.getAttribute('data-rlact');
@@ -404,8 +546,10 @@
     if (!on) return r;
     try { if (TK.stop && document.activeElement && document.activeElement.id === 'tkStopTxt') return r; } catch (e) {}
     try { setup(); draw(); } catch (e) { try { console.log('rlUI', e); } catch (e2) {} }
+    try { thApply(); } catch (e) {}
     return r;
   };
+  try { thApply(); } catch (e) {}
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { if (ID && KEY && DATA) render(); });
   else if (ID && KEY && DATA) render();
 })();
