@@ -109,7 +109,7 @@
   ['pointerdown', 'keydown', 'scroll'].forEach(function (e) { addEventListener(e, go, { once: true, passive: true }); });
   setTimeout(go, 3500);
 })();
-/* Écran de choix sur téléphone : ouvrir l'appli (App Store sur iPhone, Google Play sur Android) ou rester sur le site.
+/* Écran plein écran sur téléphone : ouvrir l'appli (App Store sur iPhone, Google Play sur Android), petit lien pour rester sur le site.
    Une fois par visite. Test : ?appchoix=ios ou ?appchoix=android */
 (function () {
   var AS = 'https://apps.apple.com/fr/app/rafai-limousine/id6829341896';
@@ -121,22 +121,23 @@
   if (!ios && !and) return;
   if (!f) { try { if (sessionStorage.getItem(K)) return; } catch (e) {} }
   var TX = {
-    fr: ['Continuer sur l’application', 'Réservez plus vite et suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Continuer sur le site'],
-    en: ['Continue in the app', 'Book faster and follow your chauffeur live.', 'Open the app', 'Continue on the website'],
-    zh: ['在应用中继续', '更快预订，实时查看您的司机。', '打开应用', '继续使用网站'],
-    ar: ['تابع في التطبيق', 'احجز بسرعة أكبر وتابع سائقك مباشرة.', 'فتح التطبيق', 'المتابعة على الموقع']
+    fr: ['Votre chauffeur privé à Paris', 'Réservez en quelques secondes, prix fixe annoncé à l’avance, suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Rester sur le site', 'Gratuit sur l’'],
+    en: ['Your private chauffeur in Paris', 'Book in seconds, fixed price upfront, follow your chauffeur live.', 'Open the app', 'Stay on the website', 'Free on the '],
+    zh: ['您在巴黎的私人司机', '几秒钟完成预订，价格提前确定，实时查看您的司机。', '打开应用', '留在网站', '免费下载 · '],
+    ar: ['سائقك الخاص في باريس', 'احجز في ثوانٍ، سعر ثابت مسبقًا، وتابع سائقك مباشرة.', 'فتح التطبيق', 'البقاء على الموقع', 'مجاني على ']
   };
   var g = String(document.documentElement.lang || navigator.language || 'en').slice(0, 2).toLowerCase(), T = TX[g] || TX.en;
   var d = document, h = d.documentElement, p = d.createElement('div');
   p.id = 'rlch'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'rlchT');
   p.dir = g === 'ar' ? 'rtl' : 'ltr';
-  p.innerHTML = '<div class="in"><img src="/img/logo.png" alt="" width="84" height="84"><h2 id="rlchT"></h2><p></p>' +
-    '<a class="go" target="_blank" rel="noopener"></a><button type="button" class="st"></button><small></small></div>';
+  p.innerHTML = '<div class="tp"><img src="/img/logo.png" alt="" width="64" height="64"><b>RAFAI LIMOUSINE</b></div>' +
+    '<div class="bt"><h2 id="rlchT"></h2><p></p><a class="go" target="_blank" rel="noopener"></a><small class="sto"></small>' +
+    '<button type="button" class="st"></button></div>';
   p.querySelector('h2').textContent = T[0];
   p.querySelector('p').textContent = T[1];
   var o = p.querySelector('a'), s = p.querySelector('button');
   o.textContent = T[2]; o.href = ios ? AS : PL; s.textContent = T[3];
-  p.querySelector('small').textContent = ios ? 'App Store' : 'Google Play';
+  p.querySelector('.sto').textContent = T[4] + (ios ? 'App Store' : 'Google Play');
   function close() {
     p.remove(); h.classList.remove('rlchon');
     try { sessionStorage.setItem(K, '1'); } catch (e) {}
