@@ -77,6 +77,7 @@
     '.gate .rlperks{grid-column:1;grid-row:5;margin-top:26px}' +
     '.gate #rlgR{display:flex;flex-direction:column;gap:16px;grid-column:2;grid-row:1/span 6;align-self:center}' +
     '.gate #gateF{margin:0;padding:32px;border-radius:26px;background:rgba(16,16,18,.76);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 90px -30px rgba(0,0,0,.75)}' +
+    '.gate #appleid-signin>div{max-width:none!important}' +
     '.gate #gCall:not(.hide){display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0}' +
     '.gate #gCall>.btn{margin:0;height:56px;min-height:0;box-sizing:border-box;padding:0 16px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;line-height:1}' +
     '.gate #gLegal{grid-column:1/-1;grid-row:7;margin-top:40px}' +
