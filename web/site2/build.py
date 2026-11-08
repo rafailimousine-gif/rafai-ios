@@ -333,19 +333,23 @@ yc = yc.replace('function arm(){', 'function arm(){return;', 1)
 # (reconnaissance vocale de Chrome / Safari) puis envoyée comme un message écrit. Bouton caché si le navigateur ne sait pas faire.
 VOICE = r'''<style>
 form.bar button.mic{background:#fff;color:#A8844B;border:1px solid var(--line)}
+form.bar button.mic.wait{background:#FFF4E5;color:#A8844B;border-color:#C29B5E}
 form.bar button.mic.rec{background:#B3261E;color:#fff;border-color:#B3261E;animation:rlpulse 1.2s ease-in-out infinite}
 @keyframes rlpulse{0%,100%{box-shadow:0 0 0 0 rgba(179,38,30,.45)}50%{box-shadow:0 0 0 8px rgba(179,38,30,0)}}
+.rlvtip{margin:0 12px 8px;padding:8px 12px;border-radius:12px;background:#FFF4E5;color:#5C4320;font-size:13px;line-height:1.4;text-align:center}
+.rlvtip.err{background:#FDECEA;color:#8C1D18}
 </style>
 <script>
 (function(){
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var bar = document.getElementById('bar'), inp = document.getElementById('in');
   if (!SR || !bar || !inp) return;
+  var IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var T = {
-    en: {a: 'Voice message', l: 'Listening… speak now', n: 'Please allow the microphone to send a voice message.', e: 'Voice message not available, please type your message.'},
-    fr: {a: 'Message vocal', l: 'Je vous écoute… parlez', n: 'Autorisez le micro pour envoyer un message vocal.', e: 'Message vocal indisponible, écrivez votre message.'},
-    zh: {a: '语音消息', l: '正在聆听…请说话', n: '请允许使用麦克风以发送语音消息。', e: '语音消息不可用，请输入文字。'},
-    ar: {a: 'رسالة صوتية', l: 'أستمع إليك… تحدث الآن', n: 'يرجى السماح باستخدام الميكروفون لإرسال رسالة صوتية.', e: 'الرسالة الصوتية غير متاحة، يرجى كتابة رسالتك.'}
+    en: {a: 'Voice message', w: 'Allow the microphone in the window that appears…', l: 'Listening… speak, then tap the red button to send', n: 'The microphone is blocked. Allow it for this site in your browser settings, then try again.', k: 'Voice message is not available here. Tap the microphone on your keyboard to dictate your message.', e: 'Voice message not available, please type your message.'},
+    fr: {a: 'Message vocal', w: 'Autorisez le micro dans la fenêtre qui s’affiche…', l: 'Je vous écoute… parlez, puis touchez le bouton rouge pour envoyer', n: 'Le micro est bloqué. Autorisez-le pour ce site dans les réglages du navigateur, puis réessayez.', k: 'Le message vocal n’est pas disponible ici. Touchez le micro de votre clavier pour dicter votre message.', e: 'Message vocal indisponible, écrivez votre message.'},
+    zh: {a: '语音消息', w: '请在弹出的窗口中允许使用麦克风…', l: '正在聆听…说完后点击红色按钮发送', n: '麦克风已被阻止。请在浏览器设置中允许本网站使用麦克风，然后重试。', k: '此处无法使用语音消息。请点击键盘上的麦克风进行听写。', e: '语音消息不可用，请输入文字。'},
+    ar: {a: 'رسالة صوتية', w: 'اسمح باستخدام الميكروفون في النافذة التي تظهر…', l: 'أستمع إليك… تحدث ثم اضغط الزر الأحمر للإرسال', n: 'الميكروفون محظور. اسمح به لهذا الموقع في إعدادات المتصفح ثم حاول مجددًا.', k: 'الرسالة الصوتية غير متاحة هنا. اضغط على ميكروفون لوحة المفاتيح لإملاء رسالتك.', e: 'الرسالة الصوتية غير متاحة، يرجى كتابة رسالتك.'}
   };
   var LOC = {en: 'en-GB', fr: 'fr-FR', zh: 'zh-CN', ar: 'ar-SA'};
   function lg() { var l = (document.documentElement.lang || 'en').slice(0, 2); return T[l] ? l : 'en'; }
@@ -353,36 +357,60 @@ form.bar button.mic.rec{background:#B3261E;color:#fff;border-color:#B3261E;anima
   b.type = 'button'; b.id = 'rlmic'; b.className = 'mic'; b.setAttribute('aria-pressed', 'false');
   b.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>';
   bar.insertBefore(b, bar.querySelector('button[type=submit]'));
+  var tip = document.createElement('div');
+  tip.className = 'rlvtip'; tip.setAttribute('role', 'status'); tip.hidden = true;
+  bar.parentNode.insertBefore(tip, bar);
   function lab() { b.setAttribute('aria-label', T[lg()].a); b.title = T[lg()].a; }
   lab();
   new MutationObserver(lab).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
-  var rec = null, on = false, txt = '', ph = '';
-  function note(m) {
-    var s = document.getElementById('small'); if (!s) return;
-    var old = s.textContent; s.textContent = m; s.style.color = '#B3261E';
-    setTimeout(function () { s.style.color = ''; if (s.textContent === m) s.textContent = old; }, 5000);
+  var rec = null, state = 'off', txt = '', ph = '', dog = null, hideT = null;
+  function show(k, err, keep) {
+    clearTimeout(hideT);
+    tip.textContent = T[lg()][k]; tip.className = 'rlvtip' + (err ? ' err' : ''); tip.hidden = false;
+    if (!keep) hideT = setTimeout(function () { tip.hidden = true; }, 9000);
   }
-  function stopUI() { on = false; b.classList.remove('rec'); b.setAttribute('aria-pressed', 'false'); if (ph) inp.placeholder = ph; }
+  function hide() { clearTimeout(hideT); tip.hidden = true; }
+  function ui(s) {
+    state = s;
+    b.classList.toggle('wait', s === 'wait'); b.classList.toggle('rec', s === 'rec');
+    b.setAttribute('aria-pressed', String(s !== 'off'));
+    if (s === 'off') { clearTimeout(dog); if (ph) inp.placeholder = ph; }
+  }
+  /* Safari (iPhone) renvoie parfois la phrase entière à chaque résultat : on évite les doublons */
+  function merge(res) {
+    var acc = '';
+    for (var i = 0; i < res.length; i++) {
+      var r = (res[i][0].transcript || '').trim(); if (!r) continue;
+      if (!acc || r.toLowerCase().indexOf(acc.toLowerCase()) === 0) acc = r;
+      else if (acc.toLowerCase().indexOf(r.toLowerCase()) === -1) acc += ' ' + r;
+    }
+    return acc;
+  }
   function send() {
     var v = (txt || '').trim(); if (!v) return;
     inp.value = v;
     if (bar.requestSubmit) bar.requestSubmit(); else bar.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
   }
+  function keyboard() { ui('off'); show('k', false); try { inp.focus(); } catch (e) {} }
   b.addEventListener('click', function () {
-    if (on) { try { rec.stop(); } catch (e) {} return; }
-    txt = ''; rec = new SR();
-    rec.lang = LOC[lg()]; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
-    rec.onresult = function (e) { var s = ''; for (var i = 0; i < e.results.length; i++) s += e.results[i][0].transcript; txt = s; inp.value = s; };
+    if (state !== 'off') { var was = state; try { rec.stop(); } catch (e) {} if (was === 'wait') { try { rec.abort(); } catch (e) {} ui('off'); hide(); } return; }
+    txt = ''; ph = inp.placeholder;
+    try { rec = new SR(); } catch (e) { keyboard(); return; }
+    rec.lang = LOC[lg()]; rec.interimResults = true; rec.continuous = !IOS; rec.maxAlternatives = 1;
+    rec.onstart = rec.onaudiostart = function () { if (state === 'wait') { ui('rec'); inp.placeholder = T[lg()].l; show('l', false, true); } };
+    rec.onresult = function (e) { if (state === 'wait') { ui('rec'); show('l', false, true); } txt = merge(e.results); inp.value = txt; };
     rec.onerror = function (e) {
-      stopUI();
-      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') note(T[lg()].n);
-      else if (e.error !== 'no-speech' && e.error !== 'aborted') note(T[lg()].e);
+      var er = e.error; txt = state === 'rec' ? txt : '';
+      if (er === 'not-allowed') { ui('off'); show('n', true); }
+      else if (er === 'service-not-allowed' || er === 'audio-capture' || er === 'network' || er === 'language-not-supported') { keyboard(); }
+      else if (er === 'no-speech' || er === 'aborted') { ui('off'); hide(); }
+      else { ui('off'); show('e', true); }
     };
-    rec.onend = function () { var was = on; stopUI(); if (was) send(); };
+    rec.onend = function () { var was = state; ui('off'); if (was === 'rec') { hide(); send(); } };
     try {
-      rec.start(); on = true; ph = inp.placeholder; inp.placeholder = T[lg()].l; inp.value = '';
-      b.classList.add('rec'); b.setAttribute('aria-pressed', 'true');
-    } catch (e) { stopUI(); note(T[lg()].e); }
+      rec.start(); ui('wait'); inp.value = ''; show('w', false, true);
+      dog = setTimeout(function () { if (state === 'wait') show('w', false, true); }, 4000);
+    } catch (e) { keyboard(); }
   });
 })();
 </script>
