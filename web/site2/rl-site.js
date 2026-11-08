@@ -72,7 +72,7 @@
       fr = document.createElement('iframe');
       fr.id = 'rlyframe';
       fr.title = fab.getAttribute('aria-label');
-      fr.allow = 'geolocation; clipboard-write';
+      fr.allow = 'geolocation; clipboard-write; microphone';
       fr.src = fab.getAttribute('data-src');
       fr.addEventListener('load', function () {
         var b = fr.contentDocument.body, was = false;

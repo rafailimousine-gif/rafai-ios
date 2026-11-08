@@ -329,6 +329,67 @@ os.remove(yf)
 for x in ("function arm(){", "var L0='en'", '<html lang="en">', '</head>'):
     assert x in yc, x
 yc = yc.replace('function arm(){', 'function arm(){return;', 1)
+# Message vocal : bouton micro dans la barre de l'agent. La voix est transcrite par le navigateur
+# (reconnaissance vocale de Chrome / Safari) puis envoyée comme un message écrit. Bouton caché si le navigateur ne sait pas faire.
+VOICE = r'''<style>
+form.bar button.mic{background:#fff;color:#A8844B;border:1px solid var(--line)}
+form.bar button.mic.rec{background:#B3261E;color:#fff;border-color:#B3261E;animation:rlpulse 1.2s ease-in-out infinite}
+@keyframes rlpulse{0%,100%{box-shadow:0 0 0 0 rgba(179,38,30,.45)}50%{box-shadow:0 0 0 8px rgba(179,38,30,0)}}
+</style>
+<script>
+(function(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var bar = document.getElementById('bar'), inp = document.getElementById('in');
+  if (!SR || !bar || !inp) return;
+  var T = {
+    en: {a: 'Voice message', l: 'Listening… speak now', n: 'Please allow the microphone to send a voice message.', e: 'Voice message not available, please type your message.'},
+    fr: {a: 'Message vocal', l: 'Je vous écoute… parlez', n: 'Autorisez le micro pour envoyer un message vocal.', e: 'Message vocal indisponible, écrivez votre message.'},
+    zh: {a: '语音消息', l: '正在聆听…请说话', n: '请允许使用麦克风以发送语音消息。', e: '语音消息不可用，请输入文字。'},
+    ar: {a: 'رسالة صوتية', l: 'أستمع إليك… تحدث الآن', n: 'يرجى السماح باستخدام الميكروفون لإرسال رسالة صوتية.', e: 'الرسالة الصوتية غير متاحة، يرجى كتابة رسالتك.'}
+  };
+  var LOC = {en: 'en-GB', fr: 'fr-FR', zh: 'zh-CN', ar: 'ar-SA'};
+  function lg() { var l = (document.documentElement.lang || 'en').slice(0, 2); return T[l] ? l : 'en'; }
+  var b = document.createElement('button');
+  b.type = 'button'; b.id = 'rlmic'; b.className = 'mic'; b.setAttribute('aria-pressed', 'false');
+  b.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>';
+  bar.insertBefore(b, bar.querySelector('button[type=submit]'));
+  function lab() { b.setAttribute('aria-label', T[lg()].a); b.title = T[lg()].a; }
+  lab();
+  new MutationObserver(lab).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
+  var rec = null, on = false, txt = '', ph = '';
+  function note(m) {
+    var s = document.getElementById('small'); if (!s) return;
+    var old = s.textContent; s.textContent = m; s.style.color = '#B3261E';
+    setTimeout(function () { s.style.color = ''; if (s.textContent === m) s.textContent = old; }, 5000);
+  }
+  function stopUI() { on = false; b.classList.remove('rec'); b.setAttribute('aria-pressed', 'false'); if (ph) inp.placeholder = ph; }
+  function send() {
+    var v = (txt || '').trim(); if (!v) return;
+    inp.value = v;
+    if (bar.requestSubmit) bar.requestSubmit(); else bar.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
+  }
+  b.addEventListener('click', function () {
+    if (on) { try { rec.stop(); } catch (e) {} return; }
+    txt = ''; rec = new SR();
+    rec.lang = LOC[lg()]; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+    rec.onresult = function (e) { var s = ''; for (var i = 0; i < e.results.length; i++) s += e.results[i][0].transcript; txt = s; inp.value = s; };
+    rec.onerror = function (e) {
+      stopUI();
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') note(T[lg()].n);
+      else if (e.error !== 'no-speech' && e.error !== 'aborted') note(T[lg()].e);
+    };
+    rec.onend = function () { var was = on; stopUI(); if (was) send(); };
+    try {
+      rec.start(); on = true; ph = inp.placeholder; inp.placeholder = T[lg()].l; inp.value = '';
+      b.classList.add('rec'); b.setAttribute('aria-pressed', 'true');
+    } catch (e) { stopUI(); note(T[lg()].e); }
+  });
+})();
+</script>
+'''
+assert yc.count('</body>') == 1, 'fin de page agent'
+assert 'id="bar"' in yc and 'id="in"' in yc and 'id="small"' in yc, 'barre agent'
+yc = yc.replace('</body>', VOICE + '</body>', 1)
 AGENT = {'en': 'Agent AI Concierge', 'fr': 'Agent AI Concierge', 'zh': 'Agent AI Concierge', 'ar': 'Agent AI Concierge'}
 avb = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'agent.webp'), 'rb').read()
 AV = '/img/agent-%s.webp' % sha(avb)[:8]
