@@ -5,7 +5,7 @@ COMMIT="$1"
 B="https://raw.githubusercontent.com/rafailimousine-gif/rafai-ios/$COMMIT/web/site2"
 mkdir -p ~/site-www/tools ~/site-www/src ~/site-src
 cd ~/site-www/src
-for f in build.py rl-site.js site.css.add pages.json logo.png agent.webp; do curl -sLf -o "$f" "$B/$f"; done
+for f in build.py rl-site.js site.css.add pages.json logo.png agent.webp flotte-rl.jpg; do curl -sLf -o "$f" "$B/$f"; done
 # badge officiel Google Play (anglais, comme le badge App Store)
 curl -sLf -o gplay.png "https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" || { echo "ARRET badge Google Play introuvable"; exit 1; }
 python3 -c "import bs4, PIL" 2>/dev/null || pip3 install --user --quiet beautifulsoup4 pillow

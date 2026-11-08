@@ -26,7 +26,18 @@ def sha(b):
     return hashlib.sha1(b if isinstance(b, bytes) else b.encode('utf-8')).hexdigest()[:14]
 
 IMG = {}
+# Photos remplacées sur le site (pages.json « swap ») : empreinte de l'ancienne image → nouveau fichier à côté de build.py
+SWAP = {}
+for k, f in (CFG.get('swap') or {}).items():
+    sp = os.path.join(os.path.dirname(os.path.abspath(__file__)), f)
+    if os.path.exists(sp):
+        SWAP[k] = open(sp, 'rb').read()
+    else:
+        print('ARRET photo de remplacement absente', f); sys.exit(1)
 def webp(raw, key, maxw=1600):
+    if sha(raw) in SWAP:
+        print('photo remplacee', sha(raw))
+        raw = SWAP[sha(raw)]
     if key in IMG:
         return IMG[key]
     name = None
