@@ -4,9 +4,11 @@
   window.__rlLogin = 1;
   var st = document.createElement('style');
   st.textContent =
-    '.rlgbg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#111113 url(/chauffeur/rl-login-fond.jpg) 50% 0/cover no-repeat}' +
-    '.rlgbg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,19,.6) 0,rgba(17,17,19,.12) 16%,rgba(17,17,19,.18) 30%,rgba(17,17,19,.82) 47%,#111113 60%)}' +
-    '@media (min-width:700px){.rlgbg{background-position:50% 30%}}' +
+    /* photo CDG 2E (chauffeur avec la tablette « Mr & Mrs Rafaï ») : recadrage vertical sur téléphone, photo entière sur ordinateur */
+    '.rlgbg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#111113 url(/chauffeur/rl-fond-cdg.jpg) 50% calc(env(safe-area-inset-top,0px) + 56px)/100% auto no-repeat}' +
+    '.rlgbg:after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(17,17,19,.5) 0,rgba(17,17,19,.06) 14%,rgba(17,17,19,.1) 36%,rgba(17,17,19,.86) 50%,#111113 58%)}' +
+    '@media (min-width:700px){.rlgbg{background-image:url(/chauffeur/rl-fond-cdg-large.jpg);background-position:50% 64px;background-size:min(100%,110vh) auto}' +
+    '.rlgbg:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#111113 calc(50% - 55vh),rgba(17,17,19,0) calc(50% - 44vh),rgba(17,17,19,0) calc(50% + 44vh),#111113 calc(50% + 55vh))}}' +
     'html.rlgon body{background:transparent!important}' +
     '.rlg{position:relative;max-width:420px;margin:0 auto;padding:min(40vh,360px) 18px 24px;text-align:center;color:var(--txt)}' +
     '.rlg h2{margin:0 0 6px;font-size:21px}' +
