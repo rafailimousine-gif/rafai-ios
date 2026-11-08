@@ -70,8 +70,11 @@
         '<button class="rll" id="rlre" type="button">Renvoyer le code</button><button class="rll" id="rlch" type="button">Changer d’adresse</button>';
     }
     h += '<div class="rlm" id="rlm" role="status"></div>' +
-      '<div class="rlh">Un souci ? Appelez Rafai Limousine au +33 6 67 09 94 94.</div></div>';
+      '<div class="rlh">Un souci ? Appelez Rafai Limousine au +33 6 67 09 94 94.</div>' +
+      /* langue de l'appli (rlLang v1) : anglais par défaut, français au choix */
+      (window.RLLang ? '<button class="rll" id="rllg" type="button" data-notr>' + (RLLang.lang === 'fr' ? '🇬🇧 English' : '🇫🇷 Français') + '</button>' : '') + '</div>';
     L.innerHTML = h;
+    if (el('rllg')) el('rllg').onclick = function () { RLLang.set(RLLang.lang === 'fr' ? 'en' : 'fr'); };
     if (S.step === 'code') { L.querySelector('.rlg p b').textContent = S.mail; }
     var f = el('rlf');
     f.addEventListener('submit', function (ev) { ev.preventDefault(); S.step === 'mail' ? sendMail() : S.step === 'link' ? useLink() : sendCode(); });

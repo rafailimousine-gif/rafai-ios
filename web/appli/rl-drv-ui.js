@@ -21,6 +21,7 @@
     bell: sv('<path d="M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>'),
     pin: sv('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>'),
     moon: sv('<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>'),
+    globe: sv('<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/>'),
     face: sv('<path d="M4 8.5V5.5A1.5 1.5 0 0 1 5.5 4h3M15.5 4h3A1.5 1.5 0 0 1 20 5.5v3M20 15.5v3a1.5 1.5 0 0 1-1.5 1.5h-3M8.5 20h-3A1.5 1.5 0 0 1 4 18.5v-3"/><path d="M9 9v1.5M15 9v1.5M12 9v4h-1M9.5 15.5a4 4 0 0 0 5 0"/>'),
     back: sv('<path d="M15 5l-7 7 7 7"/>'),
     prev: sv('<path d="M14.5 6l-6 6 6 6"/>'),
@@ -241,6 +242,9 @@
     h += '<div class="rlac-r rlth"><span>' + I.moon + 'Apparence</span><div class="rlseg" role="group" aria-label="Apparence">' +
       [['dark', 'Sombre'], ['light', 'Clair'], ['auto', 'Auto']].map(function (o) { return '<button type="button" data-rlth="' + o[0] + '"' + (tv === o[0] ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') + '>' + o[1] + '</button>'; }).join('') + '</div></div>';
     if (tv === 'auto') h += '<p class="rlth-n">' + (TH_APP ? 'Auto : clair le jour (7 h – 19 h 30), sombre la nuit.' : 'Auto : suit le réglage de votre téléphone.') + '</p>';
+    /* langue (rlLang v1) : English / Français, l'appli se recharge dans la langue choisie */
+    if (window.RLLang) h += '<div class="rlac-r rlth"><span>' + I.globe + 'Langue</span><div class="rlseg" role="group" data-notr>' +
+      [['en', 'English'], ['fr', 'Français']].map(function (o) { return '<button type="button" data-rllang="' + o[0] + '"' + (RLLang.lang === o[0] ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') + '>' + o[1] + '</button>'; }).join('') + '</div></div>';
     h += '<button type="button" class="rlac-r" data-rlgo="cal"><span>' + I.cal + 'Calendrier du mois</span>' + I.next + '</button>';
     h += '<button type="button" class="rlac-r" data-rlgo="done"><span>' + I.hist + 'Historique des courses</span>' + I.next + '</button>';
     b.innerHTML = h;
@@ -504,6 +508,7 @@
     if (t.closest('[data-rlclose]')) { navOpen(false); return; }
     if (t.closest('[data-rlacx]')) { accOpen(false); return; }
     if ((b = t.closest('[data-rlth]'))) { thSet(b.getAttribute('data-rlth')); return; }
+    if ((b = t.closest('[data-rllang]'))) { if (window.RLLang) RLLang.set(b.getAttribute('data-rllang')); return; }
     if ((b = t.closest('[data-rlgo]'))) { go(b.getAttribute('data-rlgo')); return; }
     if ((b = t.closest('[data-rlact]'))) {
       var a = b.getAttribute('data-rlact');
