@@ -4,11 +4,15 @@
   window.__rlLogin = 1;
   var st = document.createElement('style');
   st.textContent =
-    /* photo CDG 2E (chauffeur avec la tablette « Mr & Mrs Rafaï ») : recadrage vertical sur téléphone, photo entière sur ordinateur */
-    '.rlgbg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#111113 url(/chauffeur/rl-fond-cdg.jpg) 50% calc(env(safe-area-inset-top,0px) + 56px)/100% auto no-repeat}' +
-    '.rlgbg:after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(17,17,19,.5) 0,rgba(17,17,19,.06) 14%,rgba(17,17,19,.1) 36%,rgba(17,17,19,.86) 50%,#111113 58%)}' +
-    '@media (min-width:700px){.rlgbg{background-image:url(/chauffeur/rl-fond-cdg-large.jpg);background-position:50% 64px;background-size:min(100%,110vh) auto}' +
-    '.rlgbg:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#111113 calc(50% - 55vh),rgba(17,17,19,0) calc(50% - 44vh),rgba(17,17,19,0) calc(50% + 44vh),#111113 calc(50% + 55vh))}}' +
+    /* photo de la flotte (Yassine Rafaï, les chauffeurs et les voitures) : sur téléphone, photo entière sur toute la largeur
+       sous la barre du haut, la connexion juste en dessous ; sur ordinateur, photo entière centrée */
+    '.rlgbg{position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:#111113;background-repeat:no-repeat;' +
+    'background-image:linear-gradient(180deg,rgba(17,17,19,0) 0,rgba(17,17,19,0) 86%,rgba(17,17,19,.72) 96%,#111113 100%),url(/chauffeur/rl-fond-flotte.jpg);' +
+    'background-position:50% calc(env(safe-area-inset-top,0px) + 64px);background-size:100% calc(100vw * .667),100% auto}' +
+    '@media (max-width:699px){.rlg{padding-top:calc(100vw * .667 - 14px)!important}}' +
+    '@media (min-width:700px){.rlgbg{background-image:url(/chauffeur/rl-fond-flotte.jpg);background-position:50% 64px;background-size:min(100%,110vh) auto}' +
+    '.rlgbg:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#111113 calc(50% - 55vh),rgba(17,17,19,0) calc(50% - 52vh),rgba(17,17,19,0) calc(50% + 52vh),#111113 calc(50% + 55vh))}' +
+    '.rlgbg:after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(17,17,19,.5) 0,rgba(17,17,19,.06) 14%,rgba(17,17,19,.1) 36%,rgba(17,17,19,.86) 50%,#111113 58%)}}' +
     'html.rlgon body{background:transparent!important}' +
     '.rlg{position:relative;max-width:420px;margin:0 auto;padding:min(40vh,360px) 18px 24px;text-align:center;color:var(--txt)}' +
     '.rlg h2{margin:0 0 6px;font-size:21px}' +
