@@ -147,6 +147,62 @@ def airport_rates(c):
         NAP[0] += 1
     return c
 
+# « À bord de chaque voiture » (9 nov. 2026, demande de Yassine) : sous les voitures du bloc de réservation,
+# trois icônes : 2 bouteilles d'Evian, câble de charge USB-C, Wi-Fi illimité (comme sur l'appli).
+NBD = [0]
+BD_OLD = '<div class="promo" id="promoF">'
+BD_TX = {
+    'fr': ('Offert à bord de chaque voiture', '2 bouteilles d’Evian', 'Câble de charge USB-C', 'Wi-Fi illimité'),
+    'en': ('Complimentary in every car', '2 bottles of Evian', 'USB-C charging cable', 'Unlimited Wi-Fi'),
+    'ar': ('مجانًا في كل سيارة', 'زجاجتان من مياه إيفيان', 'كابل شحن USB-C', 'واي فاي غير محدود'),
+    'zh': ('每辆车免费提供', '2 瓶依云矿泉水', 'USB-C 充电线', '无限 Wi-Fi'),
+}
+# « Musique à bord » (9 nov. 2026, demande de Yassine) : champ juste avant « Comments » de l'étape 3 ;
+# le choix est ajouté en tête du commentaire envoyé (« Music: Jazz »), sans rien changer d'autre au bloc.
+MU_OLD = '<div class="f wide"><label for="notes">'
+MU_TX = {
+    'fr': ('Musique à bord', 'Pas de préférence', 'Musique', ['Sans musique', 'Classique', 'Jazz', 'Lounge / chill', 'Pop', 'R&B / Soul', 'Orientale', 'Radio']),
+    'en': ('Music on board', 'No preference', 'Music', ['No music', 'Classical', 'Jazz', 'Lounge / chill', 'Pop', 'R&B / Soul', 'Arabic / Oriental', 'Radio']),
+    'ar': ('الموسيقى في السيارة', 'بدون تفضيل', 'الموسيقى', ['بدون موسيقى', 'كلاسيكية', 'جاز', 'لاونج / هادئة', 'بوب', 'آر أند بي / سول', 'شرقية', 'راديو']),
+    'zh': ('车内音乐', '无偏好', '音乐', ['不要音乐', '古典', '爵士', '休闲 Lounge', '流行', 'R&B / 灵魂乐', '东方音乐', '电台']),
+}
+MU_JS = ('<script>(function(){var s=document.getElementById("rlMus"),n=document.getElementById("notes"),b=document.getElementById("next3");'
+         'if(!s||!n||!b)return;var P=s.getAttribute("data-p")+": ";'
+         'b.addEventListener("click",function(){var v=n.value.split("\\n").filter(function(l){return l.indexOf(P)!==0;}).join("\\n").trim();'
+         'if(s.value)v=P+s.options[s.selectedIndex].text+(v?"\\n"+v:"");n.value=v;},true);})();</script>')
+BD_IC = (
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2.5h4v2.2l1.3 1.7c.5.7.7 1.4.7 2.2V20a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V8.6c0-.8.2-1.5.7-2.2L10 4.7z"/><path d="M8 11.5h8M8 16h8"/></svg>',
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7.5" y="2.5" width="9" height="8" rx="2.5"/><path d="M10.5 6.5h3"/><path d="M12 10.5v3.5c0 2.2-1.6 3.5-3.5 3.5S5 18.7 5 21.5"/></svg>',
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 8.8a14 14 0 0 1 19 0"/><path d="M5.5 12.2a9.6 9.6 0 0 1 13 0"/><path d="M8.7 15.5a5 5 0 0 1 6.6 0"/><circle cx="12" cy="19.2" r="1.3" fill="currentColor" stroke="none"/></svg>')
+BD_CSS = ('<style>.rlbd{margin:12px 0 4px;padding:12px 14px;border:1px solid var(--line,#E5E3DE);border-radius:12px;background:rgba(201,160,99,.07)}'
+          '.rlbd .t{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-text,#8A6630);margin:0 0 9px}'
+          '.rlbd .r{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}'
+          '.rlbd .i{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:12.5px;font-weight:700;line-height:1.25;color:var(--ink,#111113)}'
+          '.rlbd .c{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#111113;color:#E6CC93}'
+          '.rlbd svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}</style>')
+def onboard(c):
+    if BD_OLD not in c or 'class="rlbd"' in c:
+        return c
+    lg = 'fr' if 'passagers' in c else 'ar' if 'ركاب' in c else 'zh' if '乘客' in c else 'en'
+    t = BD_TX[lg]
+    blk = ('<div class="rlbd"><div class="t">%s</div><div class="r">' % html.escape(t[0]) +
+           ''.join('<div class="i"><span class="c">%s</span>%s</div>' % (BD_IC[i], html.escape(t[i + 1])) for i in range(3)) + '</div></div>\n    ')
+    c = c.replace(BD_OLD, blk + BD_OLD, 1)
+    if '</head>' in c:
+        c = c.replace('</head>', BD_CSS + '</head>', 1)
+    NBD[0] += 1
+    if MU_OLD in c and 'id="rlMus"' not in c and '</body>' in c:
+        m = MU_TX[lg]
+        fld = ('<div class="f wide"><label for="rlMus"><svg class="ico"><use href="#note"/></svg>%s</label>'
+               '<select id="rlMus" data-p="%s"><option value="">%s</option>%s</select></div>\n      '
+               % (html.escape(m[0]), html.escape(m[2], quote=True), html.escape(m[1]),
+                  ''.join('<option value="%d">%s</option>' % (i, html.escape(o)) for i, o in enumerate(m[3]))))
+        c = c.replace(MU_OLD, fld + MU_OLD, 1)
+        c = c.replace('</body>', MU_JS + '</body>', 1)
+        NMU[0] += 1
+    return c
+NMU = [0]
+
 EMB = {}
 def embed(code):
     k = sha(code)
@@ -159,6 +215,7 @@ def embed(code):
     c = re.sub(r'https?://(?:www\.)?rafai-limousine\.com(?=[/"\'])', '', c)
     c = rename(c)
     c = airport_rates(c)
+    c = onboard(c)
     # l'ancien écran de choix (dans le bloc de réservation, iPhone seulement) est remplacé par celui de toute la page (rl-site.js)
     if 'if (window.__rlCh) return; window.__rlCh = 1;' in c:
         c = c.replace('if (window.__rlCh) return; window.__rlCh = 1;', 'return;', 1)
@@ -596,6 +653,9 @@ for d, _, fs in os.walk(OUT):
 print('nom Youri restant', reste)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
 print('forfaits aeroport (E 170, V 200, S 265, RR 350) dans', NAP[0], 'bloc(s) de reservation')
+print('a bord (Evian, USB-C, Wi-Fi) dans', NBD[0], 'bloc(s) de reservation · musique dans', NMU[0])
+if NBD[0] == 0:
+    print('ARRET icones a bord non appliquees (bloc de reservation change sur Google Sites)'); sys.exit(1)
 if NAP[0] == 0:
     print('ARRET forfaits aeroport non appliques (bloc de reservation change sur Google Sites)'); sys.exit(1)
 print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0], '· recadrees telephone', len([1 for v in HM.values() if v]), '· photos de fond differees', NLZ[0], '· polices des blocs sans blocage', NFA[0])
