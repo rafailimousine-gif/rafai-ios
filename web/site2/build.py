@@ -514,30 +514,8 @@ def hero_m(path):
         print('photo du haut non recadree', path, e)
     HM[path] = out
     return out
-# Partenaires : bande « Nos partenaires » sur la page d'accueil (4 langues), juste avant le bas de page
-PB = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'partner-musafir.webp'), 'rb').read()
-PLG = '/img/partner-musafir-%s.webp' % sha(PB)[:8]
-open(OUT + PLG, 'wb').write(PB)
-PART = {
-    'en': ('Our partners', 'Go Qatar by Musafir.com · Travel, events and MICE in Qatar'),
-    'fr': ('Nos partenaires', 'Go Qatar par Musafir.com · Voyages, événements et MICE au Qatar'),
-    'zh': ('合作伙伴', 'Go Qatar · Musafir.com · 卡塔尔旅行、活动与会展'),
-    'ar': ('شركاؤنا', 'Go Qatar من Musafir.com · السفر والفعاليات والمؤتمرات في قطر'),
-}
-NPART = [0]
-def partners(lg):
-    t, c = PART[lg]
-    return ('<section class="rlpart" aria-label="%s"><p class="ey">%s</p>'
-            '<a href="https://www.qa.musafir.com" target="_blank" rel="noopener"><img src="%s" alt="Musafir.com · Go Qatar" width="280" height="39" loading="lazy" decoding="async"></a>'
-            '<p class="cap">%s</p></section>' % (html.escape(t, quote=True), html.escape(t), PLG, html.escape(c)))
 urls = []
 for p, lg, title, cls, inner in docs:
-    if p in CFG['groups'][0]:
-        k = inner.find('<footer')
-        if k < 0:
-            print('ARRET bas de page introuvable', p); sys.exit(1)
-        inner = inner[:k] + partners(lg) + inner[k:]
-        NPART[0] += 1
     d = CFG['desc'].get(p) or CFG['desc'].get(lg, '')
     title = CFG.get('titles', {}).get(p, title)
     canon = BASE + ('/' if p == '/home' else urllib.parse.quote(p))
@@ -591,6 +569,5 @@ for d, _, fs in os.walk(OUT):
         if f.endswith('.html'):
             reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
 print('nom Youri restant', reste)
-print('bande partenaires', NPART[0], PLG)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
 print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0], '· recadrees telephone', len([1 for v in HM.values() if v]), '· photos de fond differees', NLZ[0], '· polices des blocs sans blocage', NFA[0])
