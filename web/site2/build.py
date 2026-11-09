@@ -123,6 +123,30 @@ NLZ = [0]
 HERO = {}
 NCH = [0]
 
+NAP = [0]
+# Forfaits aéroport (9 nov. 2026) : Paris ↔ CDG, Orly ou Le Bourget, prix fixes TTC sans hausse ni « à partir de »
+# Classe E 170 €, Classe V 200 €, Classe S 280 €, Range Rover 350 €. Le bloc de réservation vient de Google Sites : on le corrige ici.
+AP_OLD = 'function price(c){var p=rlHike(price0(c));'
+AP_NEW = ('var RL_AP={sedan:170,van:200,first:280,suv:350},'
+          'RL_APX={cdg:{lat:49.0097,lon:2.5479,r:4},ory:{lat:48.7262,lon:2.3652,r:2.5},lbg:{lat:48.9694,lon:2.4414,r:2.5}};'
+          'function rlKm(a,b){var r=Math.PI/180,x=(b.lat-a.lat)*r,y=(b.lon-a.lon)*r,'
+          'h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(y/2)*Math.sin(y/2);'
+          'return 12742*Math.asin(Math.sqrt(h));}'
+          'function rlApOf(p){if(!hasGeo(p))return \'\';for(var k in RL_APX)if(rlKm(p,RL_APX[k])<=RL_APX[k].r)return k;return \'\';}'
+          'function rlZ(s){s=(s||\'\').toLowerCase();if(/bourget|\\blbg\\b/.test(s))return \'lbg\';'
+          'var z=zone(s);return (z===\'cdg\'||z===\'ory\'||z===\'paris\')?z:\'\';}'
+          'function rlAP(c){if(mode!==\'oneway\'||!RL_AP[c])return null;var a=sel.from,b=sel.to,aa,bb,pa,pb;'
+          'if(hasGeo(a)&&hasGeo(b)){aa=rlApOf(a);bb=rlApOf(b);pa=!aa&&rlKm(a,GEO.PAR)<=12;pb=!bb&&rlKm(b,GEO.PAR)<=12;}'
+          'else{var za=rlZ(($(\'from\')||{}).value),zb=rlZ(($(\'to\')||{}).value);'
+          'aa=za===\'paris\'?\'\':za;bb=zb===\'paris\'?\'\':zb;pa=za===\'paris\';pb=zb===\'paris\';}'
+          'if((aa&&pb)||(bb&&pa))return {v:RL_AP[c],note:\'Fixed airport price\'};return null;}'
+          'function price(c){var p=rlAP(c)||rlHike(price0(c));')
+def airport_rates(c):
+    if AP_OLD in c:
+        c = c.replace(AP_OLD, AP_NEW, 1)
+        NAP[0] += 1
+    return c
+
 EMB = {}
 def embed(code):
     k = sha(code)
@@ -134,6 +158,7 @@ def embed(code):
     c = fonts_async(c)
     c = re.sub(r'https?://(?:www\.)?rafai-limousine\.com(?=[/"\'])', '', c)
     c = rename(c)
+    c = airport_rates(c)
     # l'ancien écran de choix (dans le bloc de réservation, iPhone seulement) est remplacé par celui de toute la page (rl-site.js)
     if 'if (window.__rlCh) return; window.__rlCh = 1;' in c:
         c = c.replace('if (window.__rlCh) return; window.__rlCh = 1;', 'return;', 1)
@@ -570,4 +595,7 @@ for d, _, fs in os.walk(OUT):
             reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
 print('nom Youri restant', reste)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
+print('forfaits aeroport (E 170, V 200, S 280, RR 350) dans', NAP[0], 'bloc(s) de reservation')
+if NAP[0] == 0:
+    print('ARRET forfaits aeroport non appliques (bloc de reservation change sur Google Sites)'); sys.exit(1)
 print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0], '· recadrees telephone', len([1 for v in HM.values() if v]), '· photos de fond differees', NLZ[0], '· polices des blocs sans blocage', NFA[0])
