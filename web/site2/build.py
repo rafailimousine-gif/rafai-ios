@@ -394,8 +394,23 @@ form.bar button.mic.rec{background:#B3261E;color:#fff;border-color:#B3261E;anima
   function keyboard() { ui('off'); show('k', false); try { inp.focus(); } catch (e) {} }
   var granted = false, tries = 0;
   /* une seule session de reconnaissance, réutilisée à chaque message (Safari sur iPhone refuse souvent d'en créer une deuxième) */
-  function make() {
-    var r = new SR();
+  /* Sur iPhone, Safari n'accepte souvent qu'une seule écoute par page : chaque message vocal utilise
+     une petite page invisible neuve (iframe vide), ce qui remet la reconnaissance à zéro */
+  var box = null;
+  function ctor(fresh) {
+    if (!IOS || !fresh) return SR;
+    try {
+      if (box) box.remove();
+      box = document.createElement('iframe');
+      box.setAttribute('allow', 'microphone'); box.setAttribute('aria-hidden', 'true'); box.tabIndex = -1;
+      box.style.cssText = 'position:absolute;width:0;height:0;border:0;visibility:hidden';
+      document.body.appendChild(box);
+      var w = box.contentWindow;
+      return (w && (w.SpeechRecognition || w.webkitSpeechRecognition)) || SR;
+    } catch (e) { return SR; }
+  }
+  function make(fresh) {
+    var C = ctor(fresh), r = new C();
     r.interimResults = true; r.maxAlternatives = 1;
     r.onstart = r.onaudiostart = function () { if (r !== rec) return; granted = true; if (state === 'wait') { ui('rec'); inp.placeholder = T[lg()].l; show('l', false, true); } };
     r.onresult = function (e) { if (r !== rec) return; granted = true; if (state === 'wait') { ui('rec'); show('l', false, true); } txt = merge(e.results); inp.value = txt; };
@@ -412,7 +427,7 @@ form.bar button.mic.rec{background:#B3261E;color:#fff;border-color:#B3261E;anima
   }
   function begin(fresh) {
     if (fresh && rec) { var o = rec; rec = null; try { o.abort(); } catch (e) {} }
-    if (!rec) { try { rec = make(); } catch (e) { keyboard(); return; } }
+    if (!rec) { try { rec = make(fresh || IOS); } catch (e) { try { rec = make(false); } catch (e2) { keyboard(); return; } } }
     rec.lang = LOC[lg()]; rec.continuous = !IOS;
     try { rec.start(); } catch (e) {
       /* session précédente pas encore libérée : on recommence avec une session neuve */
@@ -437,9 +452,11 @@ form.bar button.mic.rec{background:#B3261E;color:#fff;border-color:#B3261E;anima
       return;
     }
     txt = ''; tries = 0; ph = inp.placeholder;
+    /* sur iPhone, si la zone de texte avait la main (clavier), on la libère avant d'ouvrir le micro */
+    var foc = document.activeElement === inp;
     try { inp.blur(); } catch (e) {}
     inp.value = ''; ui('wait'); show(granted ? 'l' : 'w', false, true);
-    begin(false);
+    if (IOS && foc) setTimeout(function () { if (state === 'wait') begin(true); }, 350); else begin(IOS);
   });
 })();
 </script>
