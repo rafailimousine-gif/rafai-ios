@@ -1,8 +1,7 @@
 {
 "swap": {
 "c08c6e0920e417": "flotte-rl.jpg",
-"21d87317779250": "about-team.jpg",
-"2ae4d76d1a24d7": "about-team.jpg"
+"21d87317779250": "about-team.jpg"
 },
 "pages": [
 "/home",
@@ -629,6 +628,10 @@
 [
 "<h2>خدمة سائقين فاخرة <span>منذ 2014</span></h2>",
 "<h2>خدمة سائقين فاخرة <span>أكثر من 10 سنوات من الخبرة</span></h2>"
+],
+[
+"/img/2ae4d76d1a24d7.webp",
+"/img/bb9a7226f59f11.webp"
 ]
 ]
 }
