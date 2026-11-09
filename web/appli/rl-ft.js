@@ -4,7 +4,9 @@
    - Formulaire : Arrivée ou Départ, vol, passagers (4 max), bagages, nom sur la pancarte, langue de l'agent, message.
    - Envoi : la demande part avec la réservation (champ ft) ; le serveur ajoute 240 € et garde la demande.
    - « Mes courses » : la course montre le Fast Track VIP et, dès qu'il est connu, le prénom et le numéro de l'agent. */
-var FT_EUR = 240, FT_RX = /a[ée]roport|airport|\bcdg\b|\bory\b|\borly\b|roissy|bourget/i;
+/* v1.1 (9 nov.) : seulement CDG et Orly, jamais si le trajet passe par une gare (demande de Yassine). */
+var FT_EUR = 240, FT_RX = /\bcdg\b|charles[\s-]*de[\s-]*gaulle|roissy|\bory\b|\borly\b/i,
+  FT_GARE = /\bgares?\b|\bstation\b|railway|\bsncf\b|\btgv\b/i;
 var FTB = { on: false, d: null };
 var FT_TX = {
   fr: { nw: 'NOUVEAU', add: 'Ajouter Fast Track VIP', added: 'Fast Track VIP ajouté', edit: 'Modifier', rm: 'Retirer',
@@ -40,7 +42,10 @@ function ftT(k) { var l = 'fr'; try { l = L; } catch (e) {} var d = FT_TX[l] || 
 function ftEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function ftEur(v) { try { return eur(v); } catch (e) { return v + ' €'; } }
 function ftAir() {
-  try { var q = Q.q || {}; return Q.type !== 'hourly' && FT_RX.test((q.from || '') + ' ' + (q.to || '')); } catch (e) { return false; }
+  try {
+    var q = Q.q || {}, s = (q.from || '') + ' ' + (q.to || '');
+    return Q.type !== 'hourly' && FT_RX.test(s) && !FT_GARE.test(s);
+  } catch (e) { return false; }
 }
 function ftOn() { var ed = false; try { ed = !!EDIT; } catch (e) {} return FTB.on && !!FTB.d && !ed && ftAir(); }
 function ftDef() {
