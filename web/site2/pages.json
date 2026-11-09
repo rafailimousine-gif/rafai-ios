@@ -1,5 +1,7 @@
 {
-"swap": {"c08c6e0920e417": "flotte-rl.jpg"},
+"swap": {
+"c08c6e0920e417": "flotte-rl.jpg"
+},
 "pages": [
 "/home",
 "/about",
@@ -113,6 +115,10 @@
 {
 "t": "À propos",
 "u": "/fr/a-propos"
+},
+{
+"t": "L'équipe",
+"u": "/fr/equipe"
 },
 {
 "t": "Contact",
@@ -281,6 +287,10 @@
 ]
 },
 {
+"t": "Team",
+"u": "/team"
+},
+{
 "t": "About",
 "u": "/about"
 },
@@ -355,7 +365,9 @@
 "/ar/ar-services/الحجز-بالساعة": "احجز سائقًا بالساعة أو اليوم في باريس لزيارة فرساي وشامبانيا ونورماندي أو طوال إقامتك.",
 "/cgv": "Conditions générales de vente de Rafai Limousine SAS, chauffeur privé à Paris.",
 "/confidentialite": "Politique de confidentialité de Rafai Limousine SAS.",
-"/mentions-legales": "Mentions légales de Rafai Limousine SAS."
+"/mentions-legales": "Mentions légales de Rafai Limousine SAS.",
+"/team": "Team Rafai Limousine: Yassine Rafai, CEO and President, and our chauffeurs in Paris. Punctuality, rigour and professionalism.",
+"/fr/equipe": "L'équipe Rafai Limousine : Yassine Rafai, CEO – Président, et nos chauffeurs à Paris. Ponctualité, rigueur et professionnalisme."
 },
 "groups": [
 [
@@ -435,13 +447,19 @@
 "/fr/services/mise-a-disposition",
 "/zh/zh-services/按小时包车",
 "/ar/ar-services/الحجز-بالساعة"
+],
+[
+"/team",
+"/fr/equipe"
 ]
 ],
 "titles": {
 "/home": "Rafai Limousine | Private Chauffeur in Paris",
 "/fr": "Rafai Limousine | Chauffeur privé à Paris",
 "/zh": "Rafai Limousine | 巴黎私人司机",
-"/ar": "Rafai Limousine | سائق خاص في باريس"
+"/ar": "Rafai Limousine | سائق خاص في باريس",
+"/team": "Team | Rafai Limousine",
+"/fr/equipe": "L'équipe | Rafai Limousine"
 },
 "youri": {
 "en": {
