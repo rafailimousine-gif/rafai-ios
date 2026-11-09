@@ -34,7 +34,9 @@ function bdCss() {
     '.rlbd .r{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}' +
     '.rlbd .i{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:12.5px;font-weight:600;line-height:1.25;color:var(--ink,#1C1B1A)}' +
     '.rlbd .c{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#111113;color:#E6CC93}' +
-    '.rlbd svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}';
+    '.rlbd svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}' +
+    /* petite flèche pour montrer que « Musique à bord » est une liste */
+    '#rlMus{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%238A6630%27 stroke-width=%272.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M6 9l6 6 6-6%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:16px;padding-right:40px}';
   document.head.appendChild(s);
 }
 function bdRefresh() {
