@@ -280,6 +280,66 @@ def header(p, lg):
             '<a class="brand" href="/home"><img src="%s" alt="Rafai Limousine" width="40" height="40"><span>Rafai Limousine</span></a>'
             '<nav><ul>%s</ul></nav></header>' % (LOGO, ''.join(li(i) for i in tree)))
 
+# « Trajets populaires » (10 nov. 2026, demande de Yassine) : CDG, Orly et Le Bourget → Paris avec les forfaits aéroport
+# (mêmes prix que le bloc de réservation, voir RL_AP). Section ajoutée sur l'accueil des 4 langues, juste avant « Réserver ».
+RT_ANCHOR = {'en': 'Three steps, no surprises', 'fr': 'Trois étapes, aucune surprise', 'zh': '三步完成，没有意外', 'ar': 'ثلاث خطوات، بلا مفاجآت'}
+RT_PRICE = (170, 200, 265, 350)
+RT_TX = {
+    'en': {'k': 'Popular routes', 'h': 'Airport transfers at a fixed price',
+           'p': 'To or from Paris, the same price both ways. Name sign, real-time flight tracking and 1 hour of free waiting included.',
+           'r': [('Paris-CDG → Paris', 'Charles de Gaulle Airport · about 45 min'), ('Paris-Orly → Paris', 'Orly Airport · about 35 min'),
+                 ('Le Bourget → Paris', 'Private jet terminals · about 30 min')],
+           'c': ('E-Class', 'V-Class', 'S-Class', 'Range Rover'), 'f': lambda v: '€%d' % v, 'b': 'Book', 'n': 'Prices per vehicle, VAT included.'},
+    'fr': {'k': 'Trajets populaires', 'h': 'Transferts aéroport à prix fixe',
+           'p': 'Vers ou depuis Paris, le même prix dans les deux sens. Pancarte à votre nom, vol suivi en temps réel et 1 h d’attente offerte.',
+           'r': [('Roissy-CDG → Paris', 'Aéroport Charles-de-Gaulle · environ 45 min'), ('Orly → Paris', 'Aéroport d’Orly · environ 35 min'),
+                 ('Le Bourget → Paris', 'Terminaux jets privés · environ 30 min')],
+           'c': ('Classe E', 'Classe V', 'Classe S', 'Range Rover'), 'f': lambda v: '%d €' % v, 'b': 'Réserver', 'n': 'Prix par véhicule, TTC.'},
+    'zh': {'k': '热门路线', 'h': '机场接送，固定价格',
+           'p': '往返巴黎市区，双向同价。含接机举牌、实时航班跟踪和 1 小时免费等候。',
+           'r': [('戴高乐机场 (CDG) → 巴黎', '约 45 分钟'), ('奥利机场 (ORY) → 巴黎', '约 35 分钟'), ('勒布尔热 → 巴黎', '私人飞机航站楼 · 约 30 分钟')],
+           'c': ('E级', 'V级', 'S级', '揽胜'), 'f': lambda v: '€%d' % v, 'b': '预订', 'n': '每辆车价格，含增值税。'},
+    'ar': {'k': 'المسارات الأكثر طلبًا', 'h': 'التوصيل من وإلى المطار بسعر ثابت',
+           'p': 'من باريس أو إليها، بالسعر نفسه في الاتجاهين. يشمل لافتة باسمك، وتتبع رحلتك الجوية مباشرةً، وساعة انتظار مجانية.',
+           'r': [('مطار شارل ديغول ← باريس', 'حوالي 45 دقيقة'), ('مطار أورلي ← باريس', 'حوالي 35 دقيقة'), ('لو بورجيه ← باريس', 'صالات الطائرات الخاصة · حوالي 30 دقيقة')],
+           'c': ('الفئة E', 'الفئة V', 'الفئة S', 'رينج روفر'), 'f': lambda v: '%d €' % v, 'b': 'احجز', 'n': 'السعر لكل سيارة، شامل الضريبة.'},
+}
+RT_CSS = ('<style>.rlrt{max-width:1148px;margin:0 auto;padding:40px 0 64px;font-family:Manrope,Arial,sans-serif;color:#111113}'
+          '.rlrt .k{margin:0;font-size:16px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#8A6630}'
+          '.rlrt h2{margin:18px 0 0;font:700 34.67px/1.5 Manrope,Arial,sans-serif;color:#111113}'
+          '.rlrt .p{margin:14px 0 0;max-width:720px;font-size:16px;line-height:1.6;color:#5C5C64}'
+          '.rlrt .g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}'
+          '.rlrt .c{display:flex;flex-direction:column;background:#fff;border:1px solid #E5E3DE;border-radius:16px;padding:24px 24px 22px}'
+          '.rlrt h3{margin:0;font:700 19px/1.3 Manrope,Arial,sans-serif;color:#111113}'
+          '.rlrt .s{margin:6px 0 16px;font-size:14px;color:#5C5C64}'
+          '.rlrt dl{margin:0 0 18px;display:grid;grid-template-columns:1fr auto;row-gap:0}'
+          '.rlrt dt,.rlrt dd{margin:0;padding:9px 0;border-top:1px solid #EFEDE8;font-size:15px}'
+          '.rlrt dt{color:#3A3A40}.rlrt dd{font-weight:700;text-align:end}'
+          '.rlrt .b{margin-top:auto;display:inline-flex;align-self:flex-start;align-items:center;gap:8px;padding:11px 22px;border-radius:999px;background:#111113;color:#fff;font-weight:700;font-size:15px;text-decoration:none}'
+          '.rlrt .b:hover{background:#2A2A2E}'
+          '.rlrt .n{margin:16px 0 0;font-size:13px;color:#8B867C}'
+          '@media (max-width:900px){.rlrt{padding:32px 24px 48px}.rlrt h2{font-size:28px;line-height:1.3}.rlrt .g{grid-template-columns:1fr;gap:14px}}</style>')
+def routes_html(lg):
+    x = RT_TX[lg]
+    cards = ''
+    for t, sub in x['r']:
+        rows = ''.join('<dt>%s</dt><dd>%s</dd>' % (html.escape(c), html.escape(x['f'](v))) for c, v in zip(x['c'], RT_PRICE))
+        cards += ('<div class="c"><h3>%s</h3><p class="s">%s</p><dl>%s</dl><a class="b" href="#">%s</a></div>'
+                  % (html.escape(t), html.escape(sub), rows, html.escape(x['b'])))
+    return (RT_CSS + '<section class="rlrt"%s><p class="k">%s</p><h2>%s</h2><p class="p">%s</p><div class="g">%s</div><p class="n">%s</p></section>'
+            % (' dir="rtl"' if lg == 'ar' else '', html.escape(x['k']), html.escape(x['h']), html.escape(x['p']), cards, html.escape(x['n'])))
+NRT = []
+def add_routes(s, p, lg):
+    if p not in ('/home', '/fr', '/zh', '/ar'):
+        return
+    a = RT_ANCHOR[lg]
+    secs = [e for e in s.find_all('section') if a in e.get_text()]
+    if not secs:
+        print('ARRET trajets populaires : ancre introuvable sur', p); sys.exit(1)
+    sec = secs[-1]  # la section la plus intérieure qui contient le titre « Réserver »
+    sec.insert_before(BeautifulSoup(routes_html(lg), 'html.parser'))
+    NRT.append(p)
+
 CSSRC = None
 YCODE = None
 YV = ''
@@ -385,6 +445,7 @@ for p in PAGES:
             sec = e.find_parent('section')
             h = sec.find(['h1', 'h2', 'h3']) if sec else None
             e['alt'] = (h.get_text(' ', strip=True) if h else '') or title
+    add_routes(s, p, lang(p))
     body = s.body
     cls = ' '.join(body.get('class', []))
     inner = body.decode_contents()
@@ -699,6 +760,9 @@ for d, _, fs in os.walk(OUT):
 print('nom Youri restant', reste)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
 print('forfaits aeroport (E 170, V 200, S 265, RR 350) dans', NAP[0], 'bloc(s) de reservation')
+print('trajets populaires sur', ', '.join(NRT))
+if len(NRT) != 4:
+    print('ARRET trajets populaires absents d une page d accueil'); sys.exit(1)
 print('a bord (Evian, USB-C, Wi-Fi) dans', NBD[0], 'bloc(s) de reservation · musique dans', NMU[0])
 if NBD[0] == 0:
     print('ARRET icones a bord non appliquees (bloc de reservation change sur Google Sites)'); sys.exit(1)
