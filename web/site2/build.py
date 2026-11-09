@@ -125,9 +125,9 @@ NCH = [0]
 
 NAP = [0]
 # Forfaits aéroport (9 nov. 2026) : Paris ↔ CDG, Orly ou Le Bourget, prix fixes TTC sans hausse ni « à partir de »
-# Classe E 170 €, Classe V 200 €, Classe S 280 €, Range Rover 350 €. Le bloc de réservation vient de Google Sites : on le corrige ici.
+# Classe E 170 €, Classe V 200 €, Classe S 265 €, Range Rover 350 €. Le bloc de réservation vient de Google Sites : on le corrige ici.
 AP_OLD = 'function price(c){var p=rlHike(price0(c));'
-AP_NEW = ('var RL_AP={sedan:170,van:200,first:280,suv:350},'
+AP_NEW = ('var RL_AP={sedan:170,van:200,first:265,suv:350},'
           'RL_APX={cdg:{lat:49.0097,lon:2.5479,r:4},ory:{lat:48.7262,lon:2.3652,r:2.5},lbg:{lat:48.9694,lon:2.4414,r:2.5}};'
           'function rlKm(a,b){var r=Math.PI/180,x=(b.lat-a.lat)*r,y=(b.lon-a.lon)*r,'
           'h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(y/2)*Math.sin(y/2);'
@@ -595,7 +595,7 @@ for d, _, fs in os.walk(OUT):
             reste += io.open(os.path.join(d, f), encoding='utf-8').read().replace("src:'Youri", '').count('Youri')
 print('nom Youri restant', reste)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
-print('forfaits aeroport (E 170, V 200, S 280, RR 350) dans', NAP[0], 'bloc(s) de reservation')
+print('forfaits aeroport (E 170, V 200, S 265, RR 350) dans', NAP[0], 'bloc(s) de reservation')
 if NAP[0] == 0:
     print('ARRET forfaits aeroport non appliques (bloc de reservation change sur Google Sites)'); sys.exit(1)
 print('pages', len(docs), 'blocs', len(EMB), 'images', len(IMG), '· photos du haut prechargees', NPRE[0], '· recadrees telephone', len([1 for v in HM.values() if v]), '· photos de fond differees', NLZ[0], '· polices des blocs sans blocage', NFA[0])
