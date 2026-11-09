@@ -400,7 +400,9 @@ for p in PAGES:
 TEAM_JPG = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'team-rafai.jpg')
 if not os.path.exists(TEAM_JPG):
     print('ARRET photo equipe absente (team-rafai.jpg)'); sys.exit(1)
-Image.open(TEAM_JPG).convert('RGB').save(OUT + '/img/team-rafai.webp', 'WEBP', quality=84, method=6)
+# Nom tiré du contenu : les images /img/ sont gardées un an par les navigateurs (immutable).
+TEAM_IMG = '/img/team-%s.webp' % sha(open(TEAM_JPG, 'rb').read())[:10]
+Image.open(TEAM_JPG).convert('RGB').save(OUT + TEAM_IMG, 'WEBP', quality=84, method=6)
 TEAM_TX = {
     'en': {'p': '/team', 'k': 'Our team', 'v': ['Punctuality', 'Rigour', 'Professionalism'],
            'd': ['Your flight is tracked in real time, with one hour of waiting time included at the airport.',
@@ -430,11 +432,11 @@ TEAM_CSS = ('<style>.rlteam{max-width:1080px;margin:0 auto;padding:48px 20px 64p
 for lg, x in TEAM_TX.items():
     cards = ''.join('<div><h2>%s</h2><p>%s</p></div>' % (html.escape(v), html.escape(d)) for v, d in zip(x['v'], x['d']))
     inner = (TEAM_CSS + '<main class="rlteam"><p class="k">%s</p><h1>Team Rafai Limousine</h1><p class="v">%s</p>'
-             '<figure><img src="/img/team-rafai.webp" width="1080" height="1350" alt="%s" decoding="async" fetchpriority="high"></figure>'
+             '<figure><img src="%s" width="1080" height="1350" alt="%s" decoding="async" fetchpriority="high"></figure>'
              '<section class="cards">%s</section>'
              '<p class="cta"><a class="w" href="https://wa.me/33667099494" target="_blank" rel="noopener">%s</a><a class="c" href="%s">%s</a></p>'
              '<p class="n">%s</p></main>'
-             % (html.escape(x['k']), ' · '.join(html.escape(v) for v in x['v']), html.escape(x['alt'], quote=True), cards,
+             % (html.escape(x['k']), ' · '.join(html.escape(v) for v in x['v']), TEAM_IMG, html.escape(x['alt'], quote=True), cards,
                 html.escape(x['c1']), x['cu'], html.escape(x['c2']), html.escape(x['n'])))
     docs.append((x['p'], lg, 'Team Rafai Limousine', '', inner))
 print('onglet Team :', ', '.join(x['p'] for x in TEAM_TX.values()))
