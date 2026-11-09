@@ -64,7 +64,7 @@ function ft2NewBox() {
   var row = cb.closest('.row') || cb.parentNode;
   var box = document.createElement('div'); box.className = 'box'; box.id = 'ftNB';
   box.innerHTML = '<h3>✦ Fast Track VIP</h3>' +
-    '<label class="f" style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="ftnOn" style="width:20px;height:20px;flex:none"> <span>Ajouter le Fast Track VIP (+240 €) · accueil VIP à l’aéroport par Global VIP</span></label>' +
+    '<label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;font-size:14px;margin:4px 0"><input type="checkbox" id="ftnOn" style="width:20px;height:20px;flex:none"> <span>Ajouter le Fast Track VIP (+240 €) · accueil VIP à l’aéroport par Global VIP</span></label>' +
     '<div id="ftnF" style="display:none;margin-top:10px">' + ft2Fields('ftn') + '<p class="hint" id="ftnP" style="margin-top:6px"></p></div>';
   row.parentNode.insertBefore(box, row);
   var on = document.getElementById('ftnOn'), F = document.getElementById('ftnF'), po = document.getElementById('npo'), added = false;
