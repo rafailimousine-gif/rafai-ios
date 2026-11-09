@@ -23,7 +23,7 @@ function ftCss() {
     '.fta label{font-size:12.5px;display:flex;align-items:center;gap:6px}' +
     '.ftn{font-size:12px;opacity:.65;margin-top:6px}' +
     '.ftb:not(:empty){display:inline-block;min-width:17px;padding:0 5px;margin-left:5px;border-radius:999px;background:#C9A063;color:#111;font-size:11px;font-weight:800;line-height:17px;text-align:center}' +
-    '.ftnew{font-size:9.5px;font-weight:800;letter-spacing:.06em;background:#C9A063;color:#111;border-radius:6px;padding:1px 5px;margin-left:6px;vertical-align:2px}';
+    '.ftnew{font-size:8.5px;font-weight:800;letter-spacing:.04em;background:#C9A063;color:#111;border-radius:6px;padding:1px 4px;margin-left:5px;vertical-align:1px;white-space:nowrap}';
   document.head.appendChild(s);
 }
 function ftBk(ref) { var l = S.bookings || []; for (var i = 0; i < l.length; i++) if (l[i].ref === ref) return l[i]; return null; }
@@ -44,7 +44,7 @@ function ftNav() {
   var t = document.getElementById('tabs');
   if (t && !t.querySelector('[data-v="ft"]')) {
     var b = document.createElement('button'); b.dataset.v = 'ft'; b.type = 'button';
-    b.innerHTML = FTI + 'Fast Track VIP<span class="ftnew">NOUVEAU</span><span class="ftb" id="ftB1"></span>';
+    b.innerHTML = FTI + '<span style="white-space:nowrap">Fast Track VIP</span><span class="ftnew">NOUVEAU</span><span class="ftb" id="ftB1"></span>'; b.style.whiteSpace = 'nowrap';
     var c1 = t.querySelector('[data-v="gnet"]') || t.querySelector('[data-v="courses"]');
     t.insertBefore(b, c1 ? c1.nextSibling : t.firstChild);
     b.addEventListener('click', function () { go('ft'); });
