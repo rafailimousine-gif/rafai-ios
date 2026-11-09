@@ -392,25 +392,54 @@ form.bar button.mic.rec{background:#B3261E;color:#fff;border-color:#B3261E;anima
     if (bar.requestSubmit) bar.requestSubmit(); else bar.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
   }
   function keyboard() { ui('off'); show('k', false); try { inp.focus(); } catch (e) {} }
-  b.addEventListener('click', function () {
-    if (state !== 'off') { var was = state; try { rec.stop(); } catch (e) {} if (was === 'wait') { try { rec.abort(); } catch (e) {} ui('off'); hide(); } return; }
-    txt = ''; ph = inp.placeholder;
-    try { rec = new SR(); } catch (e) { keyboard(); return; }
-    rec.lang = LOC[lg()]; rec.interimResults = true; rec.continuous = !IOS; rec.maxAlternatives = 1;
-    rec.onstart = rec.onaudiostart = function () { if (state === 'wait') { ui('rec'); inp.placeholder = T[lg()].l; show('l', false, true); } };
-    rec.onresult = function (e) { if (state === 'wait') { ui('rec'); show('l', false, true); } txt = merge(e.results); inp.value = txt; };
-    rec.onerror = function (e) {
-      var er = e.error; txt = state === 'rec' ? txt : '';
+  var granted = false, tries = 0;
+  /* une seule session de reconnaissance, réutilisée à chaque message (Safari sur iPhone refuse souvent d'en créer une deuxième) */
+  function make() {
+    var r = new SR();
+    r.interimResults = true; r.maxAlternatives = 1;
+    r.onstart = r.onaudiostart = function () { if (r !== rec) return; granted = true; if (state === 'wait') { ui('rec'); inp.placeholder = T[lg()].l; show('l', false, true); } };
+    r.onresult = function (e) { if (r !== rec) return; granted = true; if (state === 'wait') { ui('rec'); show('l', false, true); } txt = merge(e.results); inp.value = txt; };
+    r.onerror = function (e) {
+      if (r !== rec || state === 'off') return;
+      var er = e.error;
       if (er === 'not-allowed') { ui('off'); show('n', true); }
       else if (er === 'service-not-allowed' || er === 'audio-capture' || er === 'network' || er === 'language-not-supported') { keyboard(); }
       else if (er === 'no-speech' || er === 'aborted') { ui('off'); hide(); }
       else { ui('off'); show('e', true); }
     };
-    rec.onend = function () { var was = state; ui('off'); if (was === 'rec') { hide(); send(); } };
-    try {
-      rec.start(); ui('wait'); inp.value = ''; show('w', false, true);
-      dog = setTimeout(function () { if (state === 'wait') show('w', false, true); }, 4000);
-    } catch (e) { keyboard(); }
+    r.onend = function () { if (r !== rec) return; var was = state; ui('off'); if (was === 'rec') { hide(); send(); } };
+    return r;
+  }
+  function begin(fresh) {
+    if (fresh && rec) { var o = rec; rec = null; try { o.abort(); } catch (e) {} }
+    if (!rec) { try { rec = make(); } catch (e) { keyboard(); return; } }
+    rec.lang = LOC[lg()]; rec.continuous = !IOS;
+    try { rec.start(); } catch (e) {
+      /* session précédente pas encore libérée : on recommence avec une session neuve */
+      if (tries++ < 1) { begin(true); return; }
+      keyboard(); return;
+    }
+    clearTimeout(dog);
+    dog = setTimeout(function () {
+      if (state !== 'wait') return;
+      if (!granted) { show('w', false, true); return; }
+      /* micro déjà autorisé mais rien ne démarre : nouvelle tentative, puis dictée du clavier */
+      if (tries++ < 1) begin(true); else keyboard();
+    }, granted ? 3500 : 6000);
+  }
+  /* le doigt sur le bouton ne doit pas fermer le clavier avant le clic (sinon le bouton bouge et le clic se perd) */
+  b.addEventListener('mousedown', function (e) { e.preventDefault(); });
+  b.addEventListener('touchstart', function () {}, {passive: true});
+  b.addEventListener('click', function () {
+    if (state !== 'off') {
+      if (state === 'wait') { ui('off'); hide(); try { rec.abort(); } catch (e) {} }
+      else { try { rec.stop(); } catch (e) { ui('off'); } }
+      return;
+    }
+    txt = ''; tries = 0; ph = inp.placeholder;
+    try { inp.blur(); } catch (e) {}
+    inp.value = ''; ui('wait'); show(granted ? 'l' : 'w', false, true);
+    begin(false);
   });
 })();
 </script>
