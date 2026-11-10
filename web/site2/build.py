@@ -646,7 +646,9 @@ for _u in [u for v in LURL.values() for u in v] + ['/cgv', '/confidentialite', '
 LIMG = {}
 def lift_img(n):
     if n not in LIMG:
-        f = os.path.join(LIFT_DIR, 'img', n + ('.png' if n.startswith('logo-') else '.jpg'))
+        f = os.path.join(LIFT_DIR, 'img', n + '.png')  # logos et portraits détourés (tm-*) en PNG
+        if not os.path.exists(f):
+            f = os.path.join(LIFT_DIR, 'img', n + '.jpg')
         LIMG[n] = webp(open(f, 'rb').read(), 'lift-' + n, maxw=1920 if n == 'hero' else 1600)
     return LIMG[n]
 def css_blocks(css):
@@ -827,6 +829,25 @@ def _nav_add(items, after, it):
 if not (_nav_add(CFG['nav'], '/services', {'t': 'Corporate', 'u': '/corporate'}) and _nav_add(CFG['nav'], '/fr/services', {'t': 'Entreprises', 'u': '/fr/entreprises'})):
     print('ARRET menu : Services introuvable'); sys.exit(1)
 print('onglet Corporate :', CORP['en']['p'], CORP['fr']['p'], CORP_IMG)
+
+# Onglet « Team » : l'image est remplacée par les vraies photos en arche avec contours dorés animés (comme l'accueil), sans Sabrina
+TV_CSS = '/* équipe : vraies photos en arche, contours dorés animés (demande de Yassine, 10 nov.) */\n@property --tva{syntax:\'<angle>\';inherits:false;initial-value:0deg}\n.tv{position:relative;max-width:780px;margin:34px auto 0;padding:34px 28px 30px;border-radius:28px;background:#0d0c0e;border:1px solid rgba(224,186,108,.38);box-shadow:0 30px 80px -24px rgba(0,0,0,.85);overflow:hidden;text-align:center}\n.tv:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(224,186,108,.10),rgba(224,186,108,0) 70%);pointer-events:none}\n.tv .boss{position:relative;display:flex;align-items:center;justify-content:center;gap:28px;text-align:left}\n.tv .ar{--tva:0deg;position:relative;display:block;padding:3px;border-radius:50% 50% 12% 12% / 38% 38% 9% 9%;background:conic-gradient(from var(--tva),#6f5120,#b8873f 12%,#f6dfa4 22%,#fff6dc 26%,#E0BA6C 32%,#7a5a24 50%,#b8873f 68%,#f0d394 80%,#6f5120);animation:tvspin 4.5s linear infinite,tvglow 3s ease-in-out infinite}\n.tv .ar>span{display:block;overflow:hidden;border-radius:inherit;background:radial-gradient(ellipse 80% 70% at 50% 35%,#2a2622 0%,#141312 70%,#0e0d0c 100%)}\n.tv .ar img{display:block;width:100%;height:auto;aspect-ratio:150/198;object-fit:cover;object-position:50% 20%}\n.tv .boss .ar{width:210px;flex:none}\n.tv .boss .ar>span{background:#fff}\n.tv .who b{display:block;font-family:"Cormorant Garamond",Lora,Georgia,serif;font-size:36px;font-weight:600;line-height:1.1;color:var(--ink,#f3eee4)}\n.tv .who span{display:block;margin-top:8px;font-size:15px;font-weight:700;letter-spacing:.06em;color:#E0BA6C}\n.tv .mem{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:24px 20px;margin:32px auto 0;max-width:640px}\n.tv .m span.n{display:block;margin-top:9px;font-size:14.5px;font-weight:600;color:var(--ink,#f3eee4)}\n.tv .m:nth-child(2) .ar{animation-delay:-.55s,-.4s}.tv .m:nth-child(3) .ar{animation-delay:-1.1s,-.8s}.tv .m:nth-child(4) .ar{animation-delay:-1.65s,-1.2s}\n.tv .m:nth-child(5) .ar{animation-delay:-2.2s,-1.6s}.tv .m:nth-child(6) .ar{animation-delay:-2.75s,-2s}.tv .m:nth-child(7) .ar{animation-delay:-3.3s,-2.4s}.tv .m:nth-child(8) .ar{animation-delay:-3.85s,-2.8s}\n@keyframes tvspin{to{--tva:360deg}}\n@keyframes tvglow{0%,100%{box-shadow:0 10px 26px rgba(0,0,0,.55),0 0 0 rgba(224,186,108,0)}50%{box-shadow:0 10px 26px rgba(0,0,0,.55),0 0 22px rgba(224,186,108,.35)}}\n@media (max-width:640px){.tv{padding:24px 14px 22px;border-radius:22px}.tv .boss{gap:16px}.tv .boss .ar{width:140px}.tv .who b{font-size:27px}.tv .who span{font-size:13px}.tv .mem{gap:16px 10px;margin-top:24px}.tv .m span.n{font-size:12.5px}}\n@media (prefers-reduced-motion:reduce){.tv .ar{animation:none}}\n'
+TV_M = ['Alex', 'David', 'Frantzdy', 'Jeremy', 'Joseph', 'Amadou', 'Amine', 'Elham']
+def team_block(lg):
+    return (('<style>%s</style>' % TV_CSS) +
+            '<div class="tv"><div class="boss"><span class="ar"><span><img src="%s" alt="Yassine Rafai" width="210" height="277" fetchpriority="high"></span></span>'
+            '<div class="who"><b>Yassine Rafai</b><span>%s</span><span>Rafai Limousine</span></div></div><div class="mem">%s</div></div>'
+            % (lift_img('tm-yassine'), 'CEO – President' if lg == 'en' else 'CEO – Président',
+               ''.join('<div class="m"><span class="ar"><span><img src="%s" alt="%s" width="150" height="198" loading="lazy"></span></span><span class="n">%s</span></div>'
+                       % (lift_img('tm-' + n.lower()), n, n) for n in TV_M)))
+_ntv = 0
+for i, (p, lg, title, cls, inner) in enumerate(docs):
+    if p in ('/team', '/fr/equipe'):
+        new = re.sub(r'<figure><img src="/img/team-[^"]+"[^>]*></figure>', lambda m: team_block(lg), inner, count=1)
+        if new != inner:
+            docs[i] = (p, lg, title, cls, new); _ntv += 1
+if _ntv != 2:
+    print('ARRET onglet Team : image non trouvee', _ntv); sys.exit(1)
 
 # feuilles de style
 css = ''

@@ -179,3 +179,59 @@
   d.body.appendChild(p); h.classList.add('rlchon');
   try { o.focus({ preventScroll: true }); } catch (e) {}
 })();
+/* Animations sur tout le site (10 nov. 2026, demande de Yassine) : les blocs apparaissent en douceur quand on descend,
+   les cartes une par une ; reflet doré sur les boutons. Rien ne bouge si le visiteur a demandé moins d'animations. */
+(function () {
+  var d = document, w = window;
+  try { if (w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
+  if (!('IntersectionObserver' in w)) return;
+  var st = d.createElement('style');
+  st.textContent = '.rl-rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}' +
+    '.rl-rv.rl-in{opacity:1;transform:none}' +
+    '.rl-rv.rl-z{transform:translateY(18px) scale(.97)}.rl-rv.rl-z.rl-in{transform:none}' +
+    '.btn-dark,.rlsv .bk,.rlco .gold,.rlrt .b,.go .btn,.btn.book{position:relative;overflow:hidden}' +
+    '.btn-dark:after,.rlsv .bk:after,.rlco .gold:after,.rlrt .b:after,.go .btn:after,.btn.book:after{content:"";position:absolute;top:-20%;bottom:-20%;left:0;width:40%;' +
+    'background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,248,225,.55),rgba(255,255,255,0));transform:translateX(-160%) skewX(-18deg);animation:rlShine 4.5s ease-in-out 1.5s infinite;pointer-events:none}' +
+    '@keyframes rlShine{0%{transform:translateX(-160%) skewX(-18deg)}35%,100%{transform:translateX(330%) skewX(-18deg)}}';
+  d.head.appendChild(st);
+  function isCards(el) {
+    if (el.children.length < 3) return false;
+    var cs = w.getComputedStyle(el);
+    return cs.display.indexOf('grid') >= 0 || (cs.display.indexOf('flex') >= 0 && (cs.flexWrap === 'wrap' || el.classList.contains('car-x')));
+  }
+  var items = [];
+  function mark(el, i, zoom) {
+    if (!el || el.nodeType !== 1 || el.classList.contains('rl-rv')) return;
+    var tag = el.tagName;
+    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'IFRAME' || el.id === 'rlyfab' || el.id === 'rlytz' || el.id === 'rlch') return;
+    var r = el.getBoundingClientRect();
+    if (r.height < 8 || r.top < w.innerHeight * 0.92) return;   // déjà à l'écran au chargement : on n'y touche pas
+    el.classList.add('rl-rv'); if (zoom) el.classList.add('rl-z');
+    if (i) el.style.transitionDelay = Math.min(i * 90, 450) + 'ms';
+    items.push(el);
+  }
+  function walk(box, depth) {
+    // descend tant qu'il n'y a qu'un seul enfant (enveloppes), puis anime les blocs ; les grilles de cartes une par une
+    while (box && box.children.length === 1 && depth < 8) { box = box.children[0]; depth++; }
+    if (!box) return;
+    [].forEach.call(box.children, function (c) {
+      if (isCards(c)) { [].forEach.call(c.children, function (k, i) { mark(k, i, true); }); }
+      else mark(c, 0, false);
+    });
+  }
+  function run() {
+    var secs = d.querySelectorAll('main section, body > section, section.yaqOZd, .rlsv .q, .rlsv .end, .rlco > section, .rlco > .stats, .rlteam, footer');
+    [].forEach.call(secs, function (s) { if (!s.closest('.rl-rv')) walk(s, 0); });
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('rl-in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -4% 0px', threshold: 0.04 });
+    items.forEach(function (el) { io.observe(el); });
+    // bas de page atteint : tout ce qui reste s'affiche
+    w.addEventListener('scroll', function () {
+      if (w.innerHeight + w.scrollY >= d.documentElement.scrollHeight - 4) items.forEach(function (el) { el.classList.add('rl-in'); });
+    }, { passive: true });
+    // sécurité : tout s'affiche au bout de 6 s même si l'observateur ne se déclenche pas
+    setTimeout(function () { items.forEach(function (el) { if (el.getBoundingClientRect().top < w.innerHeight) el.classList.add('rl-in'); }); }, 6000);
+  }
+  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', run); else run();
+})();

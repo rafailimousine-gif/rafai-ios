@@ -459,6 +459,27 @@ footer{background:#070708;color:var(--text);border-top:2px solid var(--gold)}
 .gmap{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:#E0BA6C;text-decoration:none}
 .gmap[hidden]{display:none}
 
+/* équipe : vraies photos en arche, contours dorés animés (demande de Yassine, 10 nov.) */
+@property --tva{syntax:'<angle>';inherits:false;initial-value:0deg}
+.tv{position:relative;max-width:780px;margin:34px auto 0;padding:34px 28px 30px;border-radius:28px;background:#0d0c0e;border:1px solid rgba(224,186,108,.38);box-shadow:0 30px 80px -24px rgba(0,0,0,.85);overflow:hidden;text-align:center}
+.tv:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(224,186,108,.10),rgba(224,186,108,0) 70%);pointer-events:none}
+.tv .boss{position:relative;display:flex;align-items:center;justify-content:center;gap:28px;text-align:left}
+.tv .ar{--tva:0deg;position:relative;display:block;padding:3px;border-radius:50% 50% 12% 12% / 38% 38% 9% 9%;background:conic-gradient(from var(--tva),#6f5120,#b8873f 12%,#f6dfa4 22%,#fff6dc 26%,#E0BA6C 32%,#7a5a24 50%,#b8873f 68%,#f0d394 80%,#6f5120);animation:tvspin 4.5s linear infinite,tvglow 3s ease-in-out infinite}
+.tv .ar>span{display:block;overflow:hidden;border-radius:inherit;background:radial-gradient(ellipse 80% 70% at 50% 35%,#2a2622 0%,#141312 70%,#0e0d0c 100%)}
+.tv .ar img{display:block;width:100%;height:auto;aspect-ratio:150/198;object-fit:cover;object-position:50% 20%}
+.tv .boss .ar{width:210px;flex:none}
+.tv .boss .ar>span{background:#fff}
+.tv .who b{display:block;font-family:"Cormorant Garamond",Lora,Georgia,serif;font-size:36px;font-weight:600;line-height:1.1;color:var(--ink,#f3eee4)}
+.tv .who span{display:block;margin-top:8px;font-size:15px;font-weight:700;letter-spacing:.06em;color:#E0BA6C}
+.tv .mem{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:24px 20px;margin:32px auto 0;max-width:640px}
+.tv .m span.n{display:block;margin-top:9px;font-size:14.5px;font-weight:600;color:var(--ink,#f3eee4)}
+.tv .m:nth-child(2) .ar{animation-delay:-.55s,-.4s}.tv .m:nth-child(3) .ar{animation-delay:-1.1s,-.8s}.tv .m:nth-child(4) .ar{animation-delay:-1.65s,-1.2s}
+.tv .m:nth-child(5) .ar{animation-delay:-2.2s,-1.6s}.tv .m:nth-child(6) .ar{animation-delay:-2.75s,-2s}.tv .m:nth-child(7) .ar{animation-delay:-3.3s,-2.4s}.tv .m:nth-child(8) .ar{animation-delay:-3.85s,-2.8s}
+@keyframes tvspin{to{--tva:360deg}}
+@keyframes tvglow{0%,100%{box-shadow:0 10px 26px rgba(0,0,0,.55),0 0 0 rgba(224,186,108,0)}50%{box-shadow:0 10px 26px rgba(0,0,0,.55),0 0 22px rgba(224,186,108,.35)}}
+@media (max-width:640px){.tv{padding:24px 14px 22px;border-radius:22px}.tv .boss{gap:16px}.tv .boss .ar{width:140px}.tv .who b{font-size:27px}.tv .who span{font-size:13px}.tv .mem{gap:16px 10px;margin-top:24px}.tv .m span.n{font-size:12.5px}}
+@media (prefers-reduced-motion:reduce){.tv .ar{animation:none}}
+
 /* --- site en ligne --- */
 .appbar{background:#070708;color:#d9d3c7;font-size:12.5px;line-height:1.3;border-bottom:1px solid rgba(224,186,108,.25)}
 .appbar .wrap{display:flex;align-items:center;justify-content:center;gap:10px;min-height:32px;padding-block:4px;text-align:center}
@@ -615,7 +636,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
     <div class="eyebrow" data-en="Our team">Notre équipe</div>
     <h2>Team Rafai Limousine</h2>
     <p class="kick" data-en="Punctuality · Rigour · Professionalism">Ponctualité · Rigueur · Professionnalisme</p>
-    <figure class="team-card"><img class="t-fr" src="%%IMG:team-fr%%" alt="Team Rafai Limousine : Yassine Rafai, président, et les chauffeurs"><img class="t-en" src="%%IMG:team-en%%" alt="Team Rafai Limousine: Yassine Rafai, CEO, and the chauffeurs"></figure>
+    <div class="tv"><div class="boss"><span class="ar"><span><img src="%%IMG:tm-yassine%%" alt="Yassine Rafai" width="210" height="277"></span></span><div class="who"><b>Yassine Rafai</b><span data-en="CEO – President">CEO – Président</span><span>Rafai Limousine</span></div></div><div class="mem"><div class="m"><span class="ar"><span><img src="%%IMG:tm-alex%%" alt="Alex" width="150" height="198" loading="lazy"></span></span><span class="n">Alex</span></div><div class="m"><span class="ar"><span><img src="%%IMG:tm-david%%" alt="David" width="150" height="198" loading="lazy"></span></span><span class="n">David</span></div><div class="m"><span class="ar"><span><img src="%%IMG:tm-frantzdy%%" alt="Frantzdy" width="150" height="198" loading="lazy"></span></span><span class="n">Frantzdy</span></div><div class="m"><span class="ar"><span><img src="%%IMG:tm-jeremy%%" alt="Jeremy" width="150" height="198" loading="lazy"></span></span><span class="n">Jeremy</span></div><div class="m"><span class="ar"><span><img src="%%IMG:tm-joseph%%" alt="Joseph" width="150" height="198" loading="lazy"></span></span><span class="n">Joseph</span></div><div class="m"><span class="ar"><span><img src="%%IMG:tm-amadou%%" alt="Amadou" width="150" height="198" loading="lazy"></span></span><span class="n">Amadou</span></div><div class="m"><span class="ar"><span><img src="%%IMG:tm-amine%%" alt="Amine" width="150" height="198" loading="lazy"></span></span><span class="n">Amine</span></div><div class="m"><span class="ar"><span><img src="%%IMG:tm-elham%%" alt="Elham" width="150" height="198" loading="lazy"></span></span><span class="n">Elham</span></div></div></div>
     <div class="values">
       <div class="val"><h3 data-en="Punctuality">Ponctualité</h3><p data-en="Real-time flight tracking and 1 hour of free waiting at the airport.">Vol suivi en temps réel et 1 h d’attente offerte à l’aéroport.</p></div>
       <div class="val"><h3 data-en="Rigour">Rigueur</h3><p data-en="A fixed price confirmed before the ride, spotless vehicles, every detail checked.">Prix fixe annoncé avant la course, véhicules impeccables, chaque détail vérifié.</p></div>
