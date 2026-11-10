@@ -281,7 +281,8 @@ def header(p, lg):
                % (bar['u'], AB[0], round(AB[1] * 30 / AB[2]), GPU, GP[0], round(GP[1] * 30 / GP[2])))
     else:
         btn = '<a href="%s" target="_blank" rel="noopener">%s</a>' % (bar['u'], bar['b'])
-    return ('<div id="rlbar"><p>%s</p>%s</div>' % (html.escape(bar['t']), btn) +
+    # barre du haut : seulement les logos App Store et Google Play, sans texte (10 nov. 2026, demande de Yassine)
+    return ('<div id="rlbar">%s</div>' % btn +
             '<header id="rlnav"><button type="button" id="rlmenu" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>'
             '<a class="brand" href="/home"><img src="%s" alt="Rafai Limousine" width="40" height="40"><span>Rafai Limousine</span></a>'
             '<nav><ul>%s</ul></nav></header>' % (LOGO, ''.join(li(i) for i in tree)))
@@ -684,6 +685,7 @@ def lift_page(p, lg):
     t = re.sub(r'%%PNG:(light|dark)%%', lambda m: lift_img('logo-' + m.group(1)), t)
     t = re.sub(r'%%U:([a-z]+)%%', lambda m: LURL[m.group(1)][0 if lg == 'en' else 1], t)
     t = t.replace('%%BOOK%%', book)
+    t = t.replace('%%BADGES%%', '<!--rlbadges-->')  # badges App Store / Google Play, posés à l'écriture de la page
     if '%%' in t:
         print('ARRET lifting : repere non remplace', re.findall(r'%%[^%]*%%', t)[:3]); sys.exit(1)
     s = BeautifulSoup(t, 'html.parser')
@@ -1009,6 +1011,10 @@ for _, _, _, _, inner in docs:
         AB = badge(open(OUT + m.group(1), 'rb').read(), 'appstore-bar')
         break
 print('badges Google Play ajoutes', NGP[0], '· barre', 'badges' if (AB and GP) else 'bouton texte', '· badge Play', GP)
+BADGES = (('<a href="%s" target="_blank" rel="noopener"><img src="%s" alt="Download on the App Store" width="%d" height="26"></a>'
+           '<a href="%s" target="_blank" rel="noopener"><img src="%s" alt="Get it on Google Play" width="%d" height="26"></a>')
+          % (CFG['bar']['u'], AB[0], round(AB[1] * 26 / AB[2]), GPU, GP[0], round(GP[1] * 26 / GP[2]))) if (AB and GP and GPU) else (
+          '<a href="%s" target="_blank" rel="noopener">App Store</a><a href="%s" target="_blank" rel="noopener">Google Play</a>' % (CFG['bar']['u'], GPU))
 # grande photo du haut de page (image LCP) : demandée en priorité dès le début du chargement
 NPRE = [0]
 HM = {}
@@ -1067,6 +1073,8 @@ for p, lg, title, cls, inner in docs:
     yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/agent-%s-%s.html"><img src="%s" alt="" width="62" height="62"><span class="rlwave" aria-hidden="true">👋</span></button>'
           '<button type="button" id="rlytz"%s><b>%s</b><span>%s</span></button>'
           % (html.escape(y['a'], quote=True), lg, YV, AV, ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
+    if lifted:
+        inner = inner.replace('<!--rlbadges-->', BADGES)
     page = ''.join(head) + '<body class="%s">' % cls + ('' if lifted else header(p, lg)) + inner + yb + '<script src="/css/site.js" defer></script></body></html>'
     fn = OUT + ('/index.html' if False else p + '.html')
     os.makedirs(os.path.dirname(fn), exist_ok=True)

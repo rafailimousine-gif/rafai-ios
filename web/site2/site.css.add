@@ -135,3 +135,6 @@ html body .rlrt .b{background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b88
 html body .rlteam{color:#c8c2b6}html body .rlteam h1{color:#f3eee4}html body .rlteam .k,html body .rlteam .v{color:#E0BA6C}
 html body .rlteam .cards div{background:#141316;border-color:rgba(224,186,108,.24)}html body .rlteam .cards h2{color:#E0BA6C}html body .rlteam .cards p{color:#c8c2b6}
 html body .rlteam .cta a.w{background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b8873f 100%);color:#16110a}html body .rlteam .cta a.c{border-color:#E0BA6C;color:#E0BA6C}
+/* barre du haut : seulement les logos des stores, plus fine */
+#rlbar{padding:5px 12px}#rlbar .st img{height:26px}
+@media (max-width:899px){#rlbar .st img{height:24px}}
