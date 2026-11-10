@@ -1416,7 +1416,7 @@ print('nom Youri restant', reste)
 print('cartes de reservation agrandies', NBIG[0], '· ancien ecran de choix coupe', NCH[0])
 print('forfaits aeroport (E 170, V 200, S 265, RR 350) dans', NAP[0], 'bloc(s) de reservation')
 print('trajets populaires sur', ', '.join(NRT))
-if len(NRT) != 4:
+if len(NRT) != 2:  # accueil anglais et français (chinois et arabe retirés le 10 nov. 2026)
     print('ARRET trajets populaires absents d une page d accueil'); sys.exit(1)
 print('a bord (Evian, USB-C, Wi-Fi) dans', NBD[0], 'bloc(s) de reservation · musique dans', NMU[0])
 if NBD[0] == 0:
