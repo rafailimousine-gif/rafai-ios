@@ -675,6 +675,64 @@ _sel = [b for b in _blk if re.search(r'rly|rlch|rlwave|rlring', b) and not b.sta
 _anim = set(re.findall(r'animation(?:-name)?:\s*([A-Za-z][\w-]*)', '\n'.join(_sel)))
 LIFT_CSS = '\n'.join(_sel + [b for b in _blk if b.startswith('@keyframes') and b.split()[1].split('{')[0] in _anim])
 LFONTS = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap'
+# Shopping (10 nov. 2026, demande de Yassine) : photos libres de droits de Wikimedia Commons, retouchées (recadrage, tons chauds),
+# avec le nom de l'auteur et la licence sous les cartes. Si une photo ne se télécharge pas, la carte garde l'icône dorée.
+SHOP = [  # clé, fichier Commons, auteur, licence, lien licence, point de cadrage (x, y)
+    ('lafayette', 'People at the top of Galeries Lafayette.jpg', 'Tangopaso', 'domaine public', '', (.5, .5)),
+    ('printemps', 'Boulevard Haussmann - panoramio (2).jpg', 'Romāns Kolduns', 'CC BY 3.0', 'https://creativecommons.org/licenses/by/3.0/', (.5, .5)),
+    ('bonmarche', 'Le Bon Marché, Paris 3 November 2008 - panoramio.jpg', 'hiro449944', 'CC BY 3.0', 'https://creativecommons.org/licenses/by/3.0/', (.5, .45)),
+    ('montaigne', 'Avenue Montaigne - Paris - panoramio.jpg', 'Charles Lecompte', 'CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/', (.62, .5)),
+    ('sthonore', 'Boutique Azzaro rue du Faubourg-Saint-Honoré à Paris.JPG', 'Erwmat', 'CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/', (.66, .5)),
+    ('bhv', 'Bazar Hôtel Ville - Paris IV (FR75) - 2024-06-05 - 1.jpg', 'Chabe01', 'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/', (.5, .4)),
+    ('vallee', 'Vallée Village (Serris) (2).jpg', 'Gzen92', 'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/', (.5, .5)),
+]
+SHOP_ALT = {'lafayette': ('Façade des Galeries Lafayette, boulevard Haussmann', 'Galeries Lafayette, boulevard Haussmann'),
+            'printemps': ('Le Printemps Haussmann', 'Printemps Haussmann'),
+            'bonmarche': ('Le Bon Marché, rue de Sèvres', 'Le Bon Marché, rue de Sèvres'),
+            'montaigne': ('L’avenue Montaigne illuminée le soir', 'Avenue Montaigne at night'),
+            'sthonore': ('Boutique rue du Faubourg-Saint-Honoré', 'Boutique on rue du Faubourg-Saint-Honoré'),
+            'bhv': ('Le BHV Marais, rue de Rivoli', 'BHV Marais, rue de Rivoli'),
+            'vallee': ('Entrée de La Vallée Village', 'La Vallée Village entrance')}
+SHOP_IMG = {}
+def shop_photos():
+    from PIL import ImageEnhance, ImageFilter
+    ua = {'User-Agent': 'RafaiLimousineSite/1.0 (https://www.rafai-limousine.com; contact@rafai-limousine.com)'}
+    for k, fn, who, lic, lu, (fx, fy) in SHOP:
+        cache = os.path.join(SRC, 'shop-%s.jpg' % k)
+        try:
+            if not os.path.exists(cache):
+                u = 'https://commons.wikimedia.org/wiki/Special:FilePath/' + urllib.parse.quote(fn.replace(' ', '_')) + '?width=1600'
+                with urllib.request.urlopen(urllib.request.Request(u, headers=ua), timeout=60) as r:
+                    open(cache, 'wb').write(r.read())
+            im = Image.open(cache).convert('RGB')
+            # recadrage 16:10 autour du point choisi
+            W, H = im.size; tw = min(W, int(H * 1.6)); th = int(tw / 1.6)
+            x0 = int(min(max(0, fx * W - tw / 2), W - tw)); y0 = int(min(max(0, fy * H - th / 2), H - th))
+            im = im.crop((x0, y0, x0 + tw, y0 + th)).resize((1200, 750), Image.LANCZOS)
+            # retouche : un peu plus chaud, contraste et couleurs relevés, léger vignettage
+            r, g, b = im.split(); r = r.point(lambda v: min(255, int(v * 1.04))); b = b.point(lambda v: int(v * .95)); im = Image.merge('RGB', (r, g, b))
+            im = ImageEnhance.Contrast(im).enhance(1.06); im = ImageEnhance.Color(im).enhance(1.06)
+            vg = Image.new('L', (1200, 750), 0); from PIL import ImageDraw
+            ImageDraw.Draw(vg).ellipse((-150, -120, 1350, 870), fill=255); vg = vg.filter(ImageFilter.GaussianBlur(120))
+            im = Image.composite(im, ImageEnhance.Brightness(im).enhance(.72), vg)
+            b2 = io.BytesIO(); im.save(b2, 'JPEG', quality=90)
+            SHOP_IMG[k] = webp(b2.getvalue(), 'shop-' + k, maxw=1200)
+        except Exception as e:
+            print('shopping : photo absente', k, str(e)[:80])
+    print('shopping : photos', len(SHOP_IMG), '/', len(SHOP))
+shop_photos()
+def shop_html(t, lg):
+    for k, fn, who, lic, lu, _ in SHOP:
+        if k not in SHOP_IMG:
+            continue
+        t = re.sub(r'<div class="ph shop" aria-hidden="true" data-shop="%s">.*?</div>' % k,
+                   lambda m: '<div class="ph"><img src="%s" alt="%s" loading="lazy" decoding="async"></div>' % (SHOP_IMG[k], html.escape(SHOP_ALT[k][0 if lg == 'fr' else 1], quote=True)), t, count=1, flags=re.S)
+    cred = [('<a href="https://commons.wikimedia.org/wiki/File:%s" target="_blank" rel="noopener">%s</a>, %s' %
+             (urllib.parse.quote(fn.replace(' ', '_')), html.escape(who), ('<a href="%s" target="_blank" rel="noopener">%s</a>' % (lu, lic)) if lu else ('public domain' if lg == 'en' else lic)))
+            for k, fn, who, lic, lu, _ in SHOP if k in SHOP_IMG]
+    if cred:
+        t = t.replace('<p class="shopcred"></p>', '<p class="shopcred">%s %s.</p>' % ('Photos (Wikimedia Commons, retouched):' if lg == 'en' else 'Photos (Wikimedia Commons, retouchées) :', ' · '.join(cred)), 1)
+    return t
 def lift_page(p, lg):
     desk = BOOKD.get(p) or BOOK.get(p) or BOOKM.get(p)
     mob = BOOKM.get(p) or BOOK.get(p) or BOOKD.get(p)
@@ -687,6 +745,7 @@ def lift_page(p, lg):
     t = re.sub(r'%%PNG:(light|dark)%%', lambda m: lift_img('logo-' + m.group(1)), t)
     t = re.sub(r'%%U:([a-z]+)%%', lambda m: LURL[m.group(1)][0 if lg == 'en' else 1], t)
     t = t.replace('%%BOOK%%', book)
+    t = shop_html(t, lg)
     t = t.replace('%%BADGES%%', '<!--rlbadges-->')  # badges App Store / Google Play, posés à l'écriture de la page
     if '%%' in t:
         print('ARRET lifting : repere non remplace', re.findall(r'%%[^%]*%%', t)[:3]); sys.exit(1)
