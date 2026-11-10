@@ -102,12 +102,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   .go .btn{width:100%;justify-content:center}
 }
 @media (max-width:640px){
-  .hero{min-height:0;padding-top:calc(58px + var(--appbar, 0px) + 56.3vw + 22px + env(safe-area-inset-top, 0px));padding-bottom:28px;background:#0d0c0a}
+  .hero{min-height:0;padding-top:calc(58px + var(--appbar, 0px) + 196px + env(safe-area-inset-top, 0px));padding-bottom:28px;background:#0d0c0a}
   .hero-bg .blur{display:none}
-  .hero-bg .full{inset:auto;top:calc(58px + var(--appbar, 0px) + env(safe-area-inset-top, 0px));left:0;width:100%;height:auto;aspect-ratio:1920/1081;background-size:100% 100%;background-position:center;-webkit-mask-image:linear-gradient(180deg,#000 0,#000 84%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 84%,transparent 100%)}
+  .hero-bg .full{inset:auto;top:calc(58px + var(--appbar, 0px) + env(safe-area-inset-top, 0px));left:0;width:100%;height:410px;aspect-ratio:auto;background-image:linear-gradient(180deg,rgba(13,12,10,0) 38%,rgba(13,12,10,.55) 66%,rgba(13,12,10,.92) 90%,#0d0c0a 100%),var(--hero);background-size:100% 100%,cover;background-position:0 0,53% 30%;-webkit-mask-image:none;mask-image:none}
   .hero-bg::after{display:none}
   .hero h1{font-size:36px}
   .hero .tag{margin-top:12px;font-size:10.5px;letter-spacing:.22em}
+}
+@media (max-width:380px){
+  .hero h1{font-size:31px}
   .booking{margin-top:18px;padding-top:0}
   .bform{grid-template-columns:1fr 1fr;background:rgba(14,14,14,.72)}
   .fld.wide{grid-column:1/-1}
@@ -366,7 +369,7 @@ section[id]{scroll-margin-top:96px}
 .book-sec h2{color:#fff}
 .book-sec .sub{color:rgba(255,255,255,.72)}
 .book-sec .eyebrow,.team .eyebrow{color:#E0BA6C}
-.bookbox{position:relative;max-width:900px;height:840px;margin:36px auto 0;border-radius:20px;overflow:hidden;background:#141311;border:1px solid rgba(224,186,108,.3);text-align:left}
+.bookbox{position:relative;max-width:680px;height:840px;margin:36px auto 0;overflow:hidden;text-align:left}
 .bookbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 .bookalt{margin:18px 0 0;font-size:14.5px;color:rgba(255,255,255,.72)}
 .bookalt a{color:#E0BA6C;font-weight:700;text-decoration:none}
@@ -383,7 +386,7 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
   .appbar span{display:none}
   .appbar .wrap::before{content:"📱"}
   .menu{top:calc(90px + env(safe-area-inset-top, 0px))}
-  .bookbox{height:900px;border-radius:16px;margin-top:28px}
+  .bookbox{height:900px;margin-top:28px}
 }
 </style>
 
@@ -678,6 +681,9 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
   lb.addEventListener('click',function(e){ e.stopPropagation(); var o=lm.hidden; lm.hidden=!o; lb.setAttribute('aria-expanded',String(o)); });
   document.addEventListener('click',function(e){ if(!lm.hidden && !lm.contains(e.target)){ lm.hidden=true; lb.setAttribute('aria-expanded','false'); } });
   lm.querySelectorAll('a').forEach(function(a){ if(a.getAttribute('lang')===lang) a.setAttribute('aria-current','true'); });
+  /* bloc de réservation : version ordinateur ou téléphone (même règle que les blocs eux-mêmes) */
+  (function(){ var d=document.getElementById('bookFrame'), m=document.getElementById('bookFrameM'); if(!d||!m) return;
+    var small=Math.min(screen.width,screen.height)<600; if(small){ d.parentNode.removeChild(d); m.id='bookFrame'; } else { m.parentNode.removeChild(m); } })();
 
   /* barre du haut, trajets et destinations : ouvrent le bloc de réservation (le même que sur le reste du site) déjà rempli */
   function toWidget(v){

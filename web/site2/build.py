@@ -18,6 +18,7 @@ PAGES = CFG['pages']
 LIFT_PAGES = {'/home': 'en', '/fr': 'fr'}
 BOOK = {}
 BOOKM = {}
+BOOKD = {}
 UA = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36'}
 for d in (SRC, OUT + '/img', OUT + '/e', OUT + '/css'):
     os.makedirs(d, exist_ok=True)
@@ -402,8 +403,14 @@ for p in PAGES:
         n += 1
         src = embed(e['data-code'])
         if p in LIFT_PAGES and 'id="trip"' in e['data-code'] and 'id="from"' in e['data-code']:
-            # le bloc « téléphone » se vide sur ordinateur (<plaintext>) : on garde celui qui marche partout
-            (BOOKM if '<plaintext' in e['data-code'] else BOOK).setdefault(p, src)
+            # Google Sites : sur certaines pages un bloc pour ordinateur et un bloc pour téléphone (chacun se vide sur l'autre appareil)
+            c0 = e['data-code'].replace(' ', '')
+            if "Math.min(screen.width,screen.height)>=600)document.write('<plaintext" in c0:
+                BOOKM.setdefault(p, src)
+            elif 'Math.min(screen.width,screen.height)<600' in c0:
+                BOOKD.setdefault(p, src)
+            else:
+                BOOK.setdefault(p, src)
         ttl = (e.find('iframe') or {}).get('title', '') if e.find('iframe') else ''
         # le bloc se charge juste après le premier affichage de la page (rl-site.js) : la page s'affiche plus vite
         new = s.new_tag('iframe', title='Rafai Limousine', scrolling='no', frameborder='0', allow='geolocation; clipboard-write')
@@ -554,15 +561,17 @@ _anim = set(re.findall(r'animation(?:-name)?:\s*([A-Za-z][\w-]*)', '\n'.join(_se
 LIFT_CSS = '\n'.join(_sel + [b for b in _blk if b.startswith('@keyframes') and b.split()[1].split('{')[0] in _anim])
 LFONTS = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap'
 def lift_page(p, lg):
-    book = BOOK.get(p) or BOOKM.get(p)
-    if not book:
+    desk = BOOKD.get(p) or BOOK.get(p) or BOOKM.get(p)
+    mob = BOOKM.get(p) or BOOK.get(p) or BOOKD.get(p)
+    if not desk:
         print('ARRET lifting : bloc de reservation introuvable sur', p); sys.exit(1)
+    fr_ = '<iframe id="%s" class="rlif %s" title="Rafai Limousine" scrolling="no" frameborder="0" allow="geolocation; clipboard-write" data-src="%s"></iframe>'
+    book = fr_ % ('bookFrame', 'bf-d', desk) + ('' if mob == desk else fr_ % ('bookFrameM', 'bf-m', mob))
     t = LIFT_TPL
     t = re.sub(r'%%IMG:([a-z0-9-]+)%%', lambda m: lift_img(m.group(1)), t)
     t = re.sub(r'%%PNG:(light|dark)%%', lambda m: lift_img('logo-' + m.group(1)), t)
     t = re.sub(r'%%U:([a-z]+)%%', lambda m: LURL[m.group(1)][0 if lg == 'en' else 1], t)
-    t = t.replace('%%BOOK%%', '<iframe id="bookFrame" class="rlif" title="Rafai Limousine" scrolling="no" frameborder="0" '
-                  'allow="geolocation; clipboard-write" data-src="%s"></iframe>' % book)
+    t = t.replace('%%BOOK%%', book)
     if '%%' in t:
         print('ARRET lifting : repere non remplace', re.findall(r'%%[^%]*%%', t)[:3]); sys.exit(1)
     s = BeautifulSoup(t, 'html.parser')
@@ -585,7 +594,7 @@ def lift_page(p, lg):
 for i, (p, lg, title, cls, inner) in enumerate(docs):
     if p in LIFT_PAGES:
         docs[i] = (p, lg, title, 'rllift', lift_page(p, LIFT_PAGES[p]))
-print('lifting :', ', '.join(LIFT_PAGES), '· bloc de reservation', BOOK, '· bloc telephone', BOOKM, '· images', len(LIMG), '· styles agent', len(LIFT_CSS))
+print('lifting :', ', '.join(LIFT_PAGES), '· bloc de reservation', BOOK, '· ordinateur', BOOKD, '· telephone', BOOKM, '· images', len(LIMG), '· styles agent', len(LIFT_CSS))
 
 # feuilles de style
 css = ''
