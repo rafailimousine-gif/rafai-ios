@@ -11,6 +11,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,.hero::before{transition:none!important;animation:none!important}}
+html,body{margin:0}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
 a{color:inherit}
@@ -351,10 +352,47 @@ footer{background:var(--brand-2);color:var(--on-dark-muted);border-top:2px solid
 @keyframes rt-pop{0%{color:var(--ink)}40%{color:#b8863a}100%{color:var(--ink)}}
 @media (prefers-reduced-motion: reduce){.lg-w{opacity:1}.routes-grid .route{opacity:1;transform:none}.lg-anim::after,.lg-anim::before{display:none}}
 
+/* ===== fond blanc (demande de Yassine) : plus de grands aplats noirs ===== */
+.team{background:var(--bg-alt);color:var(--text)}
+.team h2{color:var(--ink)}
+.team .kick,.team .eyebrow{color:var(--kicker)}
+.team-card{border:1px solid var(--line);box-shadow:0 24px 50px -24px rgba(17,17,19,.45)}
+.val{border:1px solid var(--line);background:var(--surface)}
+.val h3{color:var(--kicker)}
+.val p{color:var(--text)}
+.team .note{color:var(--muted)}
+footer{background:var(--bg-alt);color:var(--text);border-top:2px solid var(--gold)}
+.fbrand p{color:var(--text)}
+.fcol h4{color:var(--muted);border-bottom-color:var(--line)}
+.fcol a,.fbottom a{color:var(--ink)}
+.fbottom{border-top-color:var(--line);color:var(--muted)}
+.fbrand .contact,.fbrand .contact span{color:var(--text)}
+@media (max-width:640px){
+  .hero{background:var(--bg);padding-top:calc(var(--hdr-h, 90px) + 196px)}
+  .hdr{background:rgba(248,247,244,.97);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+  .hdr .logo-light{display:none}
+  .hdr .logo-dark{display:block}
+  .hero-bg .full{top:var(--hdr-h, 90px);height:var(--ph-h, 410px);background-image:linear-gradient(180deg,rgba(0,0,0,0) 34%,rgba(0,0,0,.5) 64%,rgba(0,0,0,.66) 100%),var(--hero)}
+  .booking{margin-top:30px}
+  .tabs{background:var(--bg-alt);border:1px solid var(--line);backdrop-filter:none;-webkit-backdrop-filter:none}
+  .tab{color:var(--ink)}
+  .tab[aria-selected="true"]{background:var(--ink);color:#fff}
+  .bform{background:var(--surface);border:1px solid var(--line);box-shadow:0 18px 40px -26px rgba(17,17,19,.35);backdrop-filter:none;-webkit-backdrop-filter:none}
+  .fld{border-color:var(--line)!important}
+  .fld label{color:var(--muted)}
+  .fld input,.fld select{color:var(--ink)}
+  .fld input::placeholder{color:#a3a09a}
+  .fld input[type=date],.fld input[type=time]{color-scheme:light}
+  .step button{border-color:var(--line);color:var(--ink)}
+  .step output{color:var(--ink)}
+  .go .btn{background:var(--ink);color:#fff}
+  .note{color:var(--text)}
+}
+
 /* --- site en ligne --- */
-.appbar{background:#0b0b0c;color:#e9e4d8;font-size:12.5px;line-height:1.3;border-bottom:1px solid rgba(224,186,108,.22)}
+.appbar{background:#f5f4f2;color:#3a3a40;font-size:12.5px;line-height:1.3;border-bottom:1px solid #E5E3DE}
 .appbar .wrap{display:flex;align-items:center;justify-content:center;gap:12px;min-height:32px;padding-block:4px;text-align:center}
-.appbar a{color:#E0BA6C;font-weight:700;text-decoration:none;white-space:nowrap}
+.appbar a{color:#8A6630;font-weight:700;text-decoration:none;white-space:nowrap}
 .appbar a:hover{text-decoration:underline}
 :root{--appbar:32px}
 @media (min-width:641px){.hero{padding-top:calc(144px + env(safe-area-inset-top, 0px))}}
@@ -373,14 +411,14 @@ section[id]{scroll-margin-top:96px}
 .bookbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 .bookalt{margin:18px 0 0;font-size:14.5px;color:rgba(255,255,255,.72)}
 .bookalt a{color:#E0BA6C;font-weight:700;text-decoration:none}
-footer .contact a{color:var(--on-dark);text-decoration:none}
+footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
 .fapps{margin:14px 0 0}
-.fapps a{color:var(--gold-2);font-weight:700;text-decoration:none}
-.flegal{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:44px;padding-top:20px;border-top:1px solid #2a2a2a;font-size:14px}
-.flegal a{color:var(--on-dark);text-decoration:none;font-weight:600}
+.fapps a{color:var(--kicker);font-weight:700;text-decoration:none}
+.flegal{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:14px}
+.flegal a{color:var(--ink);text-decoration:none;font-weight:600}
 .flegal a:hover,.flang a:hover{color:var(--gold)}
 .flegal + .fbottom{margin-top:18px;border-top:0;padding-top:0}
-.flang a{color:var(--on-dark);text-decoration:none}
+.flang a{color:var(--ink);text-decoration:none}
 @media (max-width:640px){
   .appbar{font-size:12px}
   .appbar span{display:none}
@@ -399,14 +437,14 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
     </div>
     <a class="logo" href="#top" aria-label="Rafai Limousine"><span class="lg-anim lg-h" style="--lg:url(%%PNG:light%%)"><img class="logo-light" src="%%PNG:light%%" alt="Rafai Limousine"><img class="logo-dark" src="%%PNG:dark%%" alt=""></span></a>
     <div class="right">
-      <a class="btn book" href="#reservation" data-en="Book Now">Réserver</a>
+      <a class="btn book" href="https://booking.rafai-limousine.com/" data-en="Book Now">Réserver</a>
       <a class="signin" href="https://booking.rafai-limousine.com" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span data-en="My account">Espace client</span></a>
     </div>
   </div>
 </header>
 <nav class="menu" id="menu" hidden>
   <ul class="wrap">
-    <li><a href="#reservation" data-en="Book online">Réserver en ligne</a></li>
+    <li><a href="https://booking.rafai-limousine.com/" data-en="Book online">Réserver en ligne</a></li>
     <li><a href="%%U:services%%" data-en="Services">Services</a></li>
     <li><a href="%%U:fleet%%" data-en="Fleet">Flotte</a></li>
     <li><a href="#equipe" data-en="Our team">L’équipe</a></li>
@@ -451,16 +489,6 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
   </div>
 </section>
 
-<section class="book-sec" id="reservation">
-  <div class="wrap">
-    <div class="eyebrow" data-en="Online booking">Réservation en ligne</div>
-    <h2 data-en="Your price in a few seconds">Votre prix en quelques secondes</h2>
-    <p class="sub" data-en="Choose your addresses, your car and your time. The price is fixed and confirmed before the ride.">Choisissez vos adresses, votre voiture et votre horaire. Le prix est fixe et confirmé avant la course.</p>
-    <div class="bookbox">%%BOOK%%</div>
-    <p class="bookalt"><span data-en="Prefer to talk to us?">Vous préférez nous parler ?</span> <a href="https://wa.me/33667099494" target="_blank" rel="noopener">WhatsApp +33 6 67 09 94 94</a></p>
-  </div>
-</section>
-
 <section class="why" id="why">
   <div class="wrap">
     <div class="eyebrow" data-en="Why">Pourquoi</div>
@@ -494,8 +522,8 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
       <article class="svc"><img src="%%IMG:u-range-eiffel%%" alt="Range Rover noir face à la tour Eiffel"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-en="Hourly Chauffeur">Chauffeur à l’heure</span></h3><p data-en="A chauffeur at your disposal for meetings, roadshows, shopping or a full day in Paris.">Un chauffeur à votre disposition pour vos rendez-vous, roadshows, shopping ou une journée à Paris.</p><a class="link" href="%%U:hourly%%"><span data-en="Learn more">En savoir plus</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
     </div>
     <div class="duo">
-      <div class="hl light"><div class="t"><svg class="i" viewBox="0 0 24 24"><path d="M2 22h20"/><path d="M3.8 13.3 6 14l3.3-1 3.9 7.8 2-.6-1.6-8.7 4.3-1.3c1.2-.4 2-1.6 1.6-2.8-.4-1.2-1.6-1.8-2.8-1.5L6.3 9.5 4 7.4l-1.6.5 1.4 5.4Z"/></svg><div><h3 data-en="Le Bourget · Private jets">Le Bourget · Jets privés</h3><p data-en="Meet and greet at the business aviation terminals, the car waiting on arrival.">Accueil aux terminaux d’aviation d’affaires, la voiture vous attend à l’arrivée.</p></div></div><a class="btn btn-dark" href="#reservation" data-en="Book a transfer">Réserver un transfert</a></div>
-      <div class="hl dark"><div class="t"><svg class="i" viewBox="0 0 24 24"><path d="M12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3Z"/></svg><div><h3 data-en="VIP Fast Track">Accueil VIP Fast Track</h3><p data-en="A greeter takes you from the aircraft through the fast lanes, your luggage carried to the car.">Un accueil personnalisé de l’avion aux files rapides, vos bagages portés jusqu’à la voiture.</p></div></div><a class="btn btn-gold" href="#reservation" data-en="Discover Fast Track">Découvrir le Fast Track</a></div>
+      <div class="hl light"><div class="t"><svg class="i" viewBox="0 0 24 24"><path d="M2 22h20"/><path d="M3.8 13.3 6 14l3.3-1 3.9 7.8 2-.6-1.6-8.7 4.3-1.3c1.2-.4 2-1.6 1.6-2.8-.4-1.2-1.6-1.8-2.8-1.5L6.3 9.5 4 7.4l-1.6.5 1.4 5.4Z"/></svg><div><h3 data-en="Le Bourget · Private jets">Le Bourget · Jets privés</h3><p data-en="Meet and greet at the business aviation terminals, the car waiting on arrival.">Accueil aux terminaux d’aviation d’affaires, la voiture vous attend à l’arrivée.</p></div></div><a class="btn btn-dark" href="https://booking.rafai-limousine.com/" data-en="Book a transfer">Réserver un transfert</a></div>
+      <div class="hl dark"><div class="t"><svg class="i" viewBox="0 0 24 24"><path d="M12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3Z"/></svg><div><h3 data-en="VIP Fast Track">Accueil VIP Fast Track</h3><p data-en="A greeter takes you from the aircraft through the fast lanes, your luggage carried to the car.">Un accueil personnalisé de l’avion aux files rapides, vos bagages portés jusqu’à la voiture.</p></div></div><a class="btn btn-gold" href="https://booking.rafai-limousine.com/" data-en="Discover Fast Track">Découvrir le Fast Track</a></div>
     </div>
     <div class="gal-h"><h3 data-en="Weddings &amp; events">Mariages &amp; événements</h3><p data-en="Decorated cars, chauffeurs in suits and coordinated convoys.">Voitures décorées, chauffeurs en costume et convois coordonnés.</p></div>
     <div class="gal">
@@ -525,15 +553,15 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
     <h2 data-en="Popular Routes">Trajets populaires</h2>
     <p class="sub" data-en="The rides our clients book most often from Paris.">Les trajets que nos clients réservent le plus souvent depuis Paris.</p>
     <div class="routes-grid">
-      <a class="route" href="#reservation" data-to="Aéroport Paris-Charles de Gaulle (CDG)" data-en-to="Paris Charles de Gaulle Airport (CDG)"><img src="%%IMG:u-v-thumb%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> <span data-en="CDG Airport">Aéroport CDG</span></b><span>30 km · 45 min · <em data-en="from €170">dès 170 €</em></span></div></a>
-      <a class="route" href="#reservation" data-to="Aéroport de Paris-Orly (ORY)" data-en-to="Paris Orly Airport (ORY)"><img src="%%IMG:u-s-paris%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> <span data-en="Orly Airport">Aéroport d’Orly</span></b><span>18 km · 35 min · <em data-en="from €170">dès 170 €</em></span></div></a>
-      <a class="route" href="#reservation" data-to="Aéroport de Paris-Le Bourget" data-en-to="Paris Le Bourget Airport"><img src="%%IMG:u-s-champs%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Le Bourget</b><span>15 km · 30 min · <em data-en="from €170">dès 170 €</em></span></div></a>
-      <a class="route" href="#reservation" data-to="Château de Versailles" data-en-to="Palace of Versailles"><img src="%%IMG:u-versailles%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Versailles</b><span>20 km · 35 min · <em data-en="from €132">dès 132 €</em></span></div></a>
-      <a class="route" href="#reservation" data-to="Fondation Claude Monet, Giverny" data-en-to="Fondation Claude Monet, Giverny"><img src="%%IMG:u-v-giverny%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Giverny</b><span>75 km · 1 h 15</span></div></a>
-      <a class="route" href="#reservation" data-to="Château de Chantilly" data-en-to="Château de Chantilly"><img src="%%IMG:chantilly%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Chantilly</b><span>50 km · 50 min</span></div></a>
+      <a class="route" href="https://booking.rafai-limousine.com/" data-to="Aéroport Paris-Charles de Gaulle (CDG)" data-en-to="Paris Charles de Gaulle Airport (CDG)"><img src="%%IMG:u-v-thumb%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> <span data-en="CDG Airport">Aéroport CDG</span></b><span>30 km · 45 min · <em data-en="from €170">dès 170 €</em></span></div></a>
+      <a class="route" href="https://booking.rafai-limousine.com/" data-to="Aéroport de Paris-Orly (ORY)" data-en-to="Paris Orly Airport (ORY)"><img src="%%IMG:u-s-paris%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> <span data-en="Orly Airport">Aéroport d’Orly</span></b><span>18 km · 35 min · <em data-en="from €170">dès 170 €</em></span></div></a>
+      <a class="route" href="https://booking.rafai-limousine.com/" data-to="Aéroport de Paris-Le Bourget" data-en-to="Paris Le Bourget Airport"><img src="%%IMG:u-s-champs%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Le Bourget</b><span>15 km · 30 min · <em data-en="from €170">dès 170 €</em></span></div></a>
+      <a class="route" href="https://booking.rafai-limousine.com/" data-to="Château de Versailles" data-en-to="Palace of Versailles"><img src="%%IMG:u-versailles%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Versailles</b><span>20 km · 35 min · <em data-en="from €132">dès 132 €</em></span></div></a>
+      <a class="route" href="https://booking.rafai-limousine.com/" data-to="Fondation Claude Monet, Giverny" data-en-to="Fondation Claude Monet, Giverny"><img src="%%IMG:u-v-giverny%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Giverny</b><span>75 km · 1 h 15</span></div></a>
+      <a class="route" href="https://booking.rafai-limousine.com/" data-to="Château de Chantilly" data-en-to="Château de Chantilly"><img src="%%IMG:chantilly%%" alt=""><div><b>Paris <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Chantilly</b><span>50 km · 50 min</span></div></a>
     </div>
     <p class="small-note" data-en="Distances from central Paris. Times are indicative, outside rush hour. Fixed prices incl. VAT, Mercedes E-Class.">Distances depuis le centre de Paris. Temps indicatifs, hors heures de pointe. Prix fixes TTC en Mercedes Classe E.</p>
-    <div class="center"><a class="link" href="#reservation"><span data-en="Price another ride">Estimer un autre trajet</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+    <div class="center"><a class="link" href="https://booking.rafai-limousine.com/"><span data-en="Price another ride">Estimer un autre trajet</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
   </div>
 </section>
 
@@ -545,30 +573,30 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
     <div class="group">
       <div class="group-h"><h3 data-en="Monuments">Monuments</h3><span data-en="Paris, inside the city">Paris intra-muros</span></div>
       <div class="dest-grid">
-        <a class="dest" href="#reservation" data-to="Tour Eiffel, Paris" data-en-to="Eiffel Tower, Paris"><div class="ph"><img src="%%IMG:eiffel%%" alt="La tour Eiffel depuis une rue haussmannienne"></div><div class="cap"><b data-en="Eiffel Tower">Tour Eiffel</b><span data-en="Champ-de-Mars, 7th">Champ-de-Mars, 7e</span></div></a>
-        <a class="dest" href="#reservation" data-to="Arc de Triomphe, Paris" data-en-to="Arc de Triomphe, Paris"><div class="ph"><img src="%%IMG:arc%%" alt="L’Arc de Triomphe au bout des Champs-Élysées"></div><div class="cap"><b>Arc de Triomphe</b><span data-en="Champs-Élysées, 8th">Champs-Élysées, 8e</span></div></a>
-        <a class="dest" href="#reservation" data-to="Cathédrale Notre-Dame de Paris" data-en-to="Notre-Dame Cathedral, Paris"><div class="ph"><img src="%%IMG:notredame%%" alt="Façade de Notre-Dame de Paris"></div><div class="cap"><b>Notre-Dame de Paris</b><span data-en="Île de la Cité, 4th">Île de la Cité, 4e</span></div></a>
-        <a class="dest" href="#reservation" data-to="Basilique du Sacré-Cœur, Paris" data-en-to="Sacré-Cœur Basilica, Paris"><div class="ph"><img src="%%IMG:sacrecoeur%%" alt="Basilique du Sacré-Cœur"></div><div class="cap"><b>Sacré-Cœur</b><span data-en="Montmartre, 18th">Montmartre, 18e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Tour Eiffel, Paris" data-en-to="Eiffel Tower, Paris"><div class="ph"><img src="%%IMG:eiffel%%" alt="La tour Eiffel depuis une rue haussmannienne"></div><div class="cap"><b data-en="Eiffel Tower">Tour Eiffel</b><span data-en="Champ-de-Mars, 7th">Champ-de-Mars, 7e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Arc de Triomphe, Paris" data-en-to="Arc de Triomphe, Paris"><div class="ph"><img src="%%IMG:arc%%" alt="L’Arc de Triomphe au bout des Champs-Élysées"></div><div class="cap"><b>Arc de Triomphe</b><span data-en="Champs-Élysées, 8th">Champs-Élysées, 8e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Cathédrale Notre-Dame de Paris" data-en-to="Notre-Dame Cathedral, Paris"><div class="ph"><img src="%%IMG:notredame%%" alt="Façade de Notre-Dame de Paris"></div><div class="cap"><b>Notre-Dame de Paris</b><span data-en="Île de la Cité, 4th">Île de la Cité, 4e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Basilique du Sacré-Cœur, Paris" data-en-to="Sacré-Cœur Basilica, Paris"><div class="ph"><img src="%%IMG:sacrecoeur%%" alt="Basilique du Sacré-Cœur"></div><div class="cap"><b>Sacré-Cœur</b><span data-en="Montmartre, 18th">Montmartre, 18e</span></div></a>
       </div>
     </div>
 
     <div class="group">
       <div class="group-h"><h3 data-en="Museums &amp; culture">Musées &amp; culture</h3><span data-en="Drop-off at the door, pick-up when you are ready">Dépose devant l’entrée, reprise quand vous voulez</span></div>
       <div class="dest-grid">
-        <a class="dest" href="#reservation" data-to="Musée du Louvre, Paris" data-en-to="Louvre Museum, Paris"><div class="ph"><img src="%%IMG:louvre%%" alt="La pyramide du Louvre la nuit"></div><div class="cap"><b data-en="Louvre Museum">Musée du Louvre</b><span data-en="1st arrondissement">1er arrondissement</span></div></a>
-        <a class="dest" href="#reservation" data-to="Musée d’Orsay, Paris" data-en-to="Musée d’Orsay, Paris"><div class="ph"><img src="%%IMG:orsay%%" alt="L’horloge du musée d’Orsay face à Montmartre"></div><div class="cap"><b data-en="Musée d’Orsay">Musée d’Orsay</b><span data-en="Left Bank, 7th">Rive gauche, 7e</span></div></a>
-        <a class="dest" href="#reservation" data-to="Fondation Louis Vuitton, Paris" data-en-to="Fondation Louis Vuitton, Paris"><div class="ph"><img src="%%IMG:flv%%" alt="Les voiles de verre de la Fondation Louis Vuitton"></div><div class="cap"><b>Fondation Louis Vuitton</b><span data-en="Bois de Boulogne, 16th">Bois de Boulogne, 16e</span></div></a>
-        <a class="dest" href="#reservation" data-to="Opéra Garnier, Paris" data-en-to="Opéra Garnier, Paris"><div class="ph"><img src="%%IMG:opera%%" alt="Façade de l’Opéra Garnier"></div><div class="cap"><b>Opéra Garnier</b><span data-en="9th arrondissement">9e arrondissement</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Musée du Louvre, Paris" data-en-to="Louvre Museum, Paris"><div class="ph"><img src="%%IMG:louvre%%" alt="La pyramide du Louvre la nuit"></div><div class="cap"><b data-en="Louvre Museum">Musée du Louvre</b><span data-en="1st arrondissement">1er arrondissement</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Musée d’Orsay, Paris" data-en-to="Musée d’Orsay, Paris"><div class="ph"><img src="%%IMG:orsay%%" alt="L’horloge du musée d’Orsay face à Montmartre"></div><div class="cap"><b data-en="Musée d’Orsay">Musée d’Orsay</b><span data-en="Left Bank, 7th">Rive gauche, 7e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Fondation Louis Vuitton, Paris" data-en-to="Fondation Louis Vuitton, Paris"><div class="ph"><img src="%%IMG:flv%%" alt="Les voiles de verre de la Fondation Louis Vuitton"></div><div class="cap"><b>Fondation Louis Vuitton</b><span data-en="Bois de Boulogne, 16th">Bois de Boulogne, 16e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Opéra Garnier, Paris" data-en-to="Opéra Garnier, Paris"><div class="ph"><img src="%%IMG:opera%%" alt="Façade de l’Opéra Garnier"></div><div class="cap"><b>Opéra Garnier</b><span data-en="9th arrondissement">9e arrondissement</span></div></a>
       </div>
     </div>
 
     <div class="group" id="escapades">
       <div class="group-h"><h3 data-en="Beyond Paris">Hors de Paris</h3><span data-en="Day trips with your chauffeur">Escapades à la journée avec votre chauffeur</span></div>
       <div class="dest-grid">
-        <a class="dest" href="#reservation" data-to="Château de Versailles" data-en-to="Palace of Versailles"><div class="ph"><img src="%%IMG:versailles%%" alt="Le château de Versailles et l’Orangerie"></div><div class="cap"><b data-en="Palace of Versailles">Château de Versailles</b><span>Yvelines · 35 min</span></div></a>
-        <a class="dest" href="#reservation" data-to="Fondation Claude Monet, Giverny" data-en-to="Fondation Claude Monet, Giverny"><div class="ph"><img src="%%IMG:giverny%%" alt="Le bassin aux nymphéas de Giverny"></div><div class="cap"><b data-en="Giverny, Monet’s gardens">Giverny, jardins de Monet</b><span>Eure · 1 h 15</span></div></a>
-        <a class="dest" href="#reservation" data-to="Château de Fontainebleau" data-en-to="Château de Fontainebleau"><div class="ph"><img src="%%IMG:fontainebleau%%" alt="Le château de Fontainebleau et l’étang des Carpes"></div><div class="cap"><b data-en="Château de Fontainebleau">Château de Fontainebleau</b><span>Seine-et-Marne · 1 h 10</span></div></a>
-        <a class="dest" href="#reservation" data-to="Château de Chantilly" data-en-to="Château de Chantilly"><div class="ph"><img src="%%IMG:chantilly%%" alt="Le château de Chantilly sur l’eau"></div><div class="cap"><b data-en="Château de Chantilly">Château de Chantilly</b><span>Oise · 50 min</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Château de Versailles" data-en-to="Palace of Versailles"><div class="ph"><img src="%%IMG:versailles%%" alt="Le château de Versailles et l’Orangerie"></div><div class="cap"><b data-en="Palace of Versailles">Château de Versailles</b><span>Yvelines · 35 min</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Fondation Claude Monet, Giverny" data-en-to="Fondation Claude Monet, Giverny"><div class="ph"><img src="%%IMG:giverny%%" alt="Le bassin aux nymphéas de Giverny"></div><div class="cap"><b data-en="Giverny, Monet’s gardens">Giverny, jardins de Monet</b><span>Eure · 1 h 15</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Château de Fontainebleau" data-en-to="Château de Fontainebleau"><div class="ph"><img src="%%IMG:fontainebleau%%" alt="Le château de Fontainebleau et l’étang des Carpes"></div><div class="cap"><b data-en="Château de Fontainebleau">Château de Fontainebleau</b><span>Seine-et-Marne · 1 h 10</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/" data-to="Château de Chantilly" data-en-to="Château de Chantilly"><div class="ph"><img src="%%IMG:chantilly%%" alt="Le château de Chantilly sur l’eau"></div><div class="cap"><b data-en="Château de Chantilly">Château de Chantilly</b><span>Oise · 50 min</span></div></a>
       </div>
 
       <div class="villages">
@@ -586,7 +614,7 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
         </div>
       </div>
     </div>
-    <div class="center"><a class="link" href="#reservation"><span data-en="Plan a day trip">Organiser une escapade</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+    <div class="center"><a class="link" href="https://booking.rafai-limousine.com/"><span data-en="Plan a day trip">Organiser une escapade</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
   </div>
 </section>
 
@@ -623,7 +651,7 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
   <div class="wrap">
     <div class="fgrid">
       <div class="fbrand">
-        <img class="flogo" src="%%PNG:light%%" alt="Rafai Limousine">
+        <img class="flogo" src="%%PNG:dark%%" alt="Rafai Limousine">
         <p data-en="Private chauffeur service in Paris. Transfers, chauffeurs by the hour, events and day trips, handled with precision and discretion.">Chauffeur privé à Paris. Transferts, mise à disposition, événements et escapades, avec précision et discrétion.</p>
         <div class="contact"><span data-en="Phone &amp; WhatsApp, 24/7">Téléphone &amp; WhatsApp, 24 h/24</span><a href="tel:+33667099494">+33 6 67 09 94 94</a><br><a href="mailto:contact@rafai-limousine.com">contact@rafai-limousine.com</a></div>
         <p class="fapps"><a href="https://apps.apple.com/fr/app/rafai-limousine/id6829341896" target="_blank" rel="noopener">App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.rafailimousine.client" target="_blank" rel="noopener">Google Play</a></p>
@@ -634,8 +662,8 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
         <li><a href="%%U:hourly%%" data-en="Hourly chauffeur">Chauffeur à l’heure</a></li>
         <li><a href="%%U:weddings%%" data-en="Weddings &amp; events">Mariages &amp; événements</a></li>
         <li><a href="#decouvrir" data-en="Private tours">Visites privées</a></li>
-        <li><a href="#reservation" data-en="Le Bourget · private jets">Le Bourget · jets privés</a></li>
-        <li><a href="#reservation">Fast Track VIP</a></li>
+        <li><a href="https://booking.rafai-limousine.com/" data-en="Le Bourget · private jets">Le Bourget · jets privés</a></li>
+        <li><a href="https://booking.rafai-limousine.com/">Fast Track VIP</a></li>
       </ul></div>
       <div class="fcol"><h4 data-en="Destinations">Destinations</h4><ul>
         <li><a href="#decouvrir" data-en="Eiffel Tower">Tour Eiffel</a></li>
@@ -681,29 +709,9 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
   lb.addEventListener('click',function(e){ e.stopPropagation(); var o=lm.hidden; lm.hidden=!o; lb.setAttribute('aria-expanded',String(o)); });
   document.addEventListener('click',function(e){ if(!lm.hidden && !lm.contains(e.target)){ lm.hidden=true; lb.setAttribute('aria-expanded','false'); } });
   lm.querySelectorAll('a').forEach(function(a){ if(a.getAttribute('lang')===lang) a.setAttribute('aria-current','true'); });
-  /* bloc de réservation : version ordinateur ou téléphone (même règle que les blocs eux-mêmes) */
-  (function(){ var d=document.getElementById('bookFrame'), m=document.getElementById('bookFrameM'); if(!d||!m) return;
-    var small=Math.min(screen.width,screen.height)<600; if(small){ d.parentNode.removeChild(d); m.id='bookFrame'; } else { m.parentNode.removeChild(m); } })();
 
-  /* barre du haut, trajets et destinations : ouvrent le bloc de réservation (le même que sur le reste du site) déjà rempli */
-  function toWidget(v){
-    var sec=document.getElementById('reservation'); if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
-    var f=document.getElementById('bookFrame'); if(!f) return;
-    if(!f.getAttribute('src') && f.getAttribute('data-src')){ f.src=f.getAttribute('data-src'); f.removeAttribute('data-src'); }
-    var tries=0;
-    (function fill(){
-      var d=null; try{ d=f.contentDocument; }catch(e){}
-      if(!d || !d.getElementById('trip') || !d.getElementById('from')){ if(++tries<60) setTimeout(fill,250); return; }
-      try{
-        var tab=d.querySelector('.tab[data-mode="'+(v.mode||'oneway')+'"]'); if(tab) tab.click();
-        function set(id,val){ var el=d.getElementById(id); if(el && val){ el.value=val; } }
-        set('from',v.from); set('to',v.to); set('date',v.date); set('time',v.time);
-        if(v.hours){ var hs=d.getElementById('hours'); if(hs){ [].slice.call(hs.options).forEach(function(o){ if(parseInt(o.value||o.text,10)===v.hours) hs.value=o.value; }); } }
-        if(v.from && (v.to || v.mode==='hourly')){ var tr=d.getElementById('trip'); if(tr.requestSubmit) tr.requestSubmit(); else tr.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true})); }
-        else { var el=d.getElementById(v.from?'to':'from'); if(el) el.focus({preventScroll:true}); }
-      }catch(e){}
-    })();
-  }
+  /* réservation : la page de réservation Rafai Limousine (la même que My account) */
+  function toWidget(v){ window.location.href='https://booking.rafai-limousine.com/'; }
   document.querySelectorAll('a[data-to]').forEach(function(a){
     a.addEventListener('click',function(e){ e.preventDefault(); toWidget({mode:'oneway', to:a.getAttribute('data-to')}); });
   });
@@ -739,6 +747,18 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
 
 
 
+
+  // téléphone : la photo commence juste sous l'en-tête et descend jusque sous le titre
+  (function(){
+    var hdr=document.getElementById('hdr'), hero=document.querySelector('.hero'), tag=document.querySelector('.hero .tag'), root=document.documentElement;
+    function fit(){
+      if(!hdr||!hero) return;
+      root.style.setProperty('--hdr-h', hdr.offsetHeight+'px');
+      if(window.innerWidth<=640 && tag){ var h=Math.round(tag.getBoundingClientRect().bottom-hero.getBoundingClientRect().top-hdr.offsetHeight+26); root.style.setProperty('--ph-h', Math.max(380,h)+'px'); }
+    }
+    fit(); window.addEventListener('resize',fit); window.addEventListener('load',fit);
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fit);
+  })();
   // RL logo entrance + popular routes (cards rise, prices count up)
   (function(){
     var reduce=false; try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
