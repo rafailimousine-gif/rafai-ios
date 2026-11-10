@@ -3,8 +3,8 @@
 # Dès 2 lettres : terminaux CDG, Orly, Le Bourget, Beauvais et gares (instantané), puis adresses gratuites (Base Adresse Nationale,
 # OpenStreetMap), puis Google Maps comme avant. Seuls les champs Départ / Arrivée changent. Retour arrière : ~/index-avant-ac-*.html
 set -e
-cd ~/booking/public
-cp index.html ~/index-avant-ac-$(date +%Y%m%d-%H%M).html
+# APERCU=1 : copie à part, mise sur une adresse d'aperçu (2 jours), la vraie page booking ne change pas
+if [ -n "${APERCU:-}" ]; then rm -rf ~/bk-apercu && cp -r ~/booking ~/bk-apercu && cd ~/bk-apercu/public; else cd ~/booking/public; cp index.html ~/index-avant-ac-$(date +%Y%m%d-%H%M).html; fi
 python3 - <<'PY'
 import io
 f='index.html'; t=io.open(f,encoding='utf-8').read()
@@ -55,5 +55,6 @@ function rlMerge() { var seen = {}, out = []; [].forEach.call(arguments, functio
 t=t.replace(B,lib+B)
 io.open(f,'w',encoding='utf-8').write(t); print('appli : propositions rapides ajoutees')
 PY
-cd ~/booking && firebase deploy --only hosting --project rafai-suivi 2>&1 | tail -3
+if [ -n "${APERCU:-}" ]; then cd ~/bk-apercu && firebase hosting:channel:deploy apercu --expires 2d --project rafai-suivi 2>&1 | grep -E "Channel URL|http|Error" | tail -3
+else cd ~/booking && firebase deploy --only hosting --project rafai-suivi 2>&1 | tail -3; fi
 echo FIN
