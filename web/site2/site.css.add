@@ -102,3 +102,36 @@ html,body{height:auto!important}
 #rlch .sto{font-size:12px;color:rgba(255,255,255,.55)}
 #rlch button.st{padding:6px;border:0;background:none;color:rgba(224,186,108,.9);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
 html.rlchon #rlyfab,html.rlchon #rlytz{display:none}
+
+/* ===== fond noir doré sur tout le site (10 nov. 2026, demande de Yassine) ===== */
+html,body{background:#0b0b0c!important;color-scheme:dark}
+body{color:#c8c2b6}
+#rlbar{background:#070708;border-bottom:1px solid rgba(224,186,108,.2)}
+#rlbar a{color:#E0BA6C;border-color:rgba(224,186,108,.7)}
+#rlnav{background:rgba(11,11,12,.96);color:#f3eee4;box-shadow:0 1px 0 rgba(224,186,108,.3)}
+#rlnav .brand,#rlnav a{color:#f3eee4}
+#rlnav nav a.on,#rlnav a:hover{color:#E0BA6C}
+#rlnav li.dd>button:after{border-color:#E0BA6C}
+#rlnav li ul{background:#141316;box-shadow:0 10px 30px rgba(0,0,0,.6),0 0 0 1px rgba(224,186,108,.22)}
+#rlmenu i{background:#f3eee4}
+@media (max-width:899px){#rlnav nav{background:#0b0b0c}#rlnav li ul{background:none;box-shadow:none}}
+/* textes des pages (Google Sites) : clairs sur fond noir, l'or reste or */
+.C9DxTc,.zfr3Q,.CDt4Ke,.CjVfdc,.TYR86d,.duRjpb,.JYVBee,.OmQG5e,.GV3q8e,.puwcIf,.Zjvn9b,.jgG6ef,.MHXsDd{color:#c8c2b6}
+h1,h2,h3,h4,h5,h6,.CjVfdc,h1 .C9DxTc,h2 .C9DxTc,h3 .C9DxTc,h4 .C9DxTc,.CjVfdc .C9DxTc,.duRjpb .C9DxTc,.JYVBee .C9DxTc,.OmQG5e .C9DxTc{color:#f3eee4}
+[style*="color: #111113"],[style*="color: #000000"],[style*="color: #111111"],[style*="color: #212121"],[style*="color: #202124"],[style*="color: #3c4043"],[style*="color: #1f1f1f"],[style*="color: #0c0c0e"],[style*="color: #222222"]{color:#f3eee4!important}
+[style*="color: #5c5c64"],[style*="color: #5f6368"],[style*="color: #3a3a40"],[style*="color: #4a4640"],[style*="color: #666666"],[style*="color: #434343"],[style*="color: #595959"]{color:#b9b3a7!important}
+[style*="color: #8a6630"],[style*="color: #8a6a2f"],[style*="color: #7a5c24"],[style*="color: #b8863b"],[style*="color: #c9a45c"]{color:#E0BA6C!important}
+a .C9DxTc,.XqQF9c,.XqQF9c .C9DxTc{color:#E0BA6C}
+hr,.LB7kq,.Q0VHEf{border-color:rgba(224,186,108,.22)!important}
+/* sections et cartes blanches de Google Sites */
+.yaqOZd:before{background-color:#0b0b0c!important}
+.yaqOZd.qeLZfd:before{background-color:#111012!important}
+.yaqOZd:not([style*="background-image"]),.IFuOkc:not([style*="background-image"]){background-color:transparent}
+.yaqOZd[style*="background-color: #fff"],.yaqOZd[style*="background-color: rgb(255"],[style*="background-color: #ffffff"],[style*="background-color: #fffdf8"],[style*="background-color: #f7f5f0"],[style*="background-color: #f8f6f1"],[style*="background-color: #fafafa"],[style*="background-color: #f5f5f5"]{background-color:#111012!important}
+/* blocs ajoutés par le site : trajets populaires, équipe, 404 */
+html body .rlrt{color:#c8c2b6}html body .rlrt .k{color:#E0BA6C}html body .rlrt h2,html body .rlrt h3,html body .rlrt dd{color:#f3eee4}html body .rlrt .p,html body .rlrt .s,html body .rlrt dt{color:#b9b3a7}
+html body .rlrt .c{background:#141316;border-color:rgba(224,186,108,.24)}html body .rlrt dt,html body .rlrt dd{border-top-color:rgba(224,186,108,.14)}
+html body .rlrt .b{background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b8873f 100%);color:#16110a}html body .rlrt .b:hover{background:#E0BA6C}
+html body .rlteam{color:#c8c2b6}html body .rlteam h1{color:#f3eee4}html body .rlteam .k,html body .rlteam .v{color:#E0BA6C}
+html body .rlteam .cards div{background:#141316;border-color:rgba(224,186,108,.24)}html body .rlteam .cards h2{color:#E0BA6C}html body .rlteam .cards p{color:#c8c2b6}
+html body .rlteam .cta a.w{background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b8873f 100%);color:#16110a}html body .rlteam .cta a.c{border-color:#E0BA6C;color:#E0BA6C}

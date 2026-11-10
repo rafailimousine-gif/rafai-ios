@@ -517,6 +517,117 @@ for lg, x in TEAM_TX.items():
     docs.append((x['p'], lg, 'Team Rafai Limousine', '', inner))
 print('onglet Team :', ', '.join(x['p'] for x in TEAM_TX.values()))
 
+# Onglet « Services » (10 nov. 2026, demande de Yassine) : tout le contenu remplacé par sa photo et son texte
+# (services-en.txt, traduit en français dans services-fr.txt). Fond noir doré. Le chinois et l'arabe ne changent pas.
+SVC_JPG = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'services-paris.jpg')
+SVC_TXT = {'/services': ('en', 'services-en.txt'), '/fr/services': ('fr', 'services-fr.txt')}
+if not os.path.exists(SVC_JPG):
+    print('ARRET photo services absente (services-paris.jpg)'); sys.exit(1)
+SVC_IMG = '/img/svc-%s.webp' % sha(open(SVC_JPG, 'rb').read())[:10]
+Image.open(SVC_JPG).convert('RGB').save(OUT + SVC_IMG, 'WEBP', quality=84, method=6)
+SVC_CSS = ('<style>body.rlsvc{background:#0b0b0c}'
+           '.rlsv{background:#0b0b0c;color:#c8c2b6;font:400 16.5px/1.75 Manrope,system-ui,sans-serif}'
+           '.rlsv .ph{margin:0;position:relative;background:#0b0b0c}'
+           '.rlsv .ph img{display:block;width:100%;height:auto;max-height:82vh;object-fit:cover;object-position:center 45%}'
+           '.rlsv .ph:after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(180deg,rgba(11,11,12,0),#0b0b0c);pointer-events:none}'
+           '.rlsv .in{max-width:860px;margin:0 auto;padding:8px 22px 72px}'
+           '.rlsv .k{margin:0;font-size:12.5px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:#E0BA6C}'
+           '.rlsv h1{margin:10px 0 18px;font:600 clamp(32px,5.4vw,52px)/1.12 "Cormorant Garamond",Lora,Georgia,serif;color:#f3eee4}'
+           '.rlsv .bk{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b8873f 100%);color:#16110a;font-weight:800;font-size:16px;text-decoration:none;box-shadow:0 10px 30px rgba(199,154,74,.28)}'
+           '.rlsv .q{margin:44px 0 0;padding:30px 0 0;border-top:1px solid rgba(224,186,108,.22)}'
+           '.rlsv h2{margin:0 0 14px;font:600 clamp(25px,3.6vw,33px)/1.2 "Cormorant Garamond",Lora,Georgia,serif;color:#f3eee4}'
+           '.rlsv h3{margin:26px 0 8px;font:700 18px/1.35 Manrope,system-ui,sans-serif;color:#E0BA6C}'
+           '.rlsv p{margin:0 0 14px}.rlsv strong{color:#f3eee4}'
+           '.rlsv ul{margin:4px 0 18px;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}'
+           '.rlsv li{position:relative;padding:12px 14px 12px 38px;border:1px solid rgba(224,186,108,.2);border-radius:14px;background:#141316;color:#e6e0d4;line-height:1.5}'
+           '.rlsv li:before{content:"";position:absolute;left:15px;top:19px;width:9px;height:9px;border-radius:50%;background:#E0BA6C;box-shadow:0 0 0 4px rgba(224,186,108,.16)}'
+           '.rlsv a{color:#E0BA6C}'
+           '.rlsv .end{margin:52px 0 0;padding:34px 26px;border:1px solid rgba(224,186,108,.4);border-radius:22px;background:linear-gradient(180deg,#151317,#0e0d10);text-align:center}'
+           '.rlsv .end .t{margin:0 0 6px;font:600 clamp(24px,3.4vw,30px)/1.25 "Cormorant Garamond",Lora,Georgia,serif;color:#f3eee4}'
+           '.rlsv .end .m{margin:0 0 18px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;font-size:13px;color:#E0BA6C}'
+           '.rlsv .end .c{margin:18px 0 0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font-size:15px}'
+           '.rlsv .end .c span{color:#9a9488}'
+           '.rlsv .n{margin:20px 0 0;font-size:12.5px;color:#8b867c;text-align:center}'
+           '@media (max-width:640px){.rlsv .ph img{max-height:none}.rlsv .in{padding:4px 18px 56px}.rlsv ul{grid-template-columns:1fr}.rlsv .bk{width:100%;justify-content:center;box-sizing:border-box}}</style>')
+SVC_UI = {'en': {'k': 'Our services', 'b': 'Book now', 'alt': 'Rafai Limousine chauffeur loading luggage into a Mercedes-Benz in front of a Paris hotel, Eiffel Tower in the background',
+                 'n': 'Photo: illustration.'},
+          'fr': {'k': 'Nos services', 'b': 'Réserver', 'alt': "Chauffeur Rafai Limousine chargeant les bagages dans une Mercedes-Benz devant un hôtel parisien, tour Eiffel au fond",
+                 'n': 'Photo : illustration.'}}
+SVC_DESC = {'en': 'Private chauffeur in Paris: airport transfers (CDG, Orly, Le Bourget, Beauvais), hourly hire, corporate and VIP travel in a Mercedes-Benz S-Class, V-Class or Range Rover.',
+            'fr': 'Chauffeur privé à Paris : transferts aéroport (CDG, Orly, Le Bourget, Beauvais), mise à disposition, voyages d’affaires et VIP en Mercedes-Benz Classe S, Classe V ou Range Rover.'}
+RE_URL = re.compile(r'(https?://[^\s<]+|[\w.+-]+@[\w-]+\.[\w.]+)')
+def svc_link(s):
+    s = html.escape(s)
+    def a(m):
+        u = m.group(1)
+        if '@' in u and not u.startswith('http'):
+            return '<a href="mailto:%s">%s</a>' % (u, u)
+        return '<a href="%s"%s>%s</a>' % (u, ' target="_blank" rel="noopener"' if 'booking.' in u else '', u.split('://', 1)[1].rstrip('/'))
+    return RE_URL.sub(a, s)
+def svc_page(p, lg, src):
+    lines = io.open(os.path.join(os.path.dirname(os.path.abspath(__file__)), src), encoding='utf-8').read().split('\n')
+    ui = SVC_UI[lg]
+    h1 = next(l[2:].strip() for l in lines if l.startswith('# '))
+    # dernières lignes : slogan et contacts dans un encadré
+    body = [l for l in lines if not l.startswith('# ')]
+    while body and not body[-1].strip():
+        body.pop()
+    tail = []
+    while body and (not body[-1].strip() or RE_URL.search(body[-1]) or body[-1].rstrip().endswith(':')):
+        tail.insert(0, body.pop())
+    tail = [l for l in tail if l.strip()]
+    motto = []
+    while body and body[-1].strip() and len(motto) < 2:
+        motto.insert(0, body.pop().strip())
+        while body and not body[-1].strip():
+            body.pop()
+    out, ul, sec, faq, cur = [], [], False, [], None
+    def flush():
+        if ul:
+            out.append('<ul>%s</ul>' % ''.join('<li>%s</li>' % svc_link(x) for x in ul)); del ul[:]
+    for l in body:
+        s = l.strip()
+        if not s:
+            continue
+        if s.startswith('* '):
+            ul.append(s[2:]); 
+            if cur is not None: cur[1].append(s[2:])
+            continue
+        flush()
+        if s.startswith('## '):
+            if sec: out.append('</section>')
+            out.append('<section class="q"><h2>%s</h2>' % html.escape(s[3:])); sec = True
+            cur = [s[3:], []]; faq.append(cur)
+        elif s.startswith('### '):
+            out.append('<h3>%s</h3>' % html.escape(s[4:]))
+            if cur is not None: cur[1].append(s[4:])
+        else:
+            out.append('<p>%s</p>' % svc_link(s))
+            if cur is not None: cur[1].append(s)
+    flush()
+    if sec: out.append('</section>')
+    cta = tail[0].rstrip(':').strip() if tail and tail[0].rstrip().endswith(':') else ''
+    rows = [l for l in tail if RE_URL.search(l)]
+    contacts = ''.join('<span>%s</span>' % svc_link(r) for r in rows)
+    end = ('<div class="end"><p class="t">%s</p><p class="m">%s</p>%s<a class="bk" href="https://booking.rafai-limousine.com/">%s →</a><p class="c">%s</p></div>'
+           % (html.escape(motto[0]) if motto else '', html.escape(motto[1]) if len(motto) > 1 else '',
+              ('<p>%s</p>' % html.escape(cta)) if cta else '', html.escape(ui['b']), contacts))
+    ld = {'@context': 'https://schema.org', '@type': 'FAQPage', 'inLanguage': lg,
+          'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': ' '.join(a)}} for q, a in faq]}
+    inner = (SVC_CSS + '<script type="application/ld+json">%s</script>' % json.dumps(ld, ensure_ascii=False).replace('</', '<\\/') +
+             '<main class="rlsv"><figure class="ph"><img src="%s" width="1448" height="1086" alt="%s" decoding="async" fetchpriority="high"></figure>'
+             '<div class="in"><p class="k">%s</p><h1>%s</h1><a class="bk" href="https://booking.rafai-limousine.com/">%s →</a>%s%s<p class="n">%s</p></div></main>'
+             % (SVC_IMG, html.escape(ui['alt'], quote=True), html.escape(ui['k']), html.escape(h1), html.escape(ui['b']), ''.join(out), end, html.escape(ui['n'])))
+    return h1, inner
+for i, (p, lg, title, cls, inner) in enumerate(docs):
+    if p in SVC_TXT:
+        h1, inner = svc_page(p, *SVC_TXT[p])
+        docs[i] = (p, lg, h1, (cls + ' rlsvc').strip(), inner)
+        CFG.setdefault('titles', {})[p] = h1
+        CFG['desc'][p] = SVC_DESC[lg]
+        HERO[p] = SVC_IMG
+print('onglet Services :', ', '.join(SVC_TXT), SVC_IMG)
+
 # « Lifting » : la page d'accueil /home (anglais) et /fr (français) sont remplacées par la nouvelle page (dossier lifting/).
 HERE = os.path.dirname(os.path.abspath(__file__))
 LIFT_DIR = os.path.join(HERE, 'lifting')
@@ -526,9 +637,10 @@ LURL = {'services': ('/services', '/fr/services'), 'fleet': ('/fleet', '/fr/flot
         'airport': ('/services/airport-transfers', '/fr/services/transferts-aeroport'),
         'business': ('/services/business-travel', '/fr/services/voyages-affaires'),
         'weddings': ('/services/weddings-events', '/fr/services/mariages-evenements'),
-        'hourly': ('/services/hourly-hire', '/fr/services/mise-a-disposition')}
+        'hourly': ('/services/hourly-hire', '/fr/services/mise-a-disposition'),
+        'corporate': ('/corporate', '/fr/entreprises')}
 for _u in [u for v in LURL.values() for u in v] + ['/cgv', '/confidentialite', '/mentions-legales', '/zh', '/ar']:
-    if _u not in PAGES and _u not in ('/team', '/fr/equipe'):
+    if _u not in PAGES and _u not in ('/team', '/fr/equipe', '/corporate', '/fr/entreprises'):
         print('ARRET lifting : page inconnue', _u); sys.exit(1)
 LIMG = {}
 def lift_img(n):
@@ -595,6 +707,124 @@ for i, (p, lg, title, cls, inner) in enumerate(docs):
     if p in LIFT_PAGES:
         docs[i] = (p, lg, title, 'rllift', lift_page(p, LIFT_PAGES[p]))
 print('lifting :', ', '.join(LIFT_PAGES), '· bloc de reservation', BOOK, '· ordinateur', BOOKD, '· telephone', BOOKM, '· images', len(LIMG), '· styles agent', len(LIFT_CSS))
+
+# Onglet « Corporate » (10 nov. 2026, demande de Yassine) : même mise en page que la page entreprises d'un partenaire,
+# avec nos propres textes (corporate.json) et sa photo (corporate-paris.jpg). Anglais /corporate, français /fr/entreprises.
+CORP = json.load(io.open(os.path.join(HERE, 'corporate.json'), encoding='utf-8'))
+CORP_JPG = os.path.join(HERE, 'corporate-paris.jpg')
+if not os.path.exists(CORP_JPG):
+    print('ARRET photo corporate absente (corporate-paris.jpg)'); sys.exit(1)
+CORP_IMG = '/img/corp-%s.webp' % sha(open(CORP_JPG, 'rb').read())[:10]
+Image.open(CORP_JPG).convert('RGB').save(OUT + CORP_IMG, 'WEBP', quality=84, method=6)
+CORP_CSS = ('<style>body.rlcorp{background:#0b0b0c}'
+  '.rlco{--g:#E0BA6C;--ink:#f3eee4;--tx:#c8c2b6;--mu:#9a9488;--ln:rgba(224,186,108,.22);background:#0b0b0c;color:var(--tx);font:400 16.5px/1.7 Manrope,system-ui,sans-serif}'
+  '.rlco a{color:var(--g)}.rlco h1,.rlco h2,.rlco h3{color:var(--ink);margin:0}'
+  '.rlco h2{font:600 clamp(28px,4vw,42px)/1.15 "Cormorant Garamond",Lora,Georgia,serif}'
+  '.rlco h3{font:700 18.5px/1.35 Manrope,system-ui,sans-serif}'
+  '.rlco .w{max-width:1160px;margin:0 auto;padding:0 24px}'
+  '.rlco .k{margin:0 0 10px;font-size:12.5px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--g)}'
+  '.rlco .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;font-weight:800;font-size:15.5px;text-decoration:none}'
+  '.rlco .gold{background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b8873f 100%);color:#16110a;box-shadow:0 10px 30px rgba(199,154,74,.28)}'
+  '.rlco .ghost{border:1.5px solid rgba(243,238,228,.7);color:var(--ink)}'
+  '.rlco .hero{position:relative;min-height:min(86vh,820px);display:flex;align-items:flex-end;background:#0b0b0c}'
+  '.rlco .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 58%}'
+  '.rlco .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,.25) 0%,rgba(11,11,12,0) 30%,rgba(11,11,12,.55) 62%,#0b0b0c 100%)}'
+  '.rlco .hero .w{position:relative;z-index:1;width:100%;box-sizing:border-box;padding-bottom:56px}'
+  '.rlco .crumb{margin:0 0 14px;font-size:13.5px;color:#d9d2c4}.rlco .crumb a{color:#d9d2c4;text-decoration:none}.rlco .crumb span{margin:0 8px;color:var(--g)}'
+  '.rlco h1{max-width:820px;font:600 clamp(36px,6vw,66px)/1.05 "Cormorant Garamond",Lora,Georgia,serif;text-shadow:0 2px 24px rgba(0,0,0,.45)}'
+  '.rlco .sub{max-width:640px;margin:16px 0 26px;font-size:18px;color:#e6e0d4;text-shadow:0 1px 12px rgba(0,0,0,.5)}'
+  '.rlco .ctas{display:flex;flex-wrap:wrap;gap:12px}'
+  '.rlco .stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}'
+  '.rlco .stats div{padding:28px 18px;text-align:center}.rlco .stats div+div{border-left:1px solid var(--ln)}'
+  '.rlco .stats b{display:block;font:600 clamp(30px,4vw,44px)/1 "Cormorant Garamond",Lora,Georgia,serif;color:var(--g)}'
+  '.rlco .stats span{display:block;margin-top:8px;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}'
+  '.rlco .sec{padding:84px 0 0}'
+  '.rlco .split{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}'
+  '.rlco .split.rev>figure{order:2}'
+  '.rlco figure{margin:0}.rlco .split img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.5)}'
+  '.rlco .split p{margin:16px 0 0}'
+  '.rlco ul.tick{margin:18px 0 0;padding:0;list-style:none}.rlco ul.tick li{position:relative;padding:10px 0 10px 30px;border-bottom:1px solid var(--ln);color:var(--ink)}'
+  '.rlco ul.tick li:before{content:"";position:absolute;left:2px;top:19px;width:9px;height:9px;border-radius:50%;background:var(--g);box-shadow:0 0 0 4px rgba(224,186,108,.16)}'
+  '.rlco .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}'
+  '.rlco .card{padding:26px 24px;border:1px solid var(--ln);border-radius:18px;background:#141316}'
+  '.rlco .card p{margin:10px 0 0;font-size:15.5px}'
+  '.rlco .card .ic{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin-bottom:16px;border-radius:12px;border:1px solid rgba(224,186,108,.45);color:var(--g)}'
+  '.rlco .card .ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}'
+  '.rlco .cards.four{grid-template-columns:repeat(4,1fr)}'
+  '.rlco .num{display:block;margin-bottom:14px;font:600 34px/1 "Cormorant Garamond",Lora,Georgia,serif;color:var(--g)}'
+  '.rlco .calls{display:grid;grid-template-columns:1fr 1fr;gap:18px}'
+  '.rlco .call{padding:30px 28px;border-radius:18px;border:1px solid rgba(224,186,108,.4);background:linear-gradient(180deg,#161418,#0f0e11)}'
+  '.rlco .call p{margin:8px 0 14px}.rlco .call a{font-weight:800;text-decoration:none}'
+  '.rlco .banner{margin-top:84px}.rlco .banner img{display:block;width:100%;height:min(60vh,560px);object-fit:cover}'
+  '.rlco details{border-bottom:1px solid var(--ln)}.rlco details:first-of-type{border-top:1px solid var(--ln);margin-top:26px}'
+  '.rlco summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;padding:20px 0;font-weight:700;font-size:17px;color:var(--ink)}'
+  '.rlco summary::-webkit-details-marker{display:none}.rlco summary:after{content:"+";flex:none;font-size:24px;line-height:1;color:var(--g)}'
+  '.rlco details[open] summary:after{content:"−"}.rlco details p{margin:0 0 20px}'
+  '.rlco .more{margin:20px 0 0}'
+  '.rlco .also{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:70px 0 0;padding:26px 0 72px;border-top:1px solid var(--ln)}'
+  '.rlco .also b{color:var(--ink)}.rlco .also a{padding:8px 16px;border:1px solid var(--ln);border-radius:999px;text-decoration:none;font-weight:600;font-size:14.5px}'
+  '.rlco .note{margin:0 0 0 auto;font-size:12.5px;color:#7d786e}'
+  '@media (max-width:900px){.rlco .split,.rlco .calls{grid-template-columns:1fr;gap:28px}.rlco .split.rev>figure{order:0}.rlco .cards,.rlco .cards.four{grid-template-columns:1fr 1fr}}'
+  '@media (max-width:640px){.rlco .w{padding:0 18px}.rlco .hero{display:block;min-height:0}.rlco .hero img{position:static;height:auto;aspect-ratio:1/1}'
+  '.rlco .hero:after{top:0;bottom:auto;height:100vw;background:linear-gradient(180deg,rgba(11,11,12,0) 55%,#0b0b0c 100%)}'
+  '.rlco .hero .w{margin-top:-64px;padding-bottom:36px}.rlco .sub{font-size:16.5px}.rlco .ctas .btn{flex:1 1 100%;justify-content:center}'
+  '.rlco .stats div{padding:20px 8px}.rlco .stats span{font-size:10.5px;letter-spacing:.08em}'
+  '.rlco .sec{padding-top:60px}.rlco .cards,.rlco .cards.four{grid-template-columns:1fr}.rlco .banner{margin-top:60px}.rlco .note{margin:8px 0 0;width:100%}}</style>')
+CORP_IC = ['<path d="M2 16l20-6-3-2-6 2-6-6-2 1 4 6-5 2-2-2-1 1z"/><path d="M3 21h18"/>',
+           '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+           '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>']
+def corp_page(lg):
+    x = CORP[lg]; U = lambda k: LURL[k][0 if lg == 'en' else 1]; e = html.escape
+    hm = '/' if lg == 'en' else '/fr'
+    o = [CORP_CSS, '<main class="rlco">']
+    o.append('<section class="hero"><img src="%s" width="1254" height="1254" alt="%s" fetchpriority="high" decoding="async"><div class="w">'
+             '<p class="crumb"><a href="%s">%s</a><span>/</span>%s</p><h1>%s</h1><p class="sub">%s</p>'
+             '<p class="ctas"><a class="btn gold" href="https://booking.rafai-limousine.com/">%s →</a><a class="btn ghost" href="https://wa.me/33667099494" target="_blank" rel="noopener">%s</a></p></div></section>'
+             % (CORP_IMG, e(x['alt'], quote=True), hm, e(x['crumb'][0]), e(x['crumb'][1]), e(x['h1']), e(x['sub']), e(x['b1']), e(x['b2'])))
+    o.append('<div class="stats">%s</div>' % ''.join('<div><b>%s</b><span>%s</span></div>' % (e(a), e(b)) for a, b in x['stats']))
+    i = x['intro']
+    o.append('<section class="sec"><div class="w split"><figure><img src="%s" alt="%s" loading="lazy" decoding="async"></figure><div><p class="k">%s</p><h2>%s</h2><p>%s</p></div></div></section>'
+             % (lift_img('u-s-paris'), e(i['alt'], quote=True), e(i['k']), e(i['h']), e(i['p'])))
+    a = x['adv']
+    o.append('<section class="sec"><div class="w"><h2>%s</h2><div class="cards">%s</div></div></section>'
+             % (e(a['h']), ''.join('<div class="card"><span class="ic"><svg viewBox="0 0 24 24">%s</svg></span><h3>%s</h3><p>%s</p></div>' % (CORP_IC[n], e(h), e(p)) for n, (h, p) in enumerate(a['c']))))
+    m = x['multi']
+    o.append('<section class="sec"><div class="w split rev"><figure><img src="%s" alt="%s" loading="lazy" decoding="async"></figure><div><p class="k">%s</p><h2>%s</h2><p>%s</p><ul class="tick">%s</ul></div></div></section>'
+             % (lift_img('u-v-thumb'), e(m['alt'], quote=True), e(m['k']), e(m['h']), e(m['p']), ''.join('<li>%s</li>' % e(l) for l in m['l'])))
+    u = x['uses']
+    o.append('<section class="sec"><div class="w"><h2>%s</h2><div class="cards four">%s</div></div></section>'
+             % (e(u['h']), ''.join('<div class="card"><span class="num">%02d</span><h3>%s</h3><p>%s</p></div>' % (n + 1, e(h), e(p)) for n, (h, p) in enumerate(u['c']))))
+    o.append('<section class="sec"><div class="w calls">%s</div></section>'
+             % ''.join('<div class="call"><h3>%s</h3><p>%s</p><a href="%s">%s →</a></div>' % (e(h), e(p), U(k), e(l)) for h, p, l, k in x['call']))
+    o.append('<figure class="banner"><img src="%s" alt="%s" loading="lazy" decoding="async"></figure>' % (lift_img('u-range-eiffel'), e(x['banner_alt'], quote=True)))
+    f = x['faq']
+    o.append('<section class="sec"><div class="w"><h2>%s</h2>%s<p class="more"><a href="%s">%s →</a></p></div></section>'
+             % (e(f['h']), ''.join('<details><summary>%s</summary><p>%s</p></details>' % (e(q), e(r)) for q, r in f['q']), U('contact'), e(f['more'])))
+    al = x['also']
+    o.append('<div class="w"><p class="also"><b>%s</b>%s<span class="note">%s</span></p></div></main>'
+             % (e(al['t']), ''.join('<a href="%s">%s</a>' % (U(k), e(l)) for l, k in al['l']), e(x['note'])))
+    ld = {'@context': 'https://schema.org', '@type': 'FAQPage', 'inLanguage': lg,
+          'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': r}} for q, r in f['q']]}
+    o.insert(1, '<script type="application/ld+json">%s</script>' % json.dumps(ld, ensure_ascii=False).replace('</', '<\\/'))
+    return ''.join(o)
+for lg in ('en', 'fr'):
+    x = CORP[lg]
+    docs.append((x['p'], lg, x['title'], 'rlcorp', corp_page(lg)))
+    CFG.setdefault('titles', {})[x['p']] = x['title']
+    CFG['desc'][x['p']] = x['desc']
+    HERO[x['p']] = CORP_IMG
+CFG['groups'].append([CORP['en']['p'], CORP['fr']['p']])
+# menu du site : « Corporate » après « Services » (anglais) et « Entreprises » dans le menu Français
+def _nav_add(items, after, it):
+    for n, i in enumerate(items):
+        if i['u'] == after:
+            items.insert(n + 1, it); return True
+        if _nav_add(i.get('c', []), after, it):
+            return True
+    return False
+if not (_nav_add(CFG['nav'], '/services', {'t': 'Corporate', 'u': '/corporate'}) and _nav_add(CFG['nav'], '/fr/services', {'t': 'Entreprises', 'u': '/fr/entreprises'})):
+    print('ARRET menu : Services introuvable'); sys.exit(1)
+print('onglet Corporate :', CORP['en']['p'], CORP['fr']['p'], CORP_IMG)
 
 # feuilles de style
 css = ''

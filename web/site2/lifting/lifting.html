@@ -439,6 +439,14 @@ footer{background:#070708;color:var(--text);border-top:2px solid var(--gold)}
 .fld label .lm{display:none}
 @media (max-width:640px){.fld label .lm{display:inline}.fld label .ld{display:none}}
 
+/* téléphone : ce qu'il y a à bord (demande de Yassine : eau, chargeur, Wi-Fi, siège enfant ; pas de fauteuil roulant) */
+.onb{display:none}
+@media (max-width:640px){
+  .onb{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 2px;padding:0;list-style:none}
+  .onb li{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-size:13px;line-height:1.25;color:var(--text)}
+  .onb svg{flex:none;width:18px;height:18px;fill:none;stroke:#E0BA6C;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+}
+
 /* --- site en ligne --- */
 .appbar{background:#070708;color:#d9d3c7;font-size:12.5px;line-height:1.3;border-bottom:1px solid rgba(224,186,108,.25)}
 .appbar .wrap{display:flex;align-items:center;justify-content:center;gap:12px;min-height:32px;padding-block:4px;text-align:center}
@@ -496,6 +504,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
   <ul class="wrap">
     <li><a href="https://booking.rafai-limousine.com/" data-en="Book online">Réserver en ligne</a></li>
     <li><a href="%%U:services%%" data-en="Services">Services</a></li>
+    <li><a href="%%U:corporate%%" data-en="Corporate">Entreprises</a></li>
     <li><a href="%%U:fleet%%" data-en="Fleet">Flotte</a></li>
     <li><a href="#equipe" data-en="Our team">L’équipe</a></li>
     <li><a href="#trajets" data-en="Popular routes">Trajets populaires</a></li>
@@ -534,6 +543,12 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
         <div class="fld"><label id="paxL"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg><span data-en="Passengers">Passagers</span></label><div class="step" role="group" aria-labelledby="paxL"><button type="button" data-step="pax" data-d="-1" aria-label="−">−</button><output id="pax">1</output><button type="button" data-step="pax" data-d="1" aria-label="+">+</button></div></div>
         <div class="fld"><label id="bagL"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M8 7v13M16 7v13"/></svg><span data-en="Luggage">Bagages</span></label><div class="step" role="group" aria-labelledby="bagL"><button type="button" data-step="bag" data-d="-1" aria-label="−">−</button><output id="bag">0</output><button type="button" data-step="bag" data-d="1" aria-label="+">+</button></div></div>
         </div>
+        <ul class="onb" aria-label="À bord">
+          <li><svg class="i" viewBox="0 0 24 24"><path d="M10 2h4v3l1.5 2.5V20a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2V7.5L10 5z"/><path d="M8.5 12h7"/></svg><span data-en="Bottled water">Bouteilles d’eau</span></li>
+          <li><svg class="i" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span data-en="Phone chargers">Chargeurs</span></li>
+          <li><svg class="i" viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10.5 10.5 0 0 1 14 0M8.5 15.5a5.5 5.5 0 0 1 7 0"/><circle cx="12" cy="19" r="1.2"/></svg><span data-en="Wi-Fi on board">Wi-Fi à bord</span></li>
+          <li><svg class="i" viewBox="0 0 24 24"><path d="M7 4h4l2 9h5a2 2 0 0 1 2 2v1H8z"/><path d="M8 16l-1.5 4M18 16l1.5 4"/><circle cx="9" cy="4" r=".5"/></svg><span data-en="Child seat on request">Siège enfant sur demande</span></li>
+        </ul>
         <div class="go"><button class="btn btn-white" type="submit"><span data-en="Search">Rechercher</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
       </form>
       <p class="note" id="note" aria-live="polite"></p>
@@ -691,7 +706,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
       <a class="pill" href="%%U:fleet%%" data-en="Our fleet">Notre flotte</a>
       <a class="pill" href="%%U:about%%" data-en="About us">À propos</a>
       <a class="pill" href="#decouvrir" data-en="Tours">Visites</a>
-      <a class="pill" href="%%U:business%%" data-en="Business travel">Voyages d’affaires</a>
+      <a class="pill" href="%%U:corporate%%" data-en="Corporate">Entreprises</a>
       <a class="pill" href="%%U:team%%" data-en="Our team">L’équipe</a>
       <a class="pill" href="%%U:contact%%">Contact</a>
     </div>
