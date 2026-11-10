@@ -485,14 +485,14 @@ TEAM_TX = {
            'd': ['Your flight is tracked in real time, with one hour of waiting time included at the airport.',
                  'A fixed price confirmed before the ride, immaculate vehicles, every detail checked.',
                  'Discreet, courteous chauffeurs, a name sign at arrivals, available 24/7.'],
-           'alt': 'Team Rafai Limousine: Yassine Rafai, CEO and President, the chauffeurs and the fleet',
-           'c1': 'Book on WhatsApp', 'c2': 'Contact us', 'cu': '/contact', 'n': 'Vehicle photos: illustrations.'},
+           'alt': 'Team Rafai Limousine: Yassine Rafai, CEO and President, and the chauffeurs',
+           'c1': 'Book on WhatsApp', 'c2': 'Contact us', 'cu': '/contact', 'n': ''},
     'fr': {'p': '/fr/equipe', 'k': 'Notre équipe', 'v': ['Ponctualité', 'Rigueur', 'Professionnalisme'],
            'd': ["Vol suivi en temps réel et 1 h d'attente offerte à l'aéroport.",
                  'Prix fixe annoncé avant la course, véhicules impeccables, chaque détail vérifié.',
                  'Chauffeurs discrets et courtois, pancarte à votre nom, disponibles 24h/24 et 7j/7.'],
-           'alt': "Team Rafai Limousine : Yassine Rafai, CEO – Président, les chauffeurs et la flotte",
-           'c1': 'Réserver sur WhatsApp', 'c2': 'Nous contacter', 'cu': '/fr/contact', 'n': "Photos des véhicules : illustrations."}}
+           'alt': "Team Rafai Limousine : Yassine Rafai, CEO – Président, et les chauffeurs",
+           'c1': 'Réserver sur WhatsApp', 'c2': 'Nous contacter', 'cu': '/fr/contact', 'n': ''}}
 TEAM_CSS = ('<style>.rlteam{max-width:1080px;margin:0 auto;padding:48px 20px 64px;font:500 16px/1.6 Manrope,system-ui,sans-serif;color:#111;text-align:center}'
             '.rlteam .k{margin:0;font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#8a6a2f}'
             '.rlteam h1{margin:8px 0 6px;font:600 clamp(30px,5vw,46px)/1.15 Lora,Georgia,serif}'
@@ -512,9 +512,9 @@ for lg, x in TEAM_TX.items():
              '<figure><img src="%s" width="1080" height="1350" alt="%s" decoding="async" fetchpriority="high"></figure>'
              '<section class="cards">%s</section>'
              '<p class="cta"><a class="w" href="https://wa.me/33667099494" target="_blank" rel="noopener">%s</a><a class="c" href="%s">%s</a></p>'
-             '<p class="n">%s</p></main>'
+             '%s</main>'
              % (html.escape(x['k']), ' · '.join(html.escape(v) for v in x['v']), TEAM_IMG, html.escape(x['alt'], quote=True), cards,
-                html.escape(x['c1']), x['cu'], html.escape(x['c2']), html.escape(x['n'])))
+                html.escape(x['c1']), x['cu'], html.escape(x['c2']), ('<p class="n">%s</p>' % html.escape(x['n'])) if x['n'] else ''))
     docs.append((x['p'], lg, 'Team Rafai Limousine', '', inner))
 print('onglet Team :', ', '.join(x['p'] for x in TEAM_TX.values()))
 
