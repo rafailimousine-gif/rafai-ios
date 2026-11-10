@@ -711,8 +711,8 @@ def _hero_m():
     raw = open(os.path.join(LIFT_DIR, 'img', 'hero.jpg'), 'rb').read()
     return webp(raw, 'lift-hero-m', maxw=828)
 HERO_M = _hero_m()
-FONT_CSS, FONT_PRE = self_fonts()
 LFONTS = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap'
+FONT_CSS, FONT_PRE = self_fonts()
 # Shopping (10 nov. 2026, demande de Yassine) : photos libres de droits de Wikimedia Commons, retouchées (recadrage, tons chauds),
 # avec le nom de l'auteur et la licence sous les cartes. Si une photo ne se télécharge pas, la carte garde l'icône dorée.
 SHOP = [  # clé, fichier Commons, auteur, licence, lien licence, point de cadrage (x, y)
