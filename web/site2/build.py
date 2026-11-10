@@ -813,7 +813,8 @@ def lift_page(p, lg):
                     el['width'], el['height'] = str(_im.width), str(_im.height)
             except Exception:
                 pass
-    return '<style>' + LIFT_CSS + '</style>' + str(s)
+    # les images ont maintenant largeur et hauteur (PageSpeed) : sans « height:auto » les photos des cartes s'étirent en hauteur
+    return '<style>' + LIFT_CSS + '\n.svc img,.gal img,.route img{height:auto}</style>' + str(s)
 for i, (p, lg, title, cls, inner) in enumerate(docs):
     if p in LIFT_PAGES:
         docs[i] = (p, lg, title, 'rllift', lift_page(p, LIFT_PAGES[p]))
