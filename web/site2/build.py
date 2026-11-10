@@ -1311,6 +1311,17 @@ open(OUT + '/img/logo.png', 'wb').write(open(os.path.join(os.path.dirname(os.pat
 # image de partage (aperçu du lien dans WhatsApp, Facebook…) : la photo du haut de l'accueil en 1200 × 630 (10 nov. 2026, demande de Yassine)
 _oi = Image.open(os.path.join(LIFT_DIR, 'img', 'hero.jpg')).convert('RGB'); _w, _h = _oi.size; _th = min(_h, round(_w / 1.905)); _t = (_h - _th) // 2
 _oi = _oi.crop((0, _t, _w, _t + _th)).resize((1200, 630), Image.LANCZOS)
+# logo RL Rafai Limousine en haut à gauche de l'image de partage (10 nov. 2026, demande de Yassine)
+_ob_p = os.path.join(HERE, 'og-badge.png')
+if os.path.exists(_ob_p):
+    from PIL import ImageDraw, ImageFilter
+    _oi = _oi.convert('RGBA')
+    _sh = Image.new('RGBA', _oi.size, (0, 0, 0, 0)); ImageDraw.Draw(_sh).rounded_rectangle([36, 44, 236, 244], 24, fill=(0, 0, 0, 140))
+    _oi = Image.alpha_composite(_oi, _sh.filter(ImageFilter.GaussianBlur(10)))
+    _oi.alpha_composite(Image.open(_ob_p).convert('RGBA').resize((200, 200), Image.LANCZOS), (34, 34))
+    _oi = _oi.convert('RGB')
+else:
+    print('image de partage : logo absent (og-badge.png)')
 _ob = io.BytesIO(); _oi.save(_ob, 'JPEG', quality=86, optimize=True, progressive=True)
 OG = '/img/og-%s.jpg' % sha(_ob.getvalue())[:10]
 open(OUT + OG, 'wb').write(_ob.getvalue())

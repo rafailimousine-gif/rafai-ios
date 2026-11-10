@@ -5,7 +5,7 @@ COMMIT="$1"
 B="https://raw.githubusercontent.com/rafailimousine-gif/rafai-ios/$COMMIT/web/site2"
 mkdir -p ~/site-www/tools ~/site-www/src ~/site-src
 cd ~/site-www/src
-for f in build.py rl-site.js site.css.add pages.json logo.png agent.webp flotte-rl.jpg team-rafai.jpg about-team.jpg rlch-3.webp services-en.txt services-fr.txt services-paris.jpg corporate.json corporate-paris.jpg vip-en.txt vip-fr.txt vip-paris.jpg; do curl -sLf -o "$f" "$B/$f"; done
+for f in build.py rl-site.js site.css.add pages.json logo.png agent.webp flotte-rl.jpg team-rafai.jpg about-team.jpg rlch-3.webp services-en.txt services-fr.txt services-paris.jpg corporate.json corporate-paris.jpg vip-en.txt vip-fr.txt vip-paris.jpg og-badge.png; do curl -sLf -o "$f" "$B/$f"; done
 # « Lifting » : nouvelle page d'accueil (anglais / et français /fr), son modèle et ses photos
 rm -rf lifting && mkdir -p lifting && curl -sLf -o lifting/lifting.html "$B/lifting/lifting.html" && curl -sLf -o lifting/assets.tgz "$B/lifting/assets.tgz" && tar xzf lifting/assets.tgz -C lifting && rm lifting/assets.tgz
 # badge officiel Google Play (anglais, comme le badge App Store)
