@@ -480,6 +480,29 @@ footer{background:#070708;color:var(--text);border-top:2px solid var(--gold)}
 @media (max-width:640px){.tv{padding:24px 14px 22px;border-radius:22px}.tv .boss{gap:16px}.tv .boss .ar{width:140px}.tv .who b{font-size:27px}.tv .who span{font-size:13px}.tv .mem{gap:16px 10px;margin-top:24px}.tv .m span.n{font-size:12.5px}}
 @media (prefers-reduced-motion:reduce){.tv .ar{animation:none}}
 
+/* accueil : le titre apparaît mot par mot, la ligne dorée brille (demande de Yassine, 10 nov.) */
+.hero h1 .w{display:inline-block;opacity:.01;transform:translateY(.45em) rotateX(35deg);filter:blur(6px);animation:hw-in .8s cubic-bezier(.2,.7,.2,1) forwards}
+.hero h1 .g .w{background:linear-gradient(100deg,#c79a4a 0%,#e7c27a 30%,#fff4d6 45%,#e7c27a 60%,#b8873f 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hw-in .8s cubic-bezier(.2,.7,.2,1) forwards,hw-gold 4.5s ease-in-out 1.6s infinite}
+.hero h1.split{animation:none}
+.hero .tag.split{animation:hw-tag 1.4s cubic-bezier(.2,.7,.2,1) .9s both}
+@keyframes hw-in{to{opacity:1;transform:none;filter:none}}
+@keyframes hw-gold{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+@keyframes hw-tag{0%{opacity:0;letter-spacing:.6em}100%{opacity:1}}
+/* trajets populaires : flèche qui avance, kilomètres et minutes qui défilent */
+.route b svg{animation:rt-arrow 1.6s ease-in-out infinite;color:#E0BA6C}
+@keyframes rt-arrow{0%,100%{transform:translateX(-2px);opacity:.7}50%{transform:translateX(5px);opacity:1}}
+.route .k{display:inline-block;min-width:1.6ch;text-align:right;font-variant-numeric:tabular-nums}
+.route .trk{display:block;position:relative;height:2px;margin:10px 0 0;background:rgba(224,186,108,.18);border-radius:2px;overflow:hidden}
+.route .trk:after{content:"";position:absolute;inset:0;width:0;background:linear-gradient(90deg,#b8873f,#f0d394);border-radius:2px;transition:width 1.3s cubic-bezier(.2,.7,.2,1)}
+.routes-grid.on .route .trk:after{width:var(--w,60%)}
+@media (prefers-reduced-motion:reduce){.hero h1 .w{opacity:1;transform:none;filter:none;animation:none}.route b svg{animation:none}}
+
+/* shopping : cartes sans photo pour l'instant (icône dorée), en attendant les photos */
+.dest .ph.shop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse 75% 70% at 50% 40%,rgba(224,186,108,.22),rgba(224,186,108,0) 70%),linear-gradient(160deg,#1b1916,#0e0d0f)}
+.dest .ph.shop svg{width:42px;height:42px;fill:none;stroke:#E0BA6C;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .5s ease}
+.dest:hover .ph.shop svg{transform:translateY(-3px) scale(1.06)}
+.dest .ph.shop i{font-style:normal;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#E0BA6C}
+
 /* --- site en ligne --- */
 .appbar{background:#070708;color:#d9d3c7;font-size:12.5px;line-height:1.3;border-bottom:1px solid rgba(224,186,108,.25)}
 .appbar .wrap{display:flex;align-items:center;justify-content:center;gap:10px;min-height:32px;padding-block:4px;text-align:center}
@@ -687,6 +710,18 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
       </div>
     </div>
 
+    <div class="group" id="shopping">
+      <div class="group-h"><h3>Shopping</h3><span data-en="Drop-off at the entrance, your chauffeur waits while you shop">Dépose à l’entrée, votre chauffeur vous attend pendant vos achats</span></div>
+      <div class="dest-grid">
+        <a class="dest" href="https://booking.rafai-limousine.com/"><div class="ph shop" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><i data-en="Department store">Grands magasins</i></div><div class="cap"><b data-en="Galeries Lafayette">Galeries Lafayette</b><span data-en="Boulevard Haussmann, 9th">Boulevard Haussmann, 9e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/"><div class="ph shop" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><i data-en="Department store">Grands magasins</i></div><div class="cap"><b data-en="Printemps">Printemps</b><span data-en="Boulevard Haussmann, 9th">Boulevard Haussmann, 9e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/"><div class="ph shop" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><i data-en="Left Bank">Rive gauche</i></div><div class="cap"><b data-en="Le Bon Marché">Le Bon Marché</b><span data-en="Rue de Sèvres, 7th">Rue de Sèvres, 7e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/"><div class="ph shop" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><i data-en="Haute couture">Haute couture</i></div><div class="cap"><b data-en="Avenue Montaigne">Avenue Montaigne</b><span data-en="Golden Triangle, 8th">Triangle d’or, 8e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/"><div class="ph shop" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><i data-en="Luxury houses">Maisons de luxe</i></div><div class="cap"><b data-en="Rue Saint-Honoré">Rue Saint-Honoré</b><span data-en="Faubourg Saint-Honoré, 1st and 8th">Faubourg Saint-Honoré, 1er et 8e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/"><div class="ph shop" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><i data-en="Le Marais">Le Marais</i></div><div class="cap"><b data-en="BHV Marais">BHV Marais</b><span data-en="Rue de Rivoli, 4th">Rue de Rivoli, 4e</span></div></a>
+        <a class="dest" href="https://booking.rafai-limousine.com/"><div class="ph shop" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><i data-en="Luxury outlet">Outlet de luxe</i></div><div class="cap"><b data-en="La Vallée Village">La Vallée Village</b><span data-en="Val d’Europe, Serris">Val d’Europe, Serris</span></div></a>
+      </div>
+    </div>
     <div class="group" id="escapades">
       <div class="group-h"><h3 data-en="Beyond Paris">Hors de Paris</h3><span data-en="Day trips with your chauffeur">Escapades à la journée avec votre chauffeur</span></div>
       <div class="dest-grid">
@@ -886,7 +921,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
       function close(){ ul.hidden=true; inp.setAttribute('aria-expanded','false'); cur=-1; }
       function show(list,osm){
         items=list; cur=-1; if(!list.length){ close(); return; }
-        ul.innerHTML=list.map(function(it,i){ return '<li role="option" id="'+ul.id+i+'" data-i="'+i+'">'+IC[it.i]+'<span><b></b><small></small></span></li>'; }).join('')+(osm?'<li class="src" aria-hidden="true">© OpenStreetMap · Base Adresse Nationale</li>':'');
+        ul.innerHTML=list.map(function(it,i){ return '<li role="option" id="'+ul.id+i+'" data-i="'+i+'">'+IC[it.i]+'<span><b></b><small></small></span></li>'; }).join('')+(osm?'<li class="src" aria-hidden="true">© OpenStreetMap · Base Adresse Nationale · Google Maps</li>':'');
         [].forEach.call(ul.querySelectorAll('li[data-i]'),function(li,i){ li.querySelector('b').textContent=list[i].n; li.querySelector('small').textContent=list[i].s||''; });
         place(); ul.hidden=false; inp.setAttribute('aria-expanded','true');
       }
@@ -901,14 +936,20 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
         var my=++seq;
         // deux services gratuits, sans clé : Photon (OpenStreetMap, monde entier, hôtels et lieux) et la Base Adresse Nationale (France, adresses exactes)
         timer=setTimeout(function(){
-          var osm=[], ban=[], seen={};
+          var osm=[], ban=[], goo=[], seen={};
           function uniq(list){ return list.filter(function(x){ var k=norm(x.n+'|'+x.s); if(!x.n||seen[k]) return false; seen[k]=1; return true; }); }
-          function render(){ if(my!==seq) return; seen={}; var all=uniq(osm.concat(ban)); show(loc.concat(all).slice(0,Math.max(10,loc.length+5)),all.length>0); }
+          function render(){ if(my!==seq) return; seen={}; var all=uniq(osm.concat(ban,goo)); show(loc.concat(all).slice(0,Math.max(10,loc.length+5)),all.length>0); }
           function get(u,ms){ var c=('AbortController' in window)?new AbortController():null; if(c) setTimeout(function(){c.abort();},ms); return fetch(u,c?{signal:c.signal}:{}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
           get('https://photon.komoot.io/api/?limit=6&lang='+(en?'en':'fr')+'&lat=48.8566&lon=2.3522&q='+encodeURIComponent(q),5000).then(function(j){ osm=(j.features||[]).map(label); render(); }).catch(function(){});
           get('https://data.geopf.fr/geocodage/search?limit=5&autocomplete=1&lat=48.8566&lon=2.3522&q='+encodeURIComponent(q),5000).then(function(j){
             ban=(j.features||[]).map(function(f){ var p=f.properties||{}; return {i:'pin',n:p.name||p.label,s:[p.postcode,p.city].filter(Boolean).join(' ')+', France'}; }); render();
           }).catch(function(){});
+          // Google Maps (via l'appli Rafai Limousine) quand les services gratuits trouvent peu de choses
+          setTimeout(function(){ if(my!==seq || q.length<4 || loc.length+osm.length+ban.length>=4) return;
+            get('https://script.google.com/macros/s/AKfycbwrVkg7W2mb0onawqUJdwA4f-5LWAEvcDkEfpwtg-LWuD7TX5NlBClvSfbxx7WiipW5/exec?app=cgeo&lang='+(en?'en':'fr')+'&q='+encodeURIComponent(q),8000).then(function(j){
+              goo=(j&&j.list||[]).map(function(x){ return {i:'pin',n:x.main||x.label,s:x.sub||''}; }); render();
+            }).catch(function(){});
+          },500);
         },220);
       });
       // téléphone : le champ remonte sous l'en-tête pour que la liste s'ouvre en dessous, au-dessus du clavier
@@ -959,12 +1000,34 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
         [].forEach.call(dots.children,function(b,i){ b.classList.toggle('on',i===best); }); }); },{passive:true});
     }); });
   })();
+
+  // accueil : le titre se découpe en mots qui apparaissent l'un après l'autre
+  (function(){
+    var reduce=false; try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+    var h=document.querySelector('.hero h1'), tag=document.querySelector('.hero .tag'); if(!h||reduce) return;
+    var n=0;
+    function split(el){ [].slice.call(el.childNodes).forEach(function(nd){
+      if(nd.nodeType===3){ var f=document.createDocumentFragment(); nd.textContent.split(/(\s+)/).forEach(function(p){ if(!p) return; if(/^\s+$/.test(p)){ f.appendChild(document.createTextNode(p)); return; }
+        var s=document.createElement('span'); s.className='w'; s.textContent=p; s.style.animationDelay=(0.12+n*0.09)+'s'+(el.classList&&el.classList.contains('g')?',':''); if(el.classList&&el.classList.contains('g')) s.style.animationDelay=(0.12+n*0.09)+'s,'+(1.6+n*0.09)+'s'; n++; f.appendChild(s); });
+        nd.parentNode.replaceChild(f,nd); }
+      else if(nd.nodeType===1){ split(nd); } }); }
+    split(h); h.classList.add('split'); if(tag) tag.classList.add('split');
+  })();
   // RL logo entrance + popular routes (cards rise, prices count up)
   (function(){
     var reduce=false; try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
     var lw=document.querySelector('.lg-w'), grid=document.querySelector('.routes-grid');
     var cards=grid?[].slice.call(grid.querySelectorAll('.route')):[];
     cards.forEach(function(c,i){ c.style.transitionDelay=(i*0.09)+'s'; });
+    var kms=[];
+    cards.forEach(function(c){ var sp=c.querySelector('div > span'); if(!sp) return; var maxkm=75;
+      [].slice.call(sp.childNodes).forEach(function(nd){ if(nd.nodeType!==3 || !/\d+ (km|min)/.test(nd.textContent)) return;
+        var f=document.createElement('span'); f.innerHTML=nd.textContent.replace(/(\d+)(?= (km|min))/g,'<span class="k" data-v="$1">$1</span>'); sp.replaceChild(f,nd); });
+      var km=sp.querySelector('.k'); if(km){ var bar=document.createElement('span'); bar.className='trk'; bar.style.setProperty('--w',Math.max(18,Math.min(100,Math.round(+km.getAttribute('data-v')/maxkm*100)))+'%'); sp.parentNode.appendChild(bar); }
+      [].forEach.call(sp.querySelectorAll('.k'),function(k){ kms.push(k); }); });
+    function countK(k,delay){ var v=+k.getAttribute('data-v'); k.textContent='0'; setTimeout(function(){ var t0=null, d=1300;
+      function step(ts){ if(!t0) t0=ts; var x=Math.min(1,(ts-t0)/d), e=1-Math.pow(1-x,3); k.textContent=Math.round(v*e); if(x<1) requestAnimationFrame(step); }
+      requestAnimationFrame(step); }, delay); }
     function prices(){ var out=[];
       cards.forEach(function(c){ var em=c.querySelector('em'); if(!em) return; var m=em.textContent.match(/(\d+)/); if(!m) return;
         var v=+m[1]; em.innerHTML=em.textContent.replace(m[1],'<span class="n">'+m[1]+'</span>'); out.push({em:em,n:em.querySelector('.n'),v:v}); });
@@ -975,7 +1038,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
     if(reduce || !('IntersectionObserver' in window)){ if(lw) lw.classList.add('on'); if(grid) grid.classList.add('on'); return; }
     var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(!e.isIntersecting) return; io.unobserve(e.target);
       if(e.target===lw){ lw.classList.add('on'); }
-      if(e.target===grid){ grid.classList.add('on'); prices().forEach(function(p,i){ count(p, 250+i*90); }); }
+      if(e.target===grid){ grid.classList.add('on'); prices().forEach(function(p,i){ count(p, 250+i*90); }); kms.forEach(function(k,i){ countK(k, 200+Math.floor(i/2)*90); }); }
     }); },{threshold:.35});
     if(lw) io.observe(lw); if(grid) io.observe(grid);
   })();
