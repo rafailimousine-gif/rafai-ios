@@ -527,7 +527,7 @@ LIMG = {}
 def lift_img(n):
     if n not in LIMG:
         f = os.path.join(LIFT_DIR, 'img', n + ('.png' if n.startswith('logo-') else '.jpg'))
-        LIMG[n] = webp(open(f, 'rb').read(), 'lift-' + n, maxw=1600)
+        LIMG[n] = webp(open(f, 'rb').read(), 'lift-' + n, maxw=1920 if n == 'hero' else 1600)
     return LIMG[n]
 def css_blocks(css):
     out, i, n = [], 0, len(css)
