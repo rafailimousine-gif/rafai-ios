@@ -320,6 +320,33 @@ footer{background:var(--brand-2);color:var(--on-dark-muted);border-top:2px solid
   .fgrid{grid-template-columns:1fr}
 }
 
+/* RL logo: entrance + gold light sweeping across the letters */
+.lg-anim{position:relative;display:inline-block;vertical-align:middle;line-height:0}
+.lg-anim::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,rgba(255,236,190,0) 38%,rgba(255,244,214,.95) 50%,rgba(255,236,190,0) 62%) no-repeat;background-size:300% 100%;background-position:120% 0;-webkit-mask:var(--lg) center/contain no-repeat;mask:var(--lg) center/contain no-repeat;mix-blend-mode:screen}
+.lg-h::after{animation:lg-sweep 7s 1.6s ease-in-out infinite}
+.lg-h img{animation:lg-drop 1s .1s cubic-bezier(.2,.7,.2,1) both}
+.lg-w{margin:16px auto 0}
+.lg-w .why-logo{margin:0}
+.lg-w{opacity:0}
+.lg-w.on{opacity:1}
+.lg-w.on .why-logo{animation:lg-in 1.2s cubic-bezier(.2,.7,.2,1) both}
+.lg-w.on::after{animation:lg-sweep 6s .9s ease-in-out infinite}
+.lg-w.on::before{content:"";position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(224,186,108,.28),rgba(224,186,108,0));z-index:-1;animation:lg-glow 1.6s .2s ease-out both}
+@keyframes lg-sweep{0%{background-position:120% 0}28%,100%{background-position:-20% 0}}
+@keyframes lg-in{0%{opacity:0;transform:scale(.82) translateY(10px);filter:blur(6px)}100%{opacity:1;transform:none;filter:none}}
+@keyframes lg-drop{0%{opacity:0;transform:translateY(-8px) scale(.9)}100%{opacity:1;transform:none}}
+@keyframes lg-glow{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}60%{opacity:1}100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}}
+/* popular routes: cards rise one after the other, prices count up */
+.routes-grid .route{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1),box-shadow .25s ease,border-color .25s ease}
+.routes-grid.on .route{opacity:1;transform:none}
+.routes-grid .route:hover{border-color:#d9c39a;box-shadow:0 14px 30px -18px rgba(17,17,19,.35)}
+.route img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.route:hover img{transform:scale(1.07)}
+.route em.pop{animation:rt-pop .5s ease both}
+.route em .n{display:inline-block;min-width:2.6ch;text-align:right}
+@keyframes rt-pop{0%{color:var(--ink)}40%{color:#b8863a}100%{color:var(--ink)}}
+@media (prefers-reduced-motion: reduce){.lg-w{opacity:1}.routes-grid .route{opacity:1;transform:none}.lg-anim::after,.lg-anim::before{display:none}}
+
 /* --- site en ligne --- */
 .appbar{background:#0b0b0c;color:#e9e4d8;font-size:12.5px;line-height:1.3;border-bottom:1px solid rgba(224,186,108,.22)}
 .appbar .wrap{display:flex;align-items:center;justify-content:center;gap:12px;min-height:32px;padding-block:4px;text-align:center}
@@ -364,7 +391,7 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
       <button class="icon-btn" id="menuBtn" aria-expanded="false" aria-controls="menu" aria-label="Menu"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <div class="langdd"><button class="lang" id="langBtn" aria-expanded="false" aria-haspopup="true" aria-controls="langMenu" aria-label="Langue / Language"><span id="langLabel" data-en="English">Français</span><span class="cur">&nbsp;· €</span><svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><ul class="langmenu" id="langMenu" hidden><li><a href="/fr" lang="fr">Français</a></li><li><a href="/" lang="en">English</a></li><li><a href="/zh" lang="zh">中文</a></li><li><a href="/ar" lang="ar" dir="rtl">العربية</a></li></ul></div>
     </div>
-    <a class="logo" href="#top" aria-label="Rafai Limousine"><img class="logo-light" src="%%PNG:light%%" alt="Rafai Limousine"><img class="logo-dark" src="%%PNG:dark%%" alt=""></a>
+    <a class="logo" href="#top" aria-label="Rafai Limousine"><span class="lg-anim lg-h" style="--lg:url(%%PNG:light%%)"><img class="logo-light" src="%%PNG:light%%" alt="Rafai Limousine"><img class="logo-dark" src="%%PNG:dark%%" alt=""></span></a>
     <div class="right">
       <a class="btn book" href="#reservation" data-en="Book Now">Réserver</a>
       <a class="signin" href="https://booking.rafai-limousine.com" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span data-en="My account">Espace client</span></a>
@@ -431,7 +458,7 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
 <section class="why" id="why">
   <div class="wrap">
     <div class="eyebrow" data-en="Why">Pourquoi</div>
-    <img class="why-logo" src="%%PNG:dark%%" alt="Rafai Limousine">
+    <span class="lg-anim lg-w" style="--lg:url(%%PNG:dark%%)"><img class="why-logo" src="%%PNG:dark%%" alt="Rafai Limousine"></span>
     <p class="lead" data-en="Rafai Limousine is a private chauffeur service in Paris for travellers who expect precision: airport and private jet transfers, chauffeurs by the hour, tours of Paris and day trips to the châteaux and painters’ villages around the capital. One team, one point of contact and one standard from booking to drop-off. Our founder has been a chauffeur for 14 years and still takes the wheel for demanding clients.">Rafai Limousine est un service de chauffeur privé à Paris pour les voyageurs qui attendent de la précision : transferts aéroports et jets privés, chauffeur à l’heure, visites de Paris et escapades vers les châteaux et les villages de peintres autour de la capitale. Une équipe, un seul interlocuteur et un même standard, de la réservation jusqu’à la dépose. Notre fondateur est chauffeur depuis 14 ans et prend encore le volant pour les clients exigeants.</p>
     <p data-en="Discretion, punctuality and elegance, at every address in Paris.">Discrétion, ponctualité et élégance, à chaque adresse de Paris.</p>
     <div class="stats">
@@ -702,6 +729,27 @@ footer .contact a{color:var(--on-dark);text-decoration:none}
   });
 
 
+
+  // RL logo entrance + popular routes (cards rise, prices count up)
+  (function(){
+    var reduce=false; try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+    var lw=document.querySelector('.lg-w'), grid=document.querySelector('.routes-grid');
+    var cards=grid?[].slice.call(grid.querySelectorAll('.route')):[];
+    cards.forEach(function(c,i){ c.style.transitionDelay=(i*0.09)+'s'; });
+    function prices(){ var out=[];
+      cards.forEach(function(c){ var em=c.querySelector('em'); if(!em) return; var m=em.textContent.match(/(\d+)/); if(!m) return;
+        var v=+m[1]; em.innerHTML=em.textContent.replace(m[1],'<span class="n">'+m[1]+'</span>'); out.push({em:em,n:em.querySelector('.n'),v:v}); });
+      return out; }
+    function count(p,delay){ p.n.textContent='0'; setTimeout(function(){ var t0=null, d=1100;
+      function step(ts){ if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/d), e=1-Math.pow(1-k,3); p.n.textContent=Math.round(p.v*e); if(k<1) requestAnimationFrame(step); else { p.em.classList.remove('pop'); void p.em.offsetWidth; p.em.classList.add('pop'); } }
+      requestAnimationFrame(step); }, delay); }
+    if(reduce || !('IntersectionObserver' in window)){ if(lw) lw.classList.add('on'); if(grid) grid.classList.add('on'); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(!e.isIntersecting) return; io.unobserve(e.target);
+      if(e.target===lw){ lw.classList.add('on'); }
+      if(e.target===grid){ grid.classList.add('on'); prices().forEach(function(p,i){ count(p, 250+i*90); }); }
+    }); },{threshold:.35});
+    if(lw) io.observe(lw); if(grid) io.observe(grid);
+  })();
   // Rolling numbers in the stats row
   (function(){
     var reduce=false; try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
