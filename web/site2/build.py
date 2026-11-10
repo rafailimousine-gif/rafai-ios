@@ -639,9 +639,9 @@ LURL = {'services': ('/services', '/fr/services'), 'fleet': ('/fleet', '/fr/flot
         'business': ('/services/business-travel', '/fr/services/voyages-affaires'),
         'weddings': ('/services/weddings-events', '/fr/services/mariages-evenements'),
         'hourly': ('/services/hourly-hire', '/fr/services/mise-a-disposition'),
-        'corporate': ('/corporate', '/fr/entreprises')}
+        'corporate': ('/corporate', '/fr/entreprises'), 'vip': ('/vip-fast-track', '/fr/fast-track-vip')}
 for _u in [u for v in LURL.values() for u in v] + ['/cgv', '/confidentialite', '/mentions-legales', '/zh', '/ar']:
-    if _u not in PAGES and _u not in ('/team', '/fr/equipe', '/corporate', '/fr/entreprises'):
+    if _u not in PAGES and _u not in ('/team', '/fr/equipe', '/corporate', '/fr/entreprises', '/vip-fast-track', '/fr/fast-track-vip'):
         print('ARRET lifting : page inconnue', _u); sys.exit(1)
 LIMG = {}
 LSMALL = {}  # grande version -> petite version (téléphones)
@@ -937,6 +937,173 @@ def _nav_add(items, after, it):
 if not (_nav_add(CFG['nav'], '/services', {'t': 'Corporate', 'u': '/corporate'}) and _nav_add(CFG['nav'], '/fr/services', {'t': 'Entreprises', 'u': '/fr/entreprises'})):
     print('ARRET menu : Services introuvable'); sys.exit(1)
 print('onglet Corporate :', CORP['en']['p'], CORP['fr']['p'], CORP_IMG)
+
+# Onglet « VIP Fast Track » (10 nov. 2026, demande de Yassine) : sa photo (vip-paris.jpg) et son texte (vip-en.txt, traduit
+# en français dans vip-fr.txt). Les boutons « Réserver » ouvrent une petite fenêtre : réservation en ligne (l'option Fast Track VIP
+# s'affiche au choix du véhicule pour CDG et Orly) ou demande envoyée par le client sur WhatsApp. /vip-fast-track#book l'ouvre directement.
+VIP_JPG = os.path.join(HERE, 'vip-paris.jpg')
+VIP_TXT = {'en': ('/vip-fast-track', 'vip-en.txt'), 'fr': ('/fr/fast-track-vip', 'vip-fr.txt')}
+if not os.path.exists(VIP_JPG):
+    print('ARRET photo VIP absente (vip-paris.jpg)'); sys.exit(1)
+VIP_IMG = '/img/vip-%s.webp' % sha(open(VIP_JPG, 'rb').read())[:10]
+Image.open(VIP_JPG).convert('RGB').save(OUT + VIP_IMG, 'WEBP', quality=84, method=6)
+VIP_UI = {
+    'en': {'k': 'VIP Fast Track', 'b': 'Book VIP Fast Track', 'wa': 'WhatsApp',
+           'alt': 'Greeter holding a name sign at the arrivals of Paris-Charles de Gaulle airport, a chauffeur-driven car waiting outside',
+           'n': 'Photo: illustration.', 'desc': 'VIP Fast Track and airport meet and assist in Paris (CDG, Orly, Le Bourget, Beauvais): aircraft-door welcome where authorised, priority formalities, luggage, VAT refund and your Rafai Limousine chauffeur.',
+           'title': 'VIP Fast Track & Airport Meet and Assist in Paris – Rafai Limousine',
+           'w': {'h': 'Book your VIP Fast Track', 'on': 'Book online', 'onh': 'Enter your trip with the airport: the Fast Track VIP option appears when you choose your vehicle (CDG and Orly).',
+                 'or': 'or send us your request', 'arr': 'Arrival', 'dep': 'Departure', 'air': 'Airport', 'date': 'Date', 'tarr': 'Landing time', 'tdep': 'Flight time',
+                 'fl': 'Flight number', 'pax': 'Passengers', 'car': 'With a Rafai Limousine chauffeur', 'sign': 'Name on the sign', 'send': 'Send on WhatsApp',
+                 'x': 'Close', 'need': 'Please choose a date.', 'note': 'Your request opens in WhatsApp, ready to send to our team (+33 6 67 09 94 94).',
+                 'm0': 'Hello Rafai Limousine, I would like to book a VIP Fast Track.', 'yes': 'yes', 'no': 'no', 'at': 'at', 'sp': ': '}},
+    'fr': {'k': 'Fast Track VIP', 'b': 'Réserver le Fast Track VIP', 'wa': 'WhatsApp',
+           'alt': "Agent d’accueil tenant une pancarte au nom des clients aux arrivées de l’aéroport Paris-Charles de Gaulle, une voiture avec chauffeur qui attend dehors",
+           'n': 'Photo : illustration.', 'desc': "Fast Track VIP et accueil personnalisé dans les aéroports de Paris (CDG, Orly, Le Bourget, Beauvais) : accueil à la porte de l’avion si autorisé, formalités prioritaires, bagages, détaxe et votre chauffeur Rafai Limousine.",
+           'title': 'Fast Track VIP et accueil à l’aéroport à Paris – Rafai Limousine',
+           'w': {'h': 'Réservez votre Fast Track VIP', 'on': 'Réserver en ligne', 'onh': 'Indiquez votre trajet avec l’aéroport : l’option Fast Track VIP s’affiche au choix du véhicule (CDG et Orly).',
+                 'or': 'ou envoyez-nous votre demande', 'arr': 'Arrivée', 'dep': 'Départ', 'air': 'Aéroport', 'date': 'Date', 'tarr': 'Heure d’atterrissage', 'tdep': 'Heure du vol',
+                 'fl': 'Numéro de vol', 'pax': 'Passagers', 'car': 'Avec un chauffeur Rafai Limousine', 'sign': 'Nom sur la pancarte', 'send': 'Envoyer sur WhatsApp',
+                 'x': 'Fermer', 'need': 'Choisissez une date.', 'note': 'Votre demande s’ouvre dans WhatsApp, prête à envoyer à notre équipe (+33 6 67 09 94 94).',
+                 'm0': 'Bonjour Rafai Limousine, je souhaite réserver un Fast Track VIP.', 'yes': 'oui', 'no': 'non', 'at': 'à', 'sp': ' : '}}}
+VIP_AIR = {'en': ['Paris-Charles de Gaulle (CDG)', 'Paris-Orly (ORY)', 'Paris-Le Bourget (LBG)', 'Paris-Beauvais (BVA)'],
+           'fr': ['Paris-Charles de Gaulle (CDG)', 'Paris-Orly (ORY)', 'Paris-Le Bourget (LBG)', 'Paris-Beauvais (BVA)']}
+VIP_CSS = ('<style>body.rlvip{background:#0b0b0c}'
+  '.rlsv .lead{margin:-4px 0 22px;font:500 clamp(19px,2.4vw,23px)/1.45 "Cormorant Garamond",Lora,Georgia,serif;font-style:italic;color:#E0BA6C}'
+  '.rlsv .cta{display:flex;flex-wrap:wrap;gap:12px;margin:0}'
+  '.rlsv button.bk{border:0;cursor:pointer;font-family:inherit}'
+  '.rlsv .gh{display:inline-flex;align-items:center;padding:13px 24px;border-radius:999px;border:1.5px solid rgba(243,238,228,.6);color:#f3eee4;font-weight:800;font-size:15.5px;text-decoration:none}'
+  '.rlsv .fine{margin:26px 0 0;padding:16px 18px;border-left:2px solid rgba(224,186,108,.5);background:#111012;font-size:14px;line-height:1.6;color:#9a9488}'
+  '.rlsv .end p.x{margin:0 auto 10px;max-width:560px}'
+  '.ftw{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;padding:12px}'
+  '.ftw[hidden]{display:none}'
+  '.ftw-bg{position:absolute;inset:0;background:rgba(5,5,6,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}'
+  '.ftw-box{position:relative;width:min(460px,100%);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow:auto;box-sizing:border-box;padding:24px 22px 20px;border-radius:22px;'
+  'background:linear-gradient(180deg,#17151a,#0f0e11);border:1px solid rgba(224,186,108,.45);box-shadow:0 30px 80px rgba(0,0,0,.7);color:#c8c2b6;font:400 15px/1.5 Manrope,system-ui,sans-serif;color-scheme:dark;animation:ftwUp .35s cubic-bezier(.2,.7,.2,1)}'
+  '@keyframes ftwUp{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}'
+  '.ftw-x{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(224,186,108,.35);background:#0b0b0c;color:#f3eee4;font-size:22px;line-height:1;cursor:pointer}'
+  '.ftw-k{margin:0;font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:#E0BA6C}'
+  '.ftw h2{margin:6px 40px 16px 0;font:600 27px/1.15 "Cormorant Garamond",Lora,Georgia,serif;color:#f3eee4}'
+  '.ftw .bk{display:flex;width:100%;box-sizing:border-box;justify-content:center;align-items:center;gap:8px;padding:14px 20px;border:0;border-radius:999px;cursor:pointer;font:800 15.5px/1.2 Manrope,system-ui,sans-serif;text-decoration:none;'
+  'background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b8873f 100%);color:#16110a;box-shadow:0 10px 30px rgba(199,154,74,.25)}'
+  '.ftw .ftw-h{margin:9px 2px 0;font-size:13px;color:#9a9488}'
+  '.ftw-or{display:flex;align-items:center;gap:12px;margin:18px 0 14px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8b867c}'
+  '.ftw-or:before,.ftw-or:after{content:"";flex:1;height:1px;background:rgba(224,186,108,.22)}'
+  '.ftw .sg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:999px;background:#0b0b0c;border:1px solid rgba(224,186,108,.25);margin-bottom:12px}'
+  '.ftw .sg button{padding:9px 10px;border:0;border-radius:999px;background:none;color:#c8c2b6;font:700 14px Manrope,system-ui,sans-serif;cursor:pointer}'
+  '.ftw .sg button.on{background:#E0BA6C;color:#16110a}'
+  '.ftw label{display:block;margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9a9488}'
+  '.ftw input,.ftw select{display:block;width:100%;box-sizing:border-box;margin-top:5px;padding:11px 12px;border-radius:12px;border:1px solid rgba(224,186,108,.28);background:#0b0b0c;color:#f3eee4;font:500 16px Manrope,system-ui,sans-serif;text-transform:none;letter-spacing:0}'
+  '.ftw input:focus,.ftw select:focus{outline:2px solid rgba(224,186,108,.6);outline-offset:1px}'
+  '.ftw .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}'
+  '.ftw label.ck{display:flex;align-items:center;gap:10px;margin:4px 0 12px;font-size:14px;font-weight:600;letter-spacing:0;text-transform:none;color:#e6e0d4;cursor:pointer}'
+  '.ftw label.ck input{width:20px;height:20px;margin:0;flex:none;accent-color:#E0BA6C}'
+  '.ftw .wa{background:#0b0b0c;color:#E0BA6C;border:1.5px solid #E0BA6C;box-shadow:none}'
+  '.ftw .er{min-height:18px;margin:6px 2px 0;font-size:13px;color:#f0a58a}'
+  '.ftw .nt{margin:6px 2px 0;font-size:12px;color:#7d786e}'
+  'html.ftwon,html.ftwon body{overflow:hidden}'
+  '@media (max-width:640px){.rlsv .cta .bk,.rlsv .cta .gh{flex:1 1 100%;justify-content:center}.ftw{align-items:flex-end;padding:0}'
+  '.ftw-box{width:100%;max-height:92vh;max-height:92dvh;border-radius:22px 22px 0 0;padding:22px 18px calc(18px + env(safe-area-inset-bottom,0px))}}'
+  '@media (prefers-reduced-motion:reduce){.ftw-box{animation:none}}</style>')
+def vip_window(lg):
+    w = VIP_UI[lg]['w']; e = lambda s: html.escape(s, quote=True)
+    opts = ''.join('<option>%s</option>' % e(a) for a in VIP_AIR[lg])
+    pax = ''.join('<option%s>%d</option>' % (' selected' if n == 2 else '', n) for n in range(1, 9))
+    js = ('(function(){var W=document.getElementById("ftw");if(!W)return;var F=document.getElementById("ftwF"),T=%s,k="arr",last=null;'
+          'function seg(){[].forEach.call(W.querySelectorAll(".sg button"),function(b){var o=b.getAttribute("data-k")===k;b.classList.toggle("on",o);b.setAttribute("aria-pressed",o?"true":"false")});'
+          'document.getElementById("ftwTl").firstChild.nodeValue=k==="arr"?T.tarr:T.tdep}'
+          'function open(){var c=document.querySelector("#rlch button.st");if(c)c.click();last=document.activeElement;W.hidden=false;document.documentElement.classList.add("ftwon");try{W.querySelector(".ftw-box .bk").focus({preventScroll:true})}catch(e){}}'
+          'function close(){W.hidden=true;document.documentElement.classList.remove("ftwon");if(location.hash==="#book")try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}'
+          'try{last&&last.focus({preventScroll:true})}catch(e){}}'
+          '[].forEach.call(document.querySelectorAll("[data-ftw]"),function(b){b.addEventListener("click",function(ev){ev.preventDefault();open()})});'
+          '[].forEach.call(W.querySelectorAll("[data-x]"),function(b){b.addEventListener("click",close)});'
+          'document.addEventListener("keydown",function(ev){if(ev.key==="Escape"&&!W.hidden)close()});'
+          '[].forEach.call(W.querySelectorAll(".sg button"),function(b){b.addEventListener("click",function(){k=b.getAttribute("data-k");seg()})});'
+          'F.addEventListener("submit",function(ev){ev.preventDefault();var g=function(n){return (F.elements[n].value||"").trim()},er=W.querySelector(".er");'
+          'if(!g("date")){er.textContent=T.need;F.elements.date.focus();return}er.textContent="";'
+          'var d=g("date").split("-"),ds=d.length===3?d[2]+"/"+d[1]+"/"+d[0]:g("date"),L=[T.m0,"",'
+          '"• "+(k==="arr"?T.arr:T.dep)+" · "+g("air"),"• "+T.date+T.sp+ds+(g("time")?" "+T.at+" "+g("time"):"")];'
+          'if(g("flight"))L.push("• "+T.fl+T.sp+g("flight").toUpperCase());L.push("• "+T.pax+T.sp+g("pax"));'
+          'L.push("• "+T.car+T.sp+(F.elements.car.checked?T.yes:T.no));if(g("sign"))L.push("• "+T.sign+T.sp+g("sign"));'
+          'window.open("https://wa.me/33667099494?text="+encodeURIComponent(L.join("\\n")),"_blank","noopener")});'
+          'seg();function auto(){if(location.hash==="#book"||location.hash==="#reserver")open()}'
+          'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",auto);else auto()})();'
+          % json.dumps({x: w[x] for x in ('tarr', 'tdep', 'need', 'm0', 'arr', 'dep', 'date', 'fl', 'pax', 'car', 'sign', 'yes', 'no', 'at', 'sp')}, ensure_ascii=False).replace('</', '<\\/'))
+    return ('<div class="ftw" id="ftw" hidden><div class="ftw-bg" data-x></div>'
+            '<div class="ftw-box" role="dialog" aria-modal="true" aria-labelledby="ftwT">'
+            '<button type="button" class="ftw-x" data-x aria-label="%s">×</button><p class="ftw-k">✦ Fast Track VIP</p><h2 id="ftwT">%s</h2>'
+            '<a class="bk" href="https://booking.rafai-limousine.com/" target="_blank" rel="noopener">%s →</a><p class="ftw-h">%s</p>'
+            '<p class="ftw-or">%s</p><form id="ftwF" novalidate>'
+            '<div class="sg" role="group"><button type="button" data-k="arr">%s</button><button type="button" data-k="dep">%s</button></div>'
+            '<label>%s<select name="air">%s</select></label>'
+            '<div class="r2"><label>%s<input type="date" name="date"></label><label id="ftwTl">%s<input type="time" name="time"></label></div>'
+            '<div class="r2"><label>%s<input name="flight" autocomplete="off" autocapitalize="characters" placeholder="AF 1231"></label><label>%s<select name="pax">%s</select></label></div>'
+            '<label class="ck"><input type="checkbox" name="car" checked>%s</label>'
+            '<label>%s<input name="sign" autocomplete="name"></label>'
+            '<button class="bk wa" type="submit">%s →</button><p class="er" role="alert"></p><p class="nt">%s</p></form></div></div>'
+            '<script>%s</script>'
+            % (e(w['x']), e(w['h']), e(w['on']), e(w['onh']), e(w['or']), e(w['arr']), e(w['dep']), e(w['air']), opts, e(w['date']), e(w['tarr']),
+               e(w['fl']), e(w['pax']), pax, e(w['car']), e(w['sign']), e(w['send']), e(w['note']), js))
+def vip_page(lg):
+    p, src = VIP_TXT[lg]; ui = VIP_UI[lg]; e = html.escape
+    lines = [l.rstrip() for l in io.open(os.path.join(HERE, src), encoding='utf-8').read().split('\n')]
+    n_end = lines.index('@end')
+    body, endl = lines[:n_end], [l.strip() for l in lines[n_end + 1:] if l.strip()]
+    h1 = next(l[2:].strip() for l in body if l.startswith('# '))
+    lead = next((l[2:].strip() for l in body if l.startswith('> ')), '')
+    out, ul, sec, faq, cur = [], [], False, [], None
+    def flush():
+        if ul:
+            out.append('<ul>%s</ul>' % ''.join('<li>%s</li>' % svc_link(x) for x in ul)); del ul[:]
+    for l in body:
+        s = l.strip()
+        if not s or s.startswith('# ') or s.startswith('> '):
+            continue
+        if s.startswith('* '):
+            ul.append(s[2:])
+            if cur is not None: cur[1].append(s[2:])
+            continue
+        flush()
+        if s.startswith('## '):
+            if sec: out.append('</section>')
+            out.append('<section class="q"><h2>%s</h2>' % e(s[3:])); sec = True
+            cur = [s[3:], []]; faq.append(cur)
+        elif s.startswith('### '):
+            out.append('<h3>%s</h3>' % e(s[4:]))
+        elif s.startswith('! '):
+            out.append('<p class="fine">%s</p>' % svc_link(s[2:]))
+        else:
+            out.append('<p>%s</p>' % svc_link(s))
+            if cur is not None: cur[1].append(s)
+    flush()
+    if sec: out.append('</section>')
+    et = next((l[3:] for l in endl if l.startswith('## ')), '')
+    ep = [l for l in endl if not l.startswith('## ') and not l.startswith('~ ') and not RE_URL.search(l)]
+    em = next((l[2:] for l in endl if l.startswith('~ ')), '')
+    ec = ''.join('<span>%s</span>' % svc_link(l) for l in endl if RE_URL.search(l))
+    end = ('<div class="end"><p class="t">%s</p>%s<p class="cta" style="justify-content:center;margin-top:16px"><button class="bk" type="button" data-ftw>%s →</button></p>'
+           '<p class="m" style="margin:20px 0 0">%s</p><p class="c">%s</p></div>'
+           % (e(et), ''.join('<p class="x">%s</p>' % e(x) for x in ep), e(ui['b']), e(em), ec))
+    ld = {'@context': 'https://schema.org', '@type': 'Service', 'name': h1, 'serviceType': 'VIP Fast Track & Airport Meet and Assist', 'inLanguage': lg,
+          'provider': {'@type': 'LocalBusiness', 'name': 'Rafai Limousine', 'url': 'https://www.rafai-limousine.com/', 'telephone': '+33667099494'},
+          'areaServed': 'Paris', 'description': ui['desc']}
+    inner = (SVC_CSS + VIP_CSS + '<script type="application/ld+json">%s</script>' % json.dumps(ld, ensure_ascii=False).replace('</', '<\\/') +
+             '<main class="rlsv"><figure class="ph"><img src="%s" width="1448" height="1086" alt="%s" decoding="async" fetchpriority="high"></figure>'
+             '<div class="in"><p class="k">%s</p><h1>%s</h1><p class="lead">%s</p><p class="cta"><button class="bk" type="button" data-ftw>%s →</button>'
+             '<a class="gh" href="https://wa.me/33667099494" target="_blank" rel="noopener">%s</a></p>%s%s<p class="n">%s</p></div></main>'
+             % (VIP_IMG, e(ui['alt'], quote=True), e(ui['k']), e(h1), e(lead), e(ui['b']), e(ui['wa']), ''.join(out), end, e(ui['n'])) + vip_window(lg))
+    return h1, inner
+for lg in ('en', 'fr'):
+    p = VIP_TXT[lg][0]
+    h1, inner = vip_page(lg)
+    docs.append((p, lg, VIP_UI[lg]['title'], 'rlsvc rlvip', inner))
+    CFG.setdefault('titles', {})[p] = VIP_UI[lg]['title']
+    CFG['desc'][p] = VIP_UI[lg]['desc']
+    HERO[p] = VIP_IMG
+CFG['groups'].append([VIP_TXT['en'][0], VIP_TXT['fr'][0]])
+if not (_nav_add(CFG['nav'], '/corporate', {'t': 'VIP Fast Track', 'u': '/vip-fast-track'}) and _nav_add(CFG['nav'], '/fr/entreprises', {'t': 'Fast Track VIP', 'u': '/fr/fast-track-vip'})):
+    print('ARRET menu : Corporate introuvable'); sys.exit(1)
+print('onglet VIP Fast Track :', VIP_TXT['en'][0], VIP_TXT['fr'][0], VIP_IMG)
 
 # Onglet « Team » : l'image est remplacée par les vraies photos en arche avec contours dorés animés (comme l'accueil), sans Sabrina
 TV_CSS = '/* équipe : vraies photos en arche, contours dorés animés (demande de Yassine, 10 nov.) */\n@property --tva{syntax:\'<angle>\';inherits:false;initial-value:0deg}\n.tv{position:relative;max-width:780px;margin:34px auto 0;padding:34px 28px 30px;border-radius:28px;background:#0d0c0e;border:1px solid rgba(224,186,108,.38);box-shadow:0 30px 80px -24px rgba(0,0,0,.85);overflow:hidden;text-align:center}\n.tv:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 30%,rgba(224,186,108,.10),rgba(224,186,108,0) 70%);pointer-events:none}\n.tv .boss{position:relative;display:flex;align-items:center;justify-content:center;gap:28px;text-align:left}\n.tv .ar{--tva:0deg;position:relative;display:block;padding:3px;border-radius:50% 50% 12% 12% / 38% 38% 9% 9%;background:conic-gradient(from var(--tva),#6f5120,#b8873f 12%,#f6dfa4 22%,#fff6dc 26%,#E0BA6C 32%,#7a5a24 50%,#b8873f 68%,#f0d394 80%,#6f5120);animation:tvspin 4.5s linear infinite,tvglow 3s ease-in-out infinite}\n.tv .ar>span{display:block;overflow:hidden;border-radius:inherit;background:radial-gradient(ellipse 80% 70% at 50% 35%,#2a2622 0%,#141312 70%,#0e0d0c 100%)}\n.tv .ar img{display:block;width:100%;height:auto;aspect-ratio:150/198;object-fit:cover;object-position:50% 20%}\n.tv .boss .ar{width:210px;flex:none}\n.tv .boss .ar>span{background:#fff}\n.tv .who b{display:block;font-family:"Cormorant Garamond",Lora,Georgia,serif;font-size:36px;font-weight:600;line-height:1.1;color:var(--ink,#f3eee4)}\n.tv .who span{display:block;margin-top:8px;font-size:15px;font-weight:700;letter-spacing:.06em;color:#E0BA6C}\n.tv .mem{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:24px 20px;margin:32px auto 0;max-width:640px}\n.tv .m span.n{display:block;margin-top:9px;font-size:14.5px;font-weight:600;color:var(--ink,#f3eee4)}\n.tv .m:nth-child(2) .ar{animation-delay:-.55s,-.4s}.tv .m:nth-child(3) .ar{animation-delay:-1.1s,-.8s}.tv .m:nth-child(4) .ar{animation-delay:-1.65s,-1.2s}\n.tv .m:nth-child(5) .ar{animation-delay:-2.2s,-1.6s}.tv .m:nth-child(6) .ar{animation-delay:-2.75s,-2s}.tv .m:nth-child(7) .ar{animation-delay:-3.3s,-2.4s}.tv .m:nth-child(8) .ar{animation-delay:-3.85s,-2.8s}\n@keyframes tvspin{to{--tva:360deg}}\n@keyframes tvglow{0%,100%{box-shadow:0 10px 26px rgba(0,0,0,.55),0 0 0 rgba(224,186,108,0)}50%{box-shadow:0 10px 26px rgba(0,0,0,.55),0 0 22px rgba(224,186,108,.35)}}\n@media (max-width:640px){.tv{padding:24px 14px 22px;border-radius:22px}.tv .boss{gap:16px}.tv .boss .ar{width:140px}.tv .who b{font-size:27px}.tv .who span{font-size:13px}.tv .mem{gap:16px 10px;margin-top:24px}.tv .m span.n{font-size:12.5px}}\n@media (prefers-reduced-motion:reduce){.tv .ar{animation:none}}\n'
