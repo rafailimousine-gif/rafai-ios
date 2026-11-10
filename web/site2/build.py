@@ -54,7 +54,7 @@ def webp(raw, key, maxw=1600):
         im = im.convert('RGBA' if alpha else 'RGB')
         if im.width > maxw:
             im = im.resize((maxw, round(im.height * maxw / im.width)), Image.LANCZOS)
-        name = sha(raw) + '.webp'
+        name = (sha(raw) if maxw == 1600 else sha(raw + b'|%d' % maxw)) + '.webp'  # une taille = un nom de fichier
         im.save(OUT + '/img/' + name, 'WEBP', quality=80, method=6)
     except Exception:
         ext = 'svg' if raw[:200].lstrip()[:4] in (b'<svg', b'<?xm') else 'bin'
@@ -649,7 +649,7 @@ def lift_img(n):
         f = os.path.join(LIFT_DIR, 'img', n + '.png')  # logos et portraits détourés (tm-*) en PNG
         if not os.path.exists(f):
             f = os.path.join(LIFT_DIR, 'img', n + '.jpg')
-        LIMG[n] = webp(open(f, 'rb').read(), 'lift-' + n, maxw=1920 if n == 'hero' else 1600)
+        LIMG[n] = webp(open(f, 'rb').read(), 'lift-' + n, maxw=1920 if n == 'hero' else (1080 if n.startswith('team-') else 900))
     return LIMG[n]
 def css_blocks(css):
     out, i, n = [], 0, len(css)
@@ -674,6 +674,11 @@ _blk = css_blocks(io.open(os.path.join(HERE, 'site.css.add'), encoding='utf-8').
 _sel = [b for b in _blk if re.search(r'rly|rlch|rlwave|rlring', b) and not b.startswith('@keyframes')]
 _anim = set(re.findall(r'animation(?:-name)?:\s*([A-Za-z][\w-]*)', '\n'.join(_sel)))
 LIFT_CSS = '\n'.join(_sel + [b for b in _blk if b.startswith('@keyframes') and b.split()[1].split('{')[0] in _anim])
+# photo du haut pour téléphone : 1080 px de large, beaucoup plus légère
+def _hero_m():
+    raw = open(os.path.join(LIFT_DIR, 'img', 'hero.jpg'), 'rb').read()
+    return webp(raw, 'lift-hero-m', maxw=1080)
+HERO_M = _hero_m()
 LFONTS = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap'
 # Shopping (10 nov. 2026, demande de Yassine) : photos libres de droits de Wikimedia Commons, retouchées (recadrage, tons chauds),
 # avec le nom de l'auteur et la licence sous les cartes. Si une photo ne se télécharge pas, la carte garde l'icône dorée.
@@ -716,7 +721,7 @@ def shop_photos():
             ImageDraw.Draw(vg).ellipse((-150, -120, 1350, 870), fill=255); vg = vg.filter(ImageFilter.GaussianBlur(120))
             im = Image.composite(im, ImageEnhance.Brightness(im).enhance(.72), vg)
             b2 = io.BytesIO(); im.save(b2, 'JPEG', quality=90)
-            SHOP_IMG[k] = webp(b2.getvalue(), 'shop-' + k, maxw=1200)
+            SHOP_IMG[k] = webp(b2.getvalue(), 'shop-' + k, maxw=900)
         except Exception as e:
             print('shopping : photo absente', k, str(e)[:80])
     print('shopping : photos', len(SHOP_IMG), '/', len(SHOP))
@@ -765,6 +770,13 @@ def lift_page(p, lg):
         el['decoding'] = 'async'
         if not set(el.get('class') or []) & {'logo-light', 'logo-dark'}:
             el['loading'] = 'lazy'
+        src = el.get('src') or ''
+        if not (el.get('width') and el.get('height')) and src.startswith('/img/') and os.path.exists(OUT + src):
+            try:
+                with Image.open(OUT + src) as _im:
+                    el['width'], el['height'] = str(_im.width), str(_im.height)
+            except Exception:
+                pass
     return '<style>' + LIFT_CSS + '</style>' + str(s)
 for i, (p, lg, title, cls, inner) in enumerate(docs):
     if p in LIFT_PAGES:
@@ -1130,8 +1142,11 @@ for p, lg, title, cls, inner in docs:
             '<link rel="stylesheet" href="/css/site.css">']
     lifted = p in LIFT_PAGES
     if lifted:
-        head[-2] = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s">' % LFONTS
-        head[-1] = '<link rel="preload" as="image" href="%s" fetchpriority="high">' % LIMG['hero']
+        head[-2] = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+                    '<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'"><noscript><link rel="stylesheet" href="%s"></noscript>' % (LFONTS, LFONTS))
+        head[-1] = ('<link rel="preload" as="image" href="%s" media="(min-width:641px)" fetchpriority="high">'
+                    '<link rel="preload" as="image" href="%s" media="(max-width:640px)" fetchpriority="high">'
+                    '<style>@media (max-width:640px){.hero-bg{--hero:url(%s)!important}}</style>' % (LIMG['hero'], HERO_M, HERO_M))
     hp = None if lifted else HERO.get(p)
     if hp and hp.endswith('.webp') and os.path.exists(OUT + hp):
         mp = hero_m(hp)

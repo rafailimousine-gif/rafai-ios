@@ -83,7 +83,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .hero{position:relative;overflow:hidden;isolation:isolate;color:#fff;background:#0b0b0c;padding-block:calc(112px + env(safe-area-inset-top, 0px)) 36px;min-height:clamp(720px,94vh,920px);display:flex;flex-direction:column}
 .hero-bg{position:absolute;inset:0;z-index:-1;--hero:url(%%IMG:hero%%)}
 .hero-bg .blur{display:none}
-.hero-bg .full{position:absolute;inset:0;background:var(--hero) center 30%/cover no-repeat;animation:rl-fade 1.4s .1s ease both}
+.hero-bg .full{position:absolute;inset:0;background:var(--hero) center 30%/cover no-repeat}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.15) 34%,rgba(0,0,0,.08) 60%,rgba(0,0,0,.72) 100%)}
 @keyframes rl-fade{from{opacity:0}to{opacity:1}}
 .hero-inner{flex:1;display:flex;flex-direction:column;width:100%}
@@ -132,7 +132,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .feats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:left}
 .feat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 20px 22px}
 .feat svg{color:var(--ink)}
-.feat h3{font-size:16px;font-weight:700;margin:14px 0 6px}
+.feat h3,.feat h2{font-size:16px;font-weight:700;margin:14px 0 6px}
 .feat p{margin:0;font-size:14px;color:var(--muted);line-height:1.55}
 
 /* Services */
@@ -168,8 +168,8 @@ h2{font-weight:600;font-size:clamp(36px,4.2vw,54px);letter-spacing:0;line-height
 .gal-h h3{font-size:34px;font-weight:600}
 .group-h h3{font-size:28px;font-weight:600}
 .villages .vt h3{font-size:30px;font-weight:600;line-height:1.1}
-.eyebrow,.hero .tag,.stat > span,.fcol h4{font-family:var(--sans)}
-.svc h3,.feat h3,.dest b,.route b{letter-spacing:.005em}
+.eyebrow,.hero .tag,.stat > span,.fcol h3.fh4{font-family:var(--sans)}
+.svc h3,.feat h3,.feat h2,.dest b,.route b{letter-spacing:.005em}
 
 /* Rolling stats */
 .stat b{font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1}
@@ -264,7 +264,7 @@ footer{background:var(--brand-2);color:var(--on-dark-muted);border-top:2px solid
 .fbrand p{margin:16px 0 0;max-width:34ch;line-height:1.6}
 .fbrand .contact{margin-top:20px;color:#fff}
 .fbrand .contact span{display:block;color:var(--on-dark-muted);font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
-.fcol h4{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--on-dark-muted);font-weight:600;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid #2a2a2a}
+.fcol h3.fh4{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--on-dark-muted);font-weight:600;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid #2a2a2a}
 .fcol ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
 .fcol a{text-decoration:none;color:var(--on-dark)}
 .fcol a:hover{color:var(--gold)}
@@ -373,7 +373,7 @@ h2{color:var(--ink)}
 .team .note{color:var(--muted)}
 footer{background:#070708;color:var(--text);border-top:2px solid var(--gold)}
 .fbrand p,.fbrand .contact,.fbrand .contact span{color:var(--text)}
-.fcol h4{color:var(--muted);border-bottom-color:var(--line)}
+.fcol h3.fh4{color:var(--muted);border-bottom-color:var(--line)}
 .fcol a,.fbottom a{color:var(--ink)}
 .fcol a:hover,.fbottom a:hover{color:#E0BA6C}
 .fbottom{border-top-color:var(--line);color:var(--muted)}
@@ -505,6 +505,10 @@ footer{background:#070708;color:var(--text);border-top:2px solid var(--gold)}
 
 .shopcred{margin:10px 0 0;font-size:11px;line-height:1.5;color:#7d786e}.shopcred:empty{display:none}.shopcred a{color:#9a9488}
 
+/* texte lu par les lecteurs d'écran et Google, invisible à l'écran */
+.vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.feat h2{font-family:inherit}
+
 /* --- site en ligne --- */
 .appbar{background:#070708;color:#d9d3c7;font-size:12.5px;line-height:1.3;border-bottom:1px solid rgba(224,186,108,.25)}
 .appbar .wrap{display:flex;align-items:center;justify-content:center;gap:10px;min-height:32px;padding-block:4px;text-align:center}
@@ -625,10 +629,10 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
       <div class="stat"><b data-en="Fixed">Fixe</b><span data-en="Price confirmed before the ride">Prix confirmé avant la course</span></div>
     </div>
     <div class="feats">
-      <div class="feat"><svg class="i" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/></svg><h3 data-en="Reliability">Fiabilité</h3><p data-en="Flights tracked in real time, a name sign at arrivals and one hour of waiting included at the airport.">Vols suivis en temps réel, pancarte à votre nom à l’arrivée et une heure d’attente offerte à l’aéroport.</p></div>
-      <div class="feat"><svg class="i" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg><h3 data-en="Premium fleet">Flotte premium</h3><p data-en="Mercedes S-Class, E-Class and V-Class, and Range Rover. Recent and spotless.">Mercedes Classe S, Classe E, Classe V et Range Rover. Récentes et impeccables.</p></div>
-      <div class="feat"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><h3 data-en="Professional chauffeurs">Chauffeurs professionnels</h3><p data-en="Chauffeurs in suits, discreet and bound by confidentiality, who know every route in Paris.">Chauffeurs en costume, discrets et tenus à la confidentialité, qui connaissent chaque itinéraire de Paris.</p></div>
-      <div class="feat"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><h3 data-en="Transparent pricing">Prix transparents</h3><p data-en="A fixed price confirmed before the ride, with no surcharge added afterwards. Invoices in your company’s name.">Un prix fixe confirmé avant la course, sans supplément ajouté ensuite. Factures au nom de votre société.</p></div>
+      <div class="feat"><svg class="i" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/></svg><h2 class="fh" data-en="Reliability">Fiabilité</h2><p data-en="Flights tracked in real time, a name sign at arrivals and one hour of waiting included at the airport.">Vols suivis en temps réel, pancarte à votre nom à l’arrivée et une heure d’attente offerte à l’aéroport.</p></div>
+      <div class="feat"><svg class="i" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg><h2 class="fh" data-en="Premium fleet">Flotte premium</h2><p data-en="Mercedes S-Class, E-Class and V-Class, and Range Rover. Recent and spotless.">Mercedes Classe S, Classe E, Classe V et Range Rover. Récentes et impeccables.</p></div>
+      <div class="feat"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><h2 class="fh" data-en="Professional chauffeurs">Chauffeurs professionnels</h2><p data-en="Chauffeurs in suits, discreet and bound by confidentiality, who know every route in Paris.">Chauffeurs en costume, discrets et tenus à la confidentialité, qui connaissent chaque itinéraire de Paris.</p></div>
+      <div class="feat"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><h2 class="fh" data-en="Transparent pricing">Prix transparents</h2><p data-en="A fixed price confirmed before the ride, with no surcharge added afterwards. Invoices in your company’s name.">Un prix fixe confirmé avant la course, sans supplément ajouté ensuite. Factures au nom de votre société.</p></div>
     </div>
   </div>
 </section>
@@ -638,11 +642,11 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
     <h2 data-en="Our Services">Nos services</h2>
     <p class="sub" data-en="From airport transfers to a full day around the châteaux, the same care on every ride.">Du transfert aéroport à la journée entière autour des châteaux, le même soin à chaque course.</p>
     <div class="svc-grid">
-      <article class="svc"><img src="%%IMG:u-s-paris%%" alt="Mercedes Classe S devant les Invalides"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg><span data-en="Airport &amp; Station Transfers">Aéroports &amp; gares</span></h3><p data-en="CDG, Orly, Le Bourget and the Paris stations. Flight tracking and a name sign at arrivals.">CDG, Orly, Le Bourget et les gares parisiennes. Suivi du vol et pancarte à votre nom à l’arrivée.</p><a class="link" href="%%U:airport%%"><span data-en="Learn more">En savoir plus</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
-      <article class="svc"><img src="%%IMG:u-v-giverny%%" alt="Mercedes Classe V à Giverny"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span data-en="City-to-City">Ville à ville</span></h3><p data-en="Paris to Reims, Tours or the south of France. Fixed price and door-to-door comfort.">Paris vers Reims, Tours ou le sud de la France. Prix fixe et confort de porte à porte.</p><a class="link" href="#trajets"><span data-en="Learn more">En savoir plus</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
-      <article class="svc"><img src="%%IMG:invalides%%" alt="Pont Alexandre III et les Invalides"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span data-en="Private Tours">Visites privées</span></h3><p data-en="Paris by car at your own pace: monuments, museums, Montmartre, and the châteaux beyond.">Paris en voiture à votre rythme : monuments, musées, Montmartre, puis les châteaux autour.</p><a class="link" href="#decouvrir"><span data-en="Learn more">En savoir plus</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
-      <article class="svc"><img src="%%IMG:u-couple%%" alt="Mariés devant une Mercedes Classe S décorée"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/></svg><span data-en="Events &amp; Weddings">Événements &amp; mariages</span></h3><p data-en="Fashion Week, galas and weddings. Timing, coordinated vehicles and calm on the day.">Fashion Week, galas et mariages. Horaires tenus, véhicules coordonnés et sérénité le jour J.</p><a class="link" href="%%U:weddings%%"><span data-en="Learn more">En savoir plus</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
-      <article class="svc"><img src="%%IMG:u-range-eiffel%%" alt="Range Rover noir face à la tour Eiffel"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-en="Hourly Chauffeur">Chauffeur à l’heure</span></h3><p data-en="A chauffeur at your disposal for meetings, roadshows, shopping or a full day in Paris.">Un chauffeur à votre disposition pour vos rendez-vous, roadshows, shopping ou une journée à Paris.</p><a class="link" href="%%U:hourly%%"><span data-en="Learn more">En savoir plus</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
+      <article class="svc"><img src="%%IMG:u-s-paris%%" alt="Mercedes Classe S devant les Invalides"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg><span data-en="Airport &amp; Station Transfers">Aéroports &amp; gares</span></h3><p data-en="CDG, Orly, Le Bourget and the Paris stations. Flight tracking and a name sign at arrivals.">CDG, Orly, Le Bourget et les gares parisiennes. Suivi du vol et pancarte à votre nom à l’arrivée.</p><a class="link" href="%%U:airport%%"><span data-en="Learn more">En savoir plus</span><span class="vh" data-en=": Airport &amp; Station Transfers">: Aéroports &amp; gares</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
+      <article class="svc"><img src="%%IMG:u-v-giverny%%" alt="Mercedes Classe V à Giverny"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span data-en="City-to-City">Ville à ville</span></h3><p data-en="Paris to Reims, Tours or the south of France. Fixed price and door-to-door comfort.">Paris vers Reims, Tours ou le sud de la France. Prix fixe et confort de porte à porte.</p><a class="link" href="#trajets"><span data-en="Learn more">En savoir plus</span><span class="vh" data-en=": City-to-City">: Ville à ville</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
+      <article class="svc"><img src="%%IMG:invalides%%" alt="Pont Alexandre III et les Invalides"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span data-en="Private Tours">Visites privées</span></h3><p data-en="Paris by car at your own pace: monuments, museums, Montmartre, and the châteaux beyond.">Paris en voiture à votre rythme : monuments, musées, Montmartre, puis les châteaux autour.</p><a class="link" href="#decouvrir"><span data-en="Learn more">En savoir plus</span><span class="vh" data-en=": Private Tours">: Visites privées</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
+      <article class="svc"><img src="%%IMG:u-couple%%" alt="Mariés devant une Mercedes Classe S décorée"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/></svg><span data-en="Events &amp; Weddings">Événements &amp; mariages</span></h3><p data-en="Fashion Week, galas and weddings. Timing, coordinated vehicles and calm on the day.">Fashion Week, galas et mariages. Horaires tenus, véhicules coordonnés et sérénité le jour J.</p><a class="link" href="%%U:weddings%%"><span data-en="Learn more">En savoir plus</span><span class="vh" data-en=": Events &amp; Weddings">: Événements &amp; mariages</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
+      <article class="svc"><img src="%%IMG:u-range-eiffel%%" alt="Range Rover noir face à la tour Eiffel"><div class="body"><h3><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-en="Hourly Chauffeur">Chauffeur à l’heure</span></h3><p data-en="A chauffeur at your disposal for meetings, roadshows, shopping or a full day in Paris.">Un chauffeur à votre disposition pour vos rendez-vous, roadshows, shopping ou une journée à Paris.</p><a class="link" href="%%U:hourly%%"><span data-en="Learn more">En savoir plus</span><span class="vh" data-en=": Hourly Chauffeur">: Chauffeur à l’heure</span><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div></article>
     </div>
     <div class="duo">
       <div class="hl light"><div class="t"><svg class="i" viewBox="0 0 24 24"><path d="M2 22h20"/><path d="M3.8 13.3 6 14l3.3-1 3.9 7.8 2-.6-1.6-8.7 4.3-1.3c1.2-.4 2-1.6 1.6-2.8-.4-1.2-1.6-1.8-2.8-1.5L6.3 9.5 4 7.4l-1.6.5 1.4 5.4Z"/></svg><div><h3 data-en="Le Bourget · Private jets">Le Bourget · Jets privés</h3><p data-en="Meet and greet at the business aviation terminals, the car waiting on arrival.">Accueil aux terminaux d’aviation d’affaires, la voiture vous attend à l’arrivée.</p></div></div><a class="btn btn-dark" href="https://booking.rafai-limousine.com/" data-en="Book a transfer">Réserver un transfert</a></div>
@@ -791,7 +795,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
         <div class="contact"><span data-en="Phone &amp; WhatsApp, 24/7">Téléphone &amp; WhatsApp, 24 h/24</span><a href="tel:+33667099494">+33 6 67 09 94 94</a><br><a href="mailto:contact@rafai-limousine.com">contact@rafai-limousine.com</a></div>
         <p class="fapps"><a href="https://apps.apple.com/fr/app/rafai-limousine/id6829341896" target="_blank" rel="noopener">App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.rafailimousine.client" target="_blank" rel="noopener">Google Play</a></p>
       </div>
-      <div class="fcol"><h4>Services</h4><ul>
+      <div class="fcol"><h3 class="fh4">Services</h3><ul>
         <li><a href="%%U:airport%%" data-en="Airport transfers">Transferts aéroports</a></li>
         <li><a href="%%U:business%%" data-en="Business travel">Voyages d’affaires</a></li>
         <li><a href="%%U:hourly%%" data-en="Hourly chauffeur">Chauffeur à l’heure</a></li>
@@ -800,7 +804,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
         <li><a href="https://booking.rafai-limousine.com/" data-en="Le Bourget · private jets">Le Bourget · jets privés</a></li>
         <li><a href="https://booking.rafai-limousine.com/">Fast Track VIP</a></li>
       </ul></div>
-      <div class="fcol"><h4 data-en="Destinations">Destinations</h4><ul>
+      <div class="fcol"><h3 class="fh4" data-en="Destinations">Destinations</h3><ul>
         <li><a href="#decouvrir" data-en="Eiffel Tower">Tour Eiffel</a></li>
         <li><a href="#decouvrir" data-en="Louvre Museum">Musée du Louvre</a></li>
         <li><a href="#decouvrir" data-en="Musée d’Orsay">Musée d’Orsay</a></li>
@@ -809,7 +813,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
         <li><a href="#escapades">Fontainebleau</a></li>
         <li><a href="#escapades">Chantilly</a></li>
       </ul></div>
-      <div class="fcol"><h4>Rafai Limousine</h4><ul>
+      <div class="fcol"><h3 class="fh4">Rafai Limousine</h3><ul>
         <li><a href="%%U:fleet%%" data-en="Our fleet">Notre flotte</a></li>
         <li><a href="%%U:team%%" data-en="Our team">L’équipe</a></li>
         <li><a href="%%U:about%%" data-en="About us">À propos</a></li>
@@ -916,7 +920,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
       if(!inp) return;
       var ul=document.createElement('ul'); ul.className='ac'; ul.hidden=true; ul.setAttribute('role','listbox'); ul.id=inp.id+'Ac'; document.body.appendChild(ul);
       inp.setAttribute('role','combobox'); inp.setAttribute('aria-autocomplete','list'); inp.setAttribute('aria-controls',ul.id); inp.setAttribute('aria-expanded','false');
-      var gm=document.createElement('a'); gm.className='gmap'; gm.target='_blank'; gm.rel='noopener'; gm.hidden=true; gm.textContent=en?'Check on Google Maps ↗':'Vérifier sur Google Maps ↗';
+      var gm=document.createElement('a'); gm.className='gmap'; gm.href='https://www.google.com/maps'; gm.target='_blank'; gm.rel='noopener'; gm.hidden=true; gm.textContent=en?'Check on Google Maps ↗':'Vérifier sur Google Maps ↗';
       inp.parentNode.appendChild(gm);
       var items=[], cur=-1, timer=null, seq=0;
       function place(){ var r=inp.parentNode.getBoundingClientRect(); var w=Math.max(r.width,300); ul.style.left=Math.max(8,Math.min(r.left,window.innerWidth-w-8))+'px'; ul.style.width=Math.min(w,window.innerWidth-16)+'px';
@@ -1051,7 +1055,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
     var H=1.6, OFF=0.25;
     var nums=[].slice.call(document.querySelectorAll('.stat b')).filter(function(b){return /[0-9]/.test(b.textContent)});
     nums.forEach(function(b){
-      var txt=b.textContent; b.setAttribute('aria-label',txt); b.setAttribute('data-num','1'); var html='';
+      var txt=b.textContent; b.setAttribute('data-num','1'); var html='<span class="vh">'+txt+'</span>';
       for(var i=0;i<txt.length;i++){
         var c=txt[i];
         if(/[0-9]/.test(c)){ var s=''; for(var k=0;k<20;k++){s+='<i>'+(k%10)+'</i>'} html+='<span class="dg" aria-hidden="true"><span class="strip" data-d="'+c+'" style="transform:translateY(-'+((10+Number(c))*H+OFF)+'em)">'+s+'</span></span>'; }
