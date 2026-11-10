@@ -86,8 +86,7 @@
       document.body.appendChild(fr);
       fit();
     }
-    /* Ouverture automatique : 15 s après l'arrivée, une seule fois par visite,
-       sauf si le visiteur a déjà touché à la réservation (ou à un autre bloc) ou ouvert l'agent */
+    /* (ancienne ouverture automatique 15 s après l'arrivée : désactivée, voir plus bas) */
     var auto = null, fini = false;
     try { fini = sessionStorage.getItem('rl_yauto') === '1'; } catch (e) {}
     function stop() {
@@ -115,7 +114,7 @@
     document.addEventListener('click', function (e) {
       if (e.target.closest && e.target.closest('a[href*="booking.rafai-limousine.com"]')) stop();
     }, true);
-    arme(15000);
+    /* plus d'ouverture automatique (10 nov. 2026, demande de Yassine) : l'agent reste fermé, il s'ouvre seulement quand le client clique dessus */
     fab.addEventListener('click', function () { stop(); ouvre(); });
     if (tz) tz.addEventListener('click', function () { stop(); ouvre(); });
     if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
