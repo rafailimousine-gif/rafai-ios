@@ -13,6 +13,15 @@ BASE = 'https://www.rafai-limousine.com'
 TEST = '--prod' not in sys.argv
 CFG = json.load(io.open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pages.json'), encoding='utf-8'))
 PAGES = CFG['pages']
+# Pages chinoises et arabes retirées (10 nov. 2026, demande de Yassine) : plus construites ni dans les menus ;
+# les anciennes adresses /zh et /ar renvoient vers l'accueil (redirections dans www.sh)
+def _zhar(u):
+    return bool(re.match(r'/(zh|ar)(/|$)', u or ''))
+PAGES[:] = [p for p in PAGES if not _zhar(p)]
+CFG['nav'][:] = [i for i in CFG['nav'] if not _zhar(i.get('u'))]
+for _g in CFG['groups']:
+    _g[:] = [q for q in _g if not _zhar(q)]
+CFG['groups'][:] = [g for g in CFG['groups'] if len(g) > 1]
 # « Lifting Rafai Limousine » (10 nov. 2026, demande de Yassine) : nouvelle page d'accueil en anglais (/home) et en français (/fr).
 # Le bloc de réservation de Google Sites (prix, étapes, paiement), l'agent IA et l'écran appli restent les mêmes.
 LIFT_PAGES = {'/home': 'en', '/fr': 'fr'}
@@ -640,7 +649,7 @@ LURL = {'services': ('/services', '/fr/services'), 'fleet': ('/fleet', '/fr/flot
         'weddings': ('/services/weddings-events', '/fr/services/mariages-evenements'),
         'hourly': ('/services/hourly-hire', '/fr/services/mise-a-disposition'),
         'corporate': ('/corporate', '/fr/entreprises'), 'vip': ('/vip-fast-track', '/fr/fast-track-vip')}
-for _u in [u for v in LURL.values() for u in v] + ['/cgv', '/confidentialite', '/mentions-legales', '/zh', '/ar']:
+for _u in [u for v in LURL.values() for u in v] + ['/cgv', '/confidentialite', '/mentions-legales']:
     if _u not in PAGES and _u not in ('/team', '/fr/equipe', '/corporate', '/fr/entreprises', '/vip-fast-track', '/fr/fast-track-vip'):
         print('ARRET lifting : page inconnue', _u); sys.exit(1)
 LIMG = {}
@@ -1299,6 +1308,12 @@ for l, tag in (('en', 'en'), ('fr', 'fr'), ('zh', 'zh-CN'), ('ar', 'ar')):
     io.open(OUT + '/e/agent-%s-%s.html' % (l, YV), 'w', encoding='utf-8').write(
         yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1))
 open(OUT + '/img/logo.png', 'wb').write(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo.png'), 'rb').read())
+# image de partage (aperçu du lien dans WhatsApp, Facebook…) : la photo du haut de l'accueil en 1200 × 630 (10 nov. 2026, demande de Yassine)
+_oi = Image.open(os.path.join(LIFT_DIR, 'img', 'hero.jpg')).convert('RGB'); _w, _h = _oi.size; _th = min(_h, round(_w / 1.905)); _t = (_h - _th) // 2
+_oi = _oi.crop((0, _t, _w, _t + _th)).resize((1200, 630), Image.LANCZOS)
+_ob = io.BytesIO(); _oi.save(_ob, 'JPEG', quality=86, optimize=True, progressive=True)
+OG = '/img/og-%s.jpg' % sha(_ob.getvalue())[:10]
+open(OUT + OG, 'wb').write(_ob.getvalue())
 # photo de la petite fenêtre « ouvrir l'application » (nouvelle photo paysage)
 open(OUT + '/img/rlch-3.webp', 'wb').write(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'rlch-3.webp'), 'rb').read())
 for _, _, _, _, inner in docs:
@@ -1341,7 +1356,7 @@ for p, lg, title, cls, inner in docs:
             '<link rel="canonical" href="%s">' % canon, '<meta property="og:title" content="%s">' % html.escape(title, quote=True),
             '<meta property="og:type" content="website"><meta property="og:url" content="%s">' % canon,
             '<meta property="og:description" content="%s">' % html.escape(d, quote=True),
-            '<meta property="og:image" content="%s/img/og.jpg">' % BASE, '<link rel="icon" href="/img/logo.png">',
+            '<meta property="og:image" content="%s%s"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">' % (BASE, OG), '<link rel="icon" href="/img/logo.png">',
             '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s" media="print" onload="this.media=\'all\'">' % fonts,
             '<link rel="stylesheet" href="/css/site.css">']
     lifted = p in LIFT_PAGES

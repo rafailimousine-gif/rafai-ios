@@ -14,6 +14,8 @@ python3 -c "import bs4, PIL" 2>/dev/null || pip3 install --user --quiet beautifu
 [ -x ~/site-www/tools/node_modules/.bin/purgecss ] || npm i --silent --prefix ~/site-www/tools purgecss@6 >/dev/null 2>&1
 cd ~/site-www
 rm -rf public/e public/css
+# pages chinoises et arabes retirées (10 nov. 2026) : anciens fichiers effacés, adresses redirigées vers l'accueil
+rm -rf public/zh public/ar public/zh.html public/ar.html
 python3 src/build.py "${2:-}"
 tools/node_modules/.bin/purgecss --css atari.css --content 'public/**/*.html' --output public/css/ >/dev/null
 cat public/css/atari.css src/site.css.add > public/css/site.css && rm public/css/atari.css
@@ -29,6 +31,7 @@ im.save('public/img/rlch-2.webp', 'WEBP', quality=66, method=6)"
 cat > firebase.json <<J
 {"hosting":{"target":"www","public":"public","cleanUrls":true,"trailingSlash":false,
 "rewrites":[{"source":"/","destination":"/home.html"}],
+"redirects":[{"source":"/zh","destination":"/","type":301},{"source":"/zh/**","destination":"/","type":301},{"source":"/ar","destination":"/","type":301},{"source":"/ar/**","destination":"/","type":301}],
 "headers":[{"source":"/img/**","headers":[{"key":"Cache-Control","value":"public,max-age=31536000,immutable"}]},
 {"source":"/e/**","headers":[{"key":"Cache-Control","value":"public,max-age=3600"}]},
 {"source":"/css/**","headers":[{"key":"Cache-Control","value":"public,max-age=31536000,immutable"}]},
