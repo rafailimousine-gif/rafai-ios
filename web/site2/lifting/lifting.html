@@ -295,7 +295,9 @@ footer{background:var(--brand-2);color:var(--on-dark-muted);border-top:2px solid
   .villages img{max-height:280px}
   .fgrid{grid-template-columns:1fr 1fr}
   .fbrand{grid-column:1/-1}
-  .signin span{display:none}
+  .signin span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .signin{width:38px;height:38px;justify-content:center;border:1px solid rgba(224,186,108,.55);border-radius:50%;color:#E0BA6C}
+  .signin svg{width:19px;height:19px}
 }
 @media (max-width:640px){
   .hdr .bar{height:58px}
@@ -303,7 +305,9 @@ footer{background:var(--brand-2);color:var(--on-dark-muted);border-top:2px solid
   .logo img{height:40px}
   .mark small{font-size:8px;letter-spacing:.36em}
   .lang span.cur{display:none}
-  .signin{display:none}
+  .hdr .right{gap:8px}
+  .signin{width:36px;height:36px;flex:none}
+  .signin svg{width:18px;height:18px}
   .hdr .book{padding:8px 12px;font-size:13px}
   .tabs{overflow-x:auto;max-width:100%}
   .tab{padding:7px 11px;font-size:13px}
