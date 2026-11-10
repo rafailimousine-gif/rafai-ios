@@ -644,7 +644,15 @@ for _u in [u for v in LURL.values() for u in v] + ['/cgv', '/confidentialite', '
     if _u not in PAGES and _u not in ('/team', '/fr/equipe', '/corporate', '/fr/entreprises'):
         print('ARRET lifting : page inconnue', _u); sys.exit(1)
 LIMG = {}
+LSMALL = {}  # grande version -> petite version (téléphones)
 def lift_img(n):
+    if n not in LIMG and n not in ('hero',) and not n.startswith(('logo-', 'team-')):
+        f0 = os.path.join(LIFT_DIR, 'img', n + '.png')
+        f0 = f0 if os.path.exists(f0) else os.path.join(LIFT_DIR, 'img', n + '.jpg')
+        if os.path.exists(f0) and not n.startswith('tm-'):
+            _raw = open(f0, 'rb').read()
+            big = webp(_raw, 'lift-' + n, maxw=900)
+            LSMALL[big] = webp(_raw, 'lift-s-' + n, maxw=480)
     if n not in LIMG:
         f = os.path.join(LIFT_DIR, 'img', n + '.png')  # logos et portraits détourés (tm-*) en PNG
         if not os.path.exists(f):
@@ -674,11 +682,36 @@ _blk = css_blocks(io.open(os.path.join(HERE, 'site.css.add'), encoding='utf-8').
 _sel = [b for b in _blk if re.search(r'rly|rlch|rlwave|rlring', b) and not b.startswith('@keyframes')]
 _anim = set(re.findall(r'animation(?:-name)?:\s*([A-Za-z][\w-]*)', '\n'.join(_sel)))
 LIFT_CSS = '\n'.join(_sel + [b for b in _blk if b.startswith('@keyframes') and b.split()[1].split('{')[0] in _anim])
+# polices de l'accueil hébergées sur le site (plus de feuille Google qui bloque l'affichage) ; préchargées et en « optional »
+# pour que le texte ne bouge pas quand la police arrive (score Google PageSpeed). Si le téléchargement échoue, on garde Google Fonts.
+def self_fonts():
+    try:
+        css = get(LFONTS).decode('utf-8')
+        out, pre, seen = [], [], {}
+        for sub, block in re.findall(r'/\*\s*([a-z-]+)\s*\*/\s*(@font-face\s*\{[^}]*\})', css):
+            if sub not in ('latin', 'latin-ext'):
+                continue
+            u = re.search(r'url\((https://fonts\.gstatic\.com/[^)]+?\.woff2)\)', block).group(1)
+            if u not in seen:
+                raw = get(u)
+                seen[u] = '/img/f-%s.woff2' % sha(raw)
+                open(OUT + seen[u], 'wb').write(raw)
+            block = block.replace(u, seen[u]).replace('font-display: swap', 'font-display: optional')
+            out.append(block)
+            fam = re.search(r"font-family:\s*'([^']+)'", block).group(1); sty = re.search(r'font-style:\s*(\w+)', block).group(1)
+            if sub == 'latin' and (fam, sty) not in [x[0] for x in pre]:
+                pre.append(((fam, sty), seen[u]))
+        print('polices accueil :', len(seen), 'fichiers')
+        return ''.join(out), [p for _, p in pre]
+    except Exception as e:
+        print('polices accueil : Google Fonts gardé', str(e)[:60])
+        return None, []
 # photo du haut pour téléphone : 1080 px de large, beaucoup plus légère
 def _hero_m():
     raw = open(os.path.join(LIFT_DIR, 'img', 'hero.jpg'), 'rb').read()
-    return webp(raw, 'lift-hero-m', maxw=1080)
+    return webp(raw, 'lift-hero-m', maxw=828)
 HERO_M = _hero_m()
+FONT_CSS, FONT_PRE = self_fonts()
 LFONTS = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap'
 # Shopping (10 nov. 2026, demande de Yassine) : photos libres de droits de Wikimedia Commons, retouchées (recadrage, tons chauds),
 # avec le nom de l'auteur et la licence sous les cartes. Si une photo ne se télécharge pas, la carte garde l'icône dorée.
@@ -771,6 +804,9 @@ def lift_page(p, lg):
         if not set(el.get('class') or []) & {'logo-light', 'logo-dark'}:
             el['loading'] = 'lazy'
         src = el.get('src') or ''
+        if src in LSMALL and not el.get('srcset'):
+            el['srcset'] = '%s 480w, %s 900w' % (LSMALL[src], src)
+            el['sizes'] = '(max-width: 640px) 86vw, 420px'
         if not (el.get('width') and el.get('height')) and src.startswith('/img/') and os.path.exists(OUT + src):
             try:
                 with Image.open(OUT + src) as _im:
@@ -1142,8 +1178,11 @@ for p, lg, title, cls, inner in docs:
             '<link rel="stylesheet" href="/css/site.css">']
     lifted = p in LIFT_PAGES
     if lifted:
-        head[-2] = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-                    '<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'"><noscript><link rel="stylesheet" href="%s"></noscript>' % (LFONTS, LFONTS))
+        if FONT_CSS:
+            head[-2] = ''.join('<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin>' % u for u in FONT_PRE) + '<style>%s</style>' % FONT_CSS
+        else:
+            head[-2] = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+                        '<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'"><noscript><link rel="stylesheet" href="%s"></noscript>' % (LFONTS, LFONTS))
         head[-1] = ('<link rel="preload" as="image" href="%s" media="(min-width:641px)" fetchpriority="high">'
                     '<link rel="preload" as="image" href="%s" media="(max-width:640px)" fetchpriority="high">'
                     '<style>@media (max-width:640px){.hero-bg{--hero:url(%s)!important}}</style>' % (LIMG['hero'], HERO_M, HERO_M))

@@ -137,7 +137,7 @@
     document.head.appendChild(s);
   }
   ['pointerdown', 'keydown', 'scroll'].forEach(function (e) { addEventListener(e, go, { once: true, passive: true }); });
-  setTimeout(go, 3500);
+  setTimeout(go, 8000);
 })();
 /* Petite fenêtre en bas sur téléphone (le site reste visible) : ouvrir l'appli (App Store sur iPhone, Google Play sur Android), lien ou × pour rester sur le site.
    Une fois par visite. Test : ?appchoix=ios ou ?appchoix=android */
