@@ -430,7 +430,7 @@ footer{background:#070708;color:var(--text);border-top:2px solid var(--gold)}
 /* téléphone uniquement : les cartes défilent sur le côté avec des points (comme la référence) */
 .dots{display:none}
 @media (max-width:640px){
-  .car-x{display:flex!important;grid-template-columns:none!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px!important;padding:4px 16px 8px;margin-left:-16px;margin-right:-16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  .car-x{display:flex!important;grid-template-columns:none!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px!important;padding:4px 16px 8px;margin-left:-16px;margin-right:-16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;position:relative}
   .car-x::-webkit-scrollbar{display:none}
   .car-x>*{flex:0 0 84%;scroll-snap-align:center;min-width:0}
   .dest-grid.car-x>*{flex-basis:72%}
@@ -510,6 +510,7 @@ footer{background:#070708;color:var(--text);border-top:2px solid var(--gold)}
 .shopcred{margin:10px 0 0;font-size:11px;line-height:1.5;color:#7d786e}.shopcred:empty{display:none}.shopcred a{color:#9a9488}
 
 /* texte lu par les lecteurs d'écran et Google, invisible à l'écran */
+body{overflow-x:clip}
 .vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .feat h2{font-family:inherit}
 
@@ -560,7 +561,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
     <a class="logo" href="#top" aria-label="Rafai Limousine"><span class="lg-anim lg-h" style="--lg:url(%%PNG:light%%)"><img class="logo-light" src="%%PNG:light%%" alt="Rafai Limousine"><img class="logo-dark" src="%%PNG:dark%%" alt=""></span></a>
     <div class="right">
       <a class="btn book" href="https://booking.rafai-limousine.com/" data-en="Book Now">Réserver</a>
-      <a class="signin" href="https://booking.rafai-limousine.com" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span data-en="My account">Espace client</span></a>
+      <a class="signin" href="https://booking.rafai-limousine.com/#login" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span data-en="My account">Espace client</span></a>
     </div>
   </div>
 </header>
@@ -823,7 +824,7 @@ footer .contact a{color:var(--ink);text-decoration:none;font-weight:600}
         <li><a href="%%U:team%%" data-en="Our team">L’équipe</a></li>
         <li><a href="%%U:about%%" data-en="About us">À propos</a></li>
         <li><a href="%%U:contact%%">Contact</a></li>
-        <li><a href="https://booking.rafai-limousine.com" target="_blank" rel="noopener" data-en="My account">Espace client</a></li>
+        <li><a href="https://booking.rafai-limousine.com/#login" target="_blank" rel="noopener" data-en="My account">Espace client</a></li>
       </ul></div>
     </div>
     <nav class="flegal" aria-label="Informations légales">
