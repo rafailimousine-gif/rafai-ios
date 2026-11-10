@@ -401,7 +401,7 @@ for p in PAGES:
             continue
         n += 1
         src = embed(e['data-code'])
-        if p in LIFT_PAGES and '<div class="photo">' in e['data-code'] and 'id="s1"' in e['data-code']:
+        if p in LIFT_PAGES and 'id="trip"' in e['data-code'] and 'id="from"' in e['data-code']:
             # le bloc « téléphone » se vide sur ordinateur (<plaintext>) : on garde celui qui marche partout
             (BOOKM if '<plaintext' in e['data-code'] else BOOK).setdefault(p, src)
         ttl = (e.find('iframe') or {}).get('title', '') if e.find('iframe') else ''
