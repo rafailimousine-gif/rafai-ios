@@ -139,7 +139,7 @@
   ['pointerdown', 'keydown', 'scroll'].forEach(function (e) { addEventListener(e, go, { once: true, passive: true }); });
   setTimeout(go, 3500);
 })();
-/* Écran plein écran sur téléphone : ouvrir l'appli (App Store sur iPhone, Google Play sur Android), petit lien pour rester sur le site.
+/* Petite fenêtre en bas sur téléphone (le site reste visible) : ouvrir l'appli (App Store sur iPhone, Google Play sur Android), lien ou × pour rester sur le site.
    Une fois par visite. Test : ?appchoix=ios ou ?appchoix=android */
 (function () {
   var AS = 'https://apps.apple.com/fr/app/rafai-limousine/id6829341896';
@@ -151,21 +151,22 @@
   if (!ios && !and) return;
   if (!f) { try { if (sessionStorage.getItem(K)) return; } catch (e) {} }
   var TX = {
-    fr: ['Votre chauffeur privé à Paris', 'Réservez en quelques secondes, prix fixe annoncé à l’avance, suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Rester sur le site', ['Gratuit sur l’App Store', 'Gratuit sur Google Play']],
-    en: ['Your private chauffeur in Paris', 'Book in seconds, fixed price upfront, follow your chauffeur live.', 'Open the app', 'Stay on the website', ['Free on the App Store', 'Free on Google Play']],
-    zh: ['您在巴黎的私人司机', '几秒钟完成预订，价格提前确定，实时查看您的司机。', '打开应用', '留在网站', ['免费下载 · App Store', '免费下载 · Google Play']],
-    ar: ['سائقك الخاص في باريس', 'احجز في ثوانٍ، سعر ثابت مسبقًا، وتابع سائقك مباشرة.', 'فتح التطبيق', 'البقاء على الموقع', ['مجاني على App Store', 'مجاني على Google Play']]
+    fr: ['Votre chauffeur privé à Paris', 'Réservez en quelques secondes, prix fixe annoncé à l’avance, suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Rester sur le site', ['Gratuit sur l’App Store', 'Gratuit sur Google Play'], 'Fermer'],
+    en: ['Your private chauffeur in Paris', 'Book in seconds, fixed price upfront, follow your chauffeur live.', 'Open the app', 'Stay on the website', ['Free on the App Store', 'Free on Google Play'], 'Close'],
+    zh: ['您在巴黎的私人司机', '几秒钟完成预订，价格提前确定，实时查看您的司机。', '打开应用', '留在网站', ['免费下载 · App Store', '免费下载 · Google Play'], '关闭'],
+    ar: ['سائقك الخاص في باريس', 'احجز في ثوانٍ، سعر ثابت مسبقًا، وتابع سائقك مباشرة.', 'فتح التطبيق', 'البقاء على الموقع', ['مجاني على App Store', 'مجاني على Google Play'], 'إغلاق']
   };
   var g = String(document.documentElement.lang || navigator.language || 'en').slice(0, 2).toLowerCase(), T = TX[g] || TX.en;
   var d = document, h = d.documentElement, p = d.createElement('div');
-  p.id = 'rlch'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'rlchT');
+  p.id = 'rlch'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-labelledby', 'rlchT');
   p.dir = g === 'ar' ? 'rtl' : 'ltr';
-  p.innerHTML = '<div class="tp"><span class="lg"><img src="/img/logo.png" alt="" width="72" height="72"></span><b>RAFAI LIMOUSINE</b></div>' +
-    '<div class="bt"><h2 id="rlchT"></h2><p></p><a class="go" target="_blank" rel="noopener"></a><small class="sto"></small>' +
+  p.innerHTML = '<button type="button" class="x">×</button><div class="ph"></div>' +
+    '<div class="bt"><div class="tp"><span class="lg"><img src="/img/logo.png" alt="" width="44" height="44"></span><b>RAFAI LIMOUSINE</b></div>' +
+    '<h2 id="rlchT"></h2><p></p><a class="go" target="_blank" rel="noopener"></a><small class="sto"></small>' +
     '<button type="button" class="st"></button></div>';
   p.querySelector('h2').textContent = T[0];
   p.querySelector('p').textContent = T[1];
-  var o = p.querySelector('a'), s = p.querySelector('button');
+  var o = p.querySelector('a.go'), s = p.querySelector('button.st');
   o.textContent = T[2]; o.href = ios ? AS : PL; s.textContent = T[3];
   p.querySelector('.sto').textContent = T[4][ios ? 0 : 1];
   function close() {
@@ -174,6 +175,7 @@
   }
   o.addEventListener('click', function () { setTimeout(close, 300); });
   s.addEventListener('click', close);
+  var x = p.querySelector('.x'); x.setAttribute('aria-label', T[5]); x.addEventListener('click', close);
   d.body.appendChild(p); h.classList.add('rlchon');
   try { o.focus({ preventScroll: true }); } catch (e) {}
 })();

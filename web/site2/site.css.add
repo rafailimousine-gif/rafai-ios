@@ -76,27 +76,29 @@ html,body{height:auto!important}
 .rlbook-duo>.rlbook{width:56%!important}
 .rlbook-duo>:not(.rlbook){width:44%!important}
 }
-#rlch{position:fixed;inset:0;z-index:2147483600;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;padding:calc(28px + env(safe-area-inset-top)) 24px calc(22px + env(safe-area-inset-bottom));--w:min(196vw,150vh);--t:calc(env(safe-area-inset-top) + 70px);background:linear-gradient(180deg,#0B0B0C 0,rgba(11,11,12,.3) 20%,rgba(11,11,12,.04) 42%,rgba(11,11,12,.5) 70%,#0B0B0C 100%) 0 var(--t)/100% calc(var(--w)*.5907 + 3px) no-repeat,#0B0B0C url(/img/rlch-2.webp) 0 var(--t)/calc(var(--w)*.52) auto no-repeat;color:#fff;font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:center;overflow:auto}
-#rlch:before{content:none}
-#rlch h2,#rlch p{text-shadow:0 2px 14px rgba(0,0,0,.75)}
-#rlch>div{position:relative;display:flex;flex-direction:column;align-items:center}
-#rlch .tp{gap:10px}
-#rlch .lg{position:relative;display:block;width:72px;height:72px;border-radius:17px;overflow:hidden;box-shadow:0 0 0 1px rgba(201,164,92,.5),0 8px 24px rgba(0,0,0,.4);animation:rlLgIn .9s cubic-bezier(.2,.8,.2,1) both}
-#rlch .lg img{display:block;width:72px;height:72px}
-#rlch .lg:after{content:"";position:absolute;top:-10%;bottom:-10%;left:0;width:55%;background:linear-gradient(100deg,rgba(255,236,190,0),rgba(255,236,190,.6),rgba(255,236,190,0));transform:translateX(-200%) skewX(-20deg);animation:rlLgShine 3.2s ease-in-out .9s infinite}
-#rlch .tp:before{content:"";position:absolute;top:0;left:50%;width:72px;height:72px;margin-left:-36px;border-radius:17px;box-shadow:0 0 0 1px rgba(231,194,122,.95),0 0 30px rgba(231,194,122,.5);opacity:0;animation:rlLgGlow 3.2s ease-in-out 1.2s infinite;pointer-events:none}
-#rlch .tp b{animation:rlLgTx 1s ease .35s both}
+/* écran appli sur téléphone : petite fenêtre noire et dorée en bas, le site reste visible derrière (demande de Yassine, 10 nov.) */
+#rlch{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:2147483600;box-sizing:border-box;max-width:400px;margin:0 auto;max-height:calc(100vh - 100px);overflow:auto;border-radius:22px;background:#0B0B0C;border:1px solid rgba(224,186,108,.6);box-shadow:0 18px 50px rgba(0,0,0,.55);color:#fff;font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:center;animation:rlchUp .55s cubic-bezier(.2,.8,.2,1) both}
+#rlch .ph{position:relative;height:clamp(130px,40vw,165px);background:#0B0B0C url(/img/rlch-3.webp) center 42%/cover no-repeat}
+#rlch .ph:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,0) 52%,#0B0B0C 100%)}
+#rlch button.x{position:absolute;top:10px;right:10px;z-index:2;width:34px;height:34px;padding:0;border-radius:50%;border:1px solid rgba(224,186,108,.7);background:rgba(11,11,12,.62);color:#E7C27A;font:400 24px/30px Manrope,Arial,sans-serif;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#rlch[dir=rtl] button.x{right:auto;left:10px}
+#rlch .bt{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:-26px;padding:0 20px 14px}
+#rlch .tp{position:relative;display:flex;align-items:center;gap:10px}
+#rlch .lg{position:relative;display:block;width:44px;height:44px;border-radius:11px;overflow:hidden;box-shadow:0 0 0 1px rgba(201,164,92,.6),0 6px 18px rgba(0,0,0,.5);animation:rlLgIn .9s cubic-bezier(.2,.8,.2,1) .3s both}
+#rlch .lg img{display:block;width:44px;height:44px}
+#rlch .lg:after{content:"";position:absolute;top:-10%;bottom:-10%;left:0;width:55%;background:linear-gradient(100deg,rgba(255,236,190,0),rgba(255,236,190,.6),rgba(255,236,190,0));transform:translateX(-200%) skewX(-20deg);animation:rlLgShine 3.2s ease-in-out 1.2s infinite}
+#rlch .tp:before{content:"";position:absolute;top:0;left:0;width:44px;height:44px;border-radius:11px;box-shadow:0 0 0 1px rgba(231,194,122,.95),0 0 22px rgba(231,194,122,.5);opacity:0;animation:rlLgGlow 3.2s ease-in-out 1.5s infinite;pointer-events:none}
+#rlch[dir=rtl] .tp:before{left:auto;right:0}
+#rlch .tp b{font-size:11px;letter-spacing:.3em;font-weight:800;color:#E7C27A;animation:rlLgTx 1s ease .55s both}
 @keyframes rlLgIn{0%{opacity:0;transform:scale(.5) rotate(-10deg)}60%{opacity:1;transform:scale(1.08) rotate(1deg)}100%{opacity:1;transform:none}}
 @keyframes rlLgShine{0%{transform:translateX(-200%) skewX(-20deg)}40%,100%{transform:translateX(260%) skewX(-20deg)}}
 @keyframes rlLgGlow{0%,100%{opacity:0}50%{opacity:1}}
 @keyframes rlLgTx{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){#rlch .lg,#rlch .lg:after,#rlch .tp:before,#rlch .tp b{animation:none}}
-#rlch .tp b{font-size:12px;letter-spacing:.32em;font-weight:800;color:#E7C27A}
-#rlch .bt{gap:12px;width:100%;max-width:420px;margin:0 auto}
-#rlch h2{margin:0;font-size:30px;line-height:1.15;font-weight:800;color:#fff}
-#rlch p{margin:0 0 10px;font-size:16px;line-height:1.5;color:rgba(255,255,255,.82)}
-#rlch a.go{display:block;width:100%;box-sizing:border-box;padding:18px 16px;border-radius:16px;background:linear-gradient(90deg,#E7C27A,#C79A4A);color:#16110A;font-size:18px;font-weight:800;text-decoration:none;box-shadow:0 10px 30px rgba(199,154,74,.35)}
-#rlch .sto{font-size:13px;color:rgba(255,255,255,.6)}
-#rlch button.st{margin-top:14px;padding:8px;border:0;background:none;color:rgba(255,255,255,.55);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
-html.rlchon,html.rlchon body{overflow:hidden}
+@keyframes rlchUp{0%{opacity:0;transform:translateY(46px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#rlch,#rlch .lg,#rlch .lg:after,#rlch .tp:before,#rlch .tp b{animation:none}}
+#rlch h2{margin:4px 0 0;font-size:21px;line-height:1.2;font-weight:800;color:#fff}
+#rlch p{margin:0 0 4px;font-size:14px;line-height:1.45;color:rgba(255,255,255,.78)}
+#rlch a.go{display:block;width:100%;box-sizing:border-box;padding:14px 16px;border-radius:14px;background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b8873f 100%);color:#16110A;font-size:16px;font-weight:800;text-decoration:none;box-shadow:0 8px 24px rgba(199,154,74,.3)}
+#rlch .sto{font-size:12px;color:rgba(255,255,255,.55)}
+#rlch button.st{padding:6px;border:0;background:none;color:rgba(224,186,108,.9);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
 html.rlchon #rlyfab,html.rlchon #rlytz{display:none}

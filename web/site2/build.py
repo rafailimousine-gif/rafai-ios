@@ -771,6 +771,8 @@ for l, tag in (('en', 'en'), ('fr', 'fr'), ('zh', 'zh-CN'), ('ar', 'ar')):
     io.open(OUT + '/e/agent-%s-%s.html' % (l, YV), 'w', encoding='utf-8').write(
         yc.replace("var L0='en'", "var L0='%s'" % l, 1).replace('<html lang="en">', '<html lang="%s">' % tag, 1))
 open(OUT + '/img/logo.png', 'wb').write(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo.png'), 'rb').read())
+# photo de la petite fenêtre « ouvrir l'application » (nouvelle photo paysage)
+open(OUT + '/img/rlch-3.webp', 'wb').write(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'rlch-3.webp'), 'rb').read())
 for _, _, _, _, inner in docs:
     m = re.search(r'<img[^>]*alt="Download on the App Store"[^>]*src="(/img/[^"]+)"', inner)
     if m and os.path.exists(OUT + m.group(1)):
