@@ -682,7 +682,7 @@ SHOP = [  # clé, fichier Commons, auteur, licence, lien licence, point de cadra
     ('printemps', 'Boulevard Haussmann - panoramio (2).jpg', 'Romāns Kolduns', 'CC BY 3.0', 'https://creativecommons.org/licenses/by/3.0/', (.5, .5)),
     ('bonmarche', 'Le Bon Marché, Paris 3 November 2008 - panoramio.jpg', 'hiro449944', 'CC BY 3.0', 'https://creativecommons.org/licenses/by/3.0/', (.5, .45)),
     ('montaigne', 'Avenue Montaigne - Paris - panoramio.jpg', 'Charles Lecompte', 'CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/', (.62, .5)),
-    ('sthonore', 'Boutique Azzaro rue du Faubourg-Saint-Honoré à Paris.JPG', 'Erwmat', 'CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/', (.66, .5)),
+    ('sthonore', 'Boutique Azzaro rue du Faubourg-Saint-Honoré à Paris.JPG', 'Erwmat', 'CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/', (.78, .5)),
     ('bhv', 'Bazar Hôtel Ville - Paris IV (FR75) - 2024-06-05 - 1.jpg', 'Chabe01', 'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/', (.5, .4)),
     ('vallee', 'Vallée Village (Serris) (2).jpg', 'Gzen92', 'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/', (.5, .5)),
 ]
