@@ -13,6 +13,10 @@ BASE = 'https://www.rafai-limousine.com'
 TEST = '--prod' not in sys.argv
 CFG = json.load(io.open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pages.json'), encoding='utf-8'))
 PAGES = CFG['pages']
+# « Lifting Rafai Limousine » (10 nov. 2026, demande de Yassine) : nouvelle page d'accueil en anglais (/home) et en français (/fr).
+# Le bloc de réservation de Google Sites (prix, étapes, paiement), l'agent IA et l'écran appli restent les mêmes.
+LIFT_PAGES = {'/home': 'en', '/fr': 'fr'}
+BOOK = {}
 UA = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36'}
 for d in (SRC, OUT + '/img', OUT + '/e', OUT + '/css'):
     os.makedirs(d, exist_ok=True)
@@ -396,6 +400,8 @@ for p in PAGES:
             continue
         n += 1
         src = embed(e['data-code'])
+        if p in LIFT_PAGES and '<div class="photo">' in e['data-code'] and 'id="s1"' in e['data-code']:
+            BOOK.setdefault(p, src)
         ttl = (e.find('iframe') or {}).get('title', '') if e.find('iframe') else ''
         # le bloc se charge juste après le premier affichage de la page (rl-site.js) : la page s'affiche plus vite
         new = s.new_tag('iframe', title='Rafai Limousine', scrolling='no', frameborder='0', allow='geolocation; clipboard-write')
@@ -501,6 +507,83 @@ for lg, x in TEAM_TX.items():
                 html.escape(x['c1']), x['cu'], html.escape(x['c2']), html.escape(x['n'])))
     docs.append((x['p'], lg, 'Team Rafai Limousine', '', inner))
 print('onglet Team :', ', '.join(x['p'] for x in TEAM_TX.values()))
+
+# « Lifting » : la page d'accueil /home (anglais) et /fr (français) sont remplacées par la nouvelle page (dossier lifting/).
+HERE = os.path.dirname(os.path.abspath(__file__))
+LIFT_DIR = os.path.join(HERE, 'lifting')
+LIFT_TPL = io.open(os.path.join(LIFT_DIR, 'lifting.html'), encoding='utf-8').read()
+LURL = {'services': ('/services', '/fr/services'), 'fleet': ('/fleet', '/fr/flotte'), 'team': ('/team', '/fr/equipe'),
+        'about': ('/about', '/fr/a-propos'), 'contact': ('/contact', '/fr/contact'),
+        'airport': ('/services/airport-transfers', '/fr/services/transferts-aeroport'),
+        'business': ('/services/business-travel', '/fr/services/voyages-affaires'),
+        'weddings': ('/services/weddings-events', '/fr/services/mariages-evenements'),
+        'hourly': ('/services/hourly-hire', '/fr/services/mise-a-disposition')}
+for _u in [u for v in LURL.values() for u in v] + ['/cgv', '/confidentialite', '/mentions-legales', '/zh', '/ar']:
+    if _u not in PAGES and _u not in ('/team', '/fr/equipe'):
+        print('ARRET lifting : page inconnue', _u); sys.exit(1)
+LIMG = {}
+def lift_img(n):
+    if n not in LIMG:
+        f = os.path.join(LIFT_DIR, 'img', n + ('.png' if n.startswith('logo-') else '.jpg'))
+        LIMG[n] = webp(open(f, 'rb').read(), 'lift-' + n, maxw=1600)
+    return LIMG[n]
+def css_blocks(css):
+    out, i, n = [], 0, len(css)
+    while i < n:
+        j = css.find('{', i)
+        if j < 0:
+            break
+        k, dep = j, 0
+        while k < n:
+            if css[k] == '{':
+                dep += 1
+            elif css[k] == '}':
+                dep -= 1
+                if dep == 0:
+                    break
+            k += 1
+        out.append(css[i:k + 1].strip())
+        i = k + 1
+    return out
+# la page n'utilise pas site.css (styles de Google Sites) : seulement les règles de l'agent IA et de l'écran appli
+_blk = css_blocks(io.open(os.path.join(HERE, 'site.css.add'), encoding='utf-8').read())
+_sel = [b for b in _blk if re.search(r'rly|rlch|rlwave|rlring', b) and not b.startswith('@keyframes')]
+_anim = set(re.findall(r'animation(?:-name)?:\s*([A-Za-z][\w-]*)', '\n'.join(_sel)))
+LIFT_CSS = '\n'.join(_sel + [b for b in _blk if b.startswith('@keyframes') and b.split()[1].split('{')[0] in _anim])
+LFONTS = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap'
+def lift_page(p, lg):
+    book = BOOK.get(p)
+    if not book:
+        print('ARRET lifting : bloc de reservation introuvable sur', p); sys.exit(1)
+    t = LIFT_TPL
+    t = re.sub(r'%%IMG:([a-z0-9-]+)%%', lambda m: lift_img(m.group(1)), t)
+    t = re.sub(r'%%PNG:(light|dark)%%', lambda m: lift_img('logo-' + m.group(1)), t)
+    t = re.sub(r'%%U:([a-z]+)%%', lambda m: LURL[m.group(1)][0 if lg == 'en' else 1], t)
+    t = t.replace('%%BOOK%%', '<iframe id="bookFrame" class="rlif" title="Rafai Limousine" scrolling="no" frameborder="0" '
+                  'allow="geolocation; clipboard-write" data-src="%s"></iframe>' % book)
+    if '%%' in t:
+        print('ARRET lifting : repere non remplace', re.findall(r'%%[^%]*%%', t)[:3]); sys.exit(1)
+    s = BeautifulSoup(t, 'html.parser')
+    for el in s.select('[data-en]'):
+        if lg == 'en':
+            v = el['data-en']
+            el.clear()
+            el.append(BeautifulSoup(v, 'html.parser'))
+        del el['data-en']
+    for el in s.find_all(True):
+        for a in [a for a in el.attrs if a.startswith('data-en-')]:
+            if lg == 'en':
+                el['placeholder' if a == 'data-en-ph' else 'data-' + a[8:]] = el[a]
+            del el[a]
+    for el in s.find_all('img'):
+        el['decoding'] = 'async'
+        if not set(el.get('class') or []) & {'logo-light', 'logo-dark'}:
+            el['loading'] = 'lazy'
+    return '<style>' + LIFT_CSS + '</style>' + str(s)
+for i, (p, lg, title, cls, inner) in enumerate(docs):
+    if p in LIFT_PAGES:
+        docs[i] = (p, lg, title, 'rllift', lift_page(p, LIFT_PAGES[p]))
+print('lifting :', ', '.join(LIFT_PAGES), '· bloc de reservation', BOOK, '· images', len(LIMG), '· styles agent', len(LIFT_CSS))
 
 # feuilles de style
 css = ''
@@ -716,7 +799,11 @@ for p, lg, title, cls, inner in docs:
             '<meta property="og:image" content="%s/img/og.jpg">' % BASE, '<link rel="icon" href="/img/logo.png">',
             '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s" media="print" onload="this.media=\'all\'">' % fonts,
             '<link rel="stylesheet" href="/css/site.css">']
-    hp = HERO.get(p)
+    lifted = p in LIFT_PAGES
+    if lifted:
+        head[-2] = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="%s">' % LFONTS
+        head[-1] = '<link rel="preload" as="image" href="%s" fetchpriority="high">' % LIMG['hero']
+    hp = None if lifted else HERO.get(p)
     if hp and hp.endswith('.webp') and os.path.exists(OUT + hp):
         mp = hero_m(hp)
         if mp:
@@ -737,7 +824,7 @@ for p, lg, title, cls, inner in docs:
     yb = ('<button type="button" id="rlyfab" aria-label="%s" data-src="/e/agent-%s-%s.html"><img src="%s" alt="" width="62" height="62"><span class="rlwave" aria-hidden="true">👋</span></button>'
           '<button type="button" id="rlytz"%s><b>%s</b><span>%s</span></button>'
           % (html.escape(y['a'], quote=True), lg, YV, AV, ' dir="rtl"' if lg == 'ar' else '', html.escape(y['t1']), html.escape(y['t2'])))
-    page = ''.join(head) + '<body class="%s">' % cls + header(p, lg) + inner + yb + '<script src="/css/site.js" defer></script></body></html>'
+    page = ''.join(head) + '<body class="%s">' % cls + ('' if lifted else header(p, lg)) + inner + yb + '<script src="/css/site.js" defer></script></body></html>'
     fn = OUT + ('/index.html' if False else p + '.html')
     os.makedirs(os.path.dirname(fn), exist_ok=True)
     io.open(fn, 'w', encoding='utf-8').write(page)
