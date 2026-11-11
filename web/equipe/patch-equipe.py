@@ -14,7 +14,8 @@ if len(pat.findall(s)) != 1:
     print('ARRET call() introuvable', len(pat.findall(s))); sys.exit(1)
 CALL = r'''function call(action,payload){return rlTeam.ready().then(function(t){return fetch(rlTeam.api+'?app=team',{method:'POST',body:JSON.stringify({a:action,p:payload||{},t:t})}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok)return j.r;if(j&&j.err==='auth'){rlTeam.forget();return call(action,payload)}throw new Error((j&&j.err)||'Erreur réseau')})}).catch(function(e){throw (e&&e.message)?e.message:String(e)})}'''
 s = pat.sub(lambda m: CALL, s)
-HEAD = r'''<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#0b0b0c">
+HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#0b0b0c">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Rafai Team"><link rel="apple-touch-icon" href="/icon-192.png"><link rel="icon" href="/icon-192.png">
 <style>
@@ -68,6 +69,7 @@ var rlTeam=(function(){
     logout:function(){ls(KT,null);location.reload()}};
 })();
 </script>'''.replace('__API__', api)
+if re.search(r'<meta[^>]+name=.viewport', s): HEAD = HEAD.split('\n', 1)[1]
 if '</head>' not in s:
     print('ARRET </head> absent'); sys.exit(1)
 s = s.replace('</head>', HEAD + '\n</head>', 1)
