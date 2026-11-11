@@ -122,10 +122,12 @@ function bilan() {
 var QUI = {
   FR: { aviation: 'votre société accueille régulièrement des passagers et des équipages à Paris', maritime: 'votre société fait régulièrement voyager des équipages et des clients par Paris',
         luxe: 'votre société reçoit régulièrement des clients et des invités à Paris', finance: 'votre société organise régulièrement des rendez-vous et des déplacements à Paris',
-        hotel: 'votre établissement accueille des clients qui ont souvent besoin d’un chauffeur à Paris' },
+        hotel: 'votre établissement accueille des clients qui ont souvent besoin d’un chauffeur à Paris',
+        voyage: 'votre agence envoie régulièrement des clients exigeants à Paris et en France' },
   EN: { aviation: 'your company regularly flies passengers and crews into Paris', maritime: 'your company regularly sends crews and guests through Paris',
         luxe: 'your company regularly welcomes clients and guests in Paris', finance: 'your company regularly organises meetings and executive travel in Paris',
-        hotel: 'your hotel welcomes guests who often need a chauffeur in Paris' }
+        hotel: 'your hotel welcomes guests who often need a chauffeur in Paris',
+        voyage: 'your agency regularly sends discerning clients to Paris and France' }
 };
 
 var LIGNE = {
@@ -134,14 +136,16 @@ var LIGNE = {
     maritime: 'les transferts de vos équipages et de vos clients entre Roissy-CDG, Orly, Le Bourget et Paris, à toute heure',
     luxe: "l'accueil et les déplacements de vos clients et invités à Paris (événements, défilés, rendez-vous, visites, shopping)",
     finance: 'les roadshows, rendez-vous investisseurs et déplacements de vos dirigeants à Paris, avec chauffeur à disposition à l’heure ou à la journée',
-    hotel: 'les transferts aéroport et le chauffeur à disposition pour vos clients, en complément de votre conciergerie'
+    hotel: 'les transferts aéroport et le chauffeur à disposition pour vos clients, en complément de votre conciergerie',
+    voyage: 'l’accueil à l’aéroport, le chauffeur à disposition et les excursions privées (Versailles, Giverny…) pour vos clients à Paris'
   },
   EN: {
     aviation: 'transfers for your passengers and crews between Paris Le Bourget, Charles de Gaulle (CDG), Orly and central Paris, at any hour',
     maritime: 'transfers for your crews and guests between Paris Charles de Gaulle (CDG), Orly, Le Bourget and central Paris, at any hour',
     luxe: 'meet & greet and chauffeur services for your clients and guests in Paris (events, shows, appointments, viewings, shopping)',
     finance: 'roadshows, investor meetings and executive travel in Paris, with a chauffeur at your disposal by the hour or by the day',
-    hotel: 'airport transfers and chauffeurs at disposal for your guests in Paris'
+    hotel: 'airport transfers and chauffeurs at disposal for your guests in Paris',
+    voyage: 'airport meet & greet, chauffeurs at disposal and private day trips (Versailles, Giverny…) for your clients in Paris'
   }
 };
 

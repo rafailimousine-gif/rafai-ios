@@ -210,3 +210,30 @@ hotel|hotel-de-nell.com|Hôtel de Nell
 hotel|hotelvillamadame.com|Villa Madame
 hotel|lesbainsparis.com|Les Bains
 hotel|hotelamastan.com|Hôtel Amastan
+voyage|artisansofleisure.com|Artisans of Leisure
+voyage|smartflyer.com|Smartflyer
+voyage|foratravel.com|Fora Travel
+voyage|scottdunn.com|Scott Dunn
+voyage|butterfield.com|Butterfield & Robinson
+voyage|giftedtravelnetwork.com|Gifted Travel Network
+voyage|indagare.com|Indagare
+voyage|blacktomato.com|Black Tomato
+voyage|abercrombiekent.com|Abercrombie & Kent
+voyage|embarkbeyond.com|Embark Beyond
+voyage|vwti.com|Valerie Wilson Travel
+voyage|brownelltravel.com|Brownell Travel
+voyage|protravelinc.com|Protravel International
+voyage|tzell.com|Tzell Travel Group
+voyage|traveledge.com|Travel Edge
+voyage|exeterinternational.com|Exeter International
+voyage|altour.com|Altour
+voyage|ovationtravel.com|Ovation Travel Group
+voyage|frosch.com|Frosch
+voyage|andrewharper.com|Andrew Harper
+voyage|kerdowney.com|Ker & Downey
+voyage|frenchsidetravel.com|French Side Travel
+voyage|exclusive-france-tours.com|Exclusive France Tours
+voyage|ghardytours.com|G. Hardy Tours
+voyage|contexttravel.com|Context Travel
+voyage|parisperfect.com|Paris Perfect
+voyage|parispropertygroup.com|Paris Property Group
