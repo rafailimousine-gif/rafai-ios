@@ -216,7 +216,7 @@ function envoyerLot() {
     if (String(v[i][6]).trim().toUpperCase() !== 'OUI' || !mail || v[i][7] || deja[mail] || EXCLUS.test(mail + ' ' + v[i][1])) continue;
     var t = texte_(v[i][0], v[i][1], v[i][3]);
     try {
-      GmailApp.sendEmail(mail, t.sujet, t.texte, { htmlBody: t.html, name: 'Yassine Rafaï – Rafai Limousine', replyTo: REPLY });
+      MailApp.sendEmail(mail, t.sujet, t.texte, { htmlBody: t.html, name: 'Yassine Rafaï – Rafai Limousine', replyTo: REPLY });
       sh.getRange(i + 1, 8, 1, 2).setValues([[new Date(), 'envoyé']]);
       deja[mail] = 1; n++;
     } catch (e) { sh.getRange(i + 1, 9).setValue('erreur : ' + e.message); }
