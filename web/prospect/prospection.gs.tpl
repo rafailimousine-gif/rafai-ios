@@ -383,3 +383,12 @@ function envoyerCarmel() {
     { name: 'Yassine Rafaï – Rafai Limousine', replyTo: REPLY });
   Logger.log('envoyé à Carmel (service client, pour le service des affiliés)');
 }
+
+/* 11 nov. 2026 : APE validée par Yassine (« Oui ») ; CNN (health@) écartée : rubrique santé, pas une adresse pour les équipes */
+var PRESSE_OUI = [296];
+function validerPresse() {
+  var sh = ss_().getSheetByName(FEUILLE);
+  sh.getRange(285, 9).setValue('écartée : seule adresse = rubrique santé de CNN');
+  PRESSE_OUI.forEach(function (r) { if (/presse|media/.test(String(sh.getRange(+r, 1).getValue())) && sh.getRange(+r, 5).getValue()) sh.getRange(+r, 7).setValue('OUI'); });
+  Logger.log('presse validée : ' + PRESSE_OUI.length);
+}
