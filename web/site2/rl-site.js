@@ -138,45 +138,131 @@
   ['pointerdown', 'keydown', 'scroll'].forEach(function (e) { addEventListener(e, go, { once: true, passive: true }); });
   setTimeout(go, 8000);
 })();
-/* Petite fenêtre en bas sur téléphone (le site reste visible) : ouvrir l'appli (App Store sur iPhone, Google Play sur Android), lien ou × pour rester sur le site.
-   Une fois par visite. Test : ?appchoix=ios ou ?appchoix=android */
+/* Fenêtre « -10 % sur votre première course » (11 nov. 2026, demande de Yassine) : remplace la fenêtre « Ouvrir l'application ».
+   Le visiteur donne prénom, nom, e-mail et téléphone → e-mail « Validez votre adresse » ; le lien de l'e-mail revient sur le site
+   (?rlpromo=…) : adresse validée, code personnel RL10-XXXXX affiché (et envoyé par e-mail), bouton vers la réservation avec le code rempli.
+   Une fois par visite, jamais dans l'appli, plus du tout une fois inscrit sur ce navigateur. Test : ?promo=1 */
 (function () {
+  var API = 'https://script.google.com/macros/s/AKfycbwrVkg7W2mb0onawqUJdwA4f-5LWAEvcDkEfpwtg-LWuD7TX5NlBClvSfbxx7WiipW5/exec';
+  var BOOK = 'https://booking.rafai-limousine.com/';
   var AS = 'https://apps.apple.com/fr/app/rafai-limousine/id6829341896';
   var PL = 'https://play.google.com/store/apps/details?id=com.rafailimousine.client';
-  var K = 'rl_app_choix_v2', ua = navigator.userAgent || '', f = '';
-  try { f = (location.search.match(/[?&]appchoix=(ios|android)/) || [])[1] || ''; } catch (e) {}
-  var ios = f === 'ios' || (!f && (/iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)));
-  var and = f === 'android' || (!f && /Android/.test(ua));
-  if (!ios && !and) return;
-  if (!f) { try { if (sessionStorage.getItem(K)) return; } catch (e) {} }
+  var d = document, h = d.documentElement, w = window, ua = navigator.userAgent || '';
+  if (w.__rlNative || /RafaiApp\//.test(ua)) return;
+  var qs = location.search || '', tok = (qs.match(/[?&]rlpromo=([a-f0-9]{32,40})/i) || [])[1] || '', force = /[?&]promo=1(&|$)/.test(qs);
+  var K = 'rl_promo_v1', KD = 'rl_promo_done';
+  function st(o, k, v) { try { var x = w[o]; if (v === undefined) return x.getItem(k); x.setItem(k, v); } catch (e) {} return null; }
+  if (!tok && !force && (st('localStorage', KD) || st('sessionStorage', K))) return;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), and = /Android/.test(ua);
+  var g = String(h.lang || navigator.language || 'en').slice(0, 2).toLowerCase() === 'fr' ? 'fr' : 'en';
   var TX = {
-    fr: ['Votre chauffeur privé à Paris', 'Réservez en quelques secondes, prix fixe annoncé à l’avance, suivez votre chauffeur en direct.', 'Ouvrir l’application', 'Rester sur le site', ['Gratuit sur l’App Store', 'Gratuit sur Google Play'], 'Fermer'],
-    en: ['Your private chauffeur in Paris', 'Book in seconds, fixed price upfront, follow your chauffeur live.', 'Open the app', 'Stay on the website', ['Free on the App Store', 'Free on Google Play'], 'Close'],
-    zh: ['您在巴黎的私人司机', '几秒钟完成预订，价格提前确定，实时查看您的司机。', '打开应用', '留在网站', ['免费下载 · App Store', '免费下载 · Google Play'], '关闭'],
-    ar: ['سائقك الخاص في باريس', 'احجز في ثوانٍ، سعر ثابت مسبقًا، وتابع سائقك مباشرة.', 'فتح التطبيق', 'البقاء على الموقع', ['مجاني على App Store', 'مجاني على Google Play'], 'إغلاق']
-  };
-  var g = String(document.documentElement.lang || navigator.language || 'en').slice(0, 2).toLowerCase(), T = TX[g] || TX.en;
-  var d = document, h = d.documentElement, p = d.createElement('div');
-  p.id = 'rlch'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-labelledby', 'rlchT');
-  p.dir = g === 'ar' ? 'rtl' : 'ltr';
-  p.innerHTML = '<button type="button" class="x">×</button><div class="ph"></div>' +
-    '<div class="bt"><div class="tp"><span class="lg"><img src="/img/logo.png" alt="" width="44" height="44"></span><b>RAFAI LIMOUSINE</b></div>' +
-    '<h2 id="rlchT"></h2><p></p><a class="go" target="_blank" rel="noopener"></a><small class="sto"></small>' +
-    '<button type="button" class="st"></button></div>';
-  p.querySelector('h2').textContent = T[0];
-  p.querySelector('p').textContent = T[1];
-  var o = p.querySelector('a.go'), s = p.querySelector('button.st');
-  o.textContent = T[2]; o.href = ios ? AS : PL; s.textContent = T[3];
-  p.querySelector('.sto').textContent = T[4][ios ? 0 : 1];
+    fr: { t: 'sur votre première course', s: 'Inscrivez-vous en 30 secondes : nous vous envoyons votre code personnel par e-mail.',
+      fn: 'Prénom', ln: 'Nom', e: 'E-mail', tel: 'Téléphone', opt: 'Recevoir nos offres par e-mail (désinscription à tout moment)',
+      go: 'Recevoir mon code -10 %', later: 'Plus tard', legal: 'Vos informations servent à vous envoyer votre code et à gérer vos réservations.', priv: 'Confidentialité',
+      app: 'Ou téléchargez l’appli gratuite', wait: 'Envoi…',
+      sentT: 'Vérifiez votre boîte mail', sentP: 'Nous avons envoyé un lien à {e}. Cliquez dessus pour valider votre adresse : votre code -10 % s’affichera aussitôt.',
+      sentN: 'Pas reçu ? Regardez dans les courriers indésirables.', againT: 'Code renvoyé', againP: 'Votre code -10 % vous a été renvoyé par e-mail à {e}.',
+      okT: 'Adresse validée', okP: 'Votre code personnel : -10 % sur votre première course', copy: 'Copier', copied: 'Copié ✓', book: 'Réserver avec -10 %',
+      okN: 'Le code vous a aussi été envoyé par e-mail. Valable une seule fois.', usedP: 'Ce code a déjà été utilisé pour une réservation.', close: 'Fermer',
+      err: { client: 'Cette offre est réservée aux nouveaux clients. Merci de votre fidélité !', deja: 'Un code a déjà été envoyé pour ce numéro de téléphone.',
+        utilise: 'Votre code a déjà été utilisé.', quota: 'Trop de demandes : réessayez dans une heure.', champs: 'Merci de remplir tous les champs.',
+        email: 'Adresse e-mail non valable.', jeton: 'Ce lien n’est pas valable. Réessayez depuis le site.', serveur: 'Une erreur est survenue, réessayez.' } },
+    en: { t: 'off your first ride', s: 'Sign up in 30 seconds: we will e-mail you your personal code.',
+      fn: 'First name', ln: 'Last name', e: 'E-mail', tel: 'Phone', opt: 'Send me offers by e-mail (unsubscribe anytime)',
+      go: 'Get my 10% off code', later: 'Not now', legal: 'Your details are only used to send your code and manage your bookings.', priv: 'Privacy',
+      app: 'Or get the free app', wait: 'Sending…',
+      sentT: 'Check your inbox', sentP: 'We sent a link to {e}. Click it to confirm your e-mail: your 10% off code will appear right away.',
+      sentN: 'Nothing yet? Check your spam folder.', againT: 'Code sent again', againP: 'Your 10% off code was sent again to {e}.',
+      okT: 'E-mail confirmed', okP: 'Your personal code: 10% off your first ride', copy: 'Copy', copied: 'Copied ✓', book: 'Book with 10% off',
+      okN: 'We also sent the code by e-mail. Single use.', usedP: 'This code has already been used for a booking.', close: 'Close',
+      err: { client: 'This offer is for new customers. Thank you for riding with us again!', deja: 'A code was already sent for this phone number.',
+        utilise: 'Your code has already been used.', quota: 'Too many requests: please try again in an hour.', champs: 'Please fill in all the fields.',
+        email: 'This e-mail address is not valid.', jeton: 'This link is not valid. Please try again from the website.', serveur: 'Something went wrong, please try again.' } }
+  }, T = TX[g];
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var p, body;
   function close() {
-    p.remove(); h.classList.remove('rlchon');
-    try { sessionStorage.setItem(K, '1'); } catch (e) {}
+    if (p) p.remove(); h.classList.remove('rlchon');
+    st('sessionStorage', K, '1');
   }
-  o.addEventListener('click', function () { setTimeout(close, 300); });
-  s.addEventListener('click', close);
-  var x = p.querySelector('.x'); x.setAttribute('aria-label', T[5]); x.addEventListener('click', close);
-  d.body.appendChild(p); h.classList.add('rlchon');
-  try { o.focus({ preventScroll: true }); } catch (e) {}
+  function shell() {
+    p = d.createElement('div');
+    p.id = 'rlch'; p.className = 'rlpm'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-labelledby', 'rlchT');
+    p.innerHTML = '<button type="button" class="x" aria-label="' + esc(T.close) + '">×</button><div class="ph"></div>' +
+      '<div class="bt"><div class="tp"><span class="lg"><img src="/img/logo.png" alt="" width="44" height="44"></span><b>RAFAI LIMOUSINE</b></div><div class="bd"></div></div>';
+    body = p.querySelector('.bd');
+    p.querySelector('.x').addEventListener('click', close);
+    d.body.appendChild(p); h.classList.add('rlchon');
+  }
+  function later() { return '<button type="button" class="st">' + esc(T.later) + '</button>'; }
+  function wire() { var b = body.querySelector('button.st'); if (b) b.addEventListener('click', close); }
+  function api(u, o) { return fetch(API + u, o).then(function (r) { return r.json(); }); }
+  function form() {
+    body.innerHTML = '<h2 id="rlchT"><span class="pc">-10 %</span> ' + esc(T.t) + '</h2><p>' + esc(T.s) + '</p>' +
+      '<form class="pf" novalidate><div class="two"><input name="fn" autocomplete="given-name" placeholder="' + esc(T.fn) + '" aria-label="' + esc(T.fn) + '">' +
+      '<input name="ln" autocomplete="family-name" placeholder="' + esc(T.ln) + '" aria-label="' + esc(T.ln) + '"></div>' +
+      '<input name="e" type="email" autocomplete="email" inputmode="email" placeholder="' + esc(T.e) + '" aria-label="' + esc(T.e) + '">' +
+      '<input name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="' + esc(T.tel) + '" aria-label="' + esc(T.tel) + '">' +
+      '<input name="hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+      '<label class="ck"><input type="checkbox" name="opt"> <span>' + esc(T.opt) + '</span></label>' +
+      '<div class="er" role="alert"></div><button type="submit" class="go">' + esc(T.go) + '</button></form>' +
+      '<small class="lgl">' + esc(T.legal) + ' <a href="/confidentialite">' + esc(T.priv) + '</a></small>' +
+      ((ios || and) ? '<a class="app" href="' + (ios ? AS : PL) + '" target="_blank" rel="noopener">' + esc(T.app) + '</a>' : '') + later();
+    wire();
+    var f = body.querySelector('form'), er = body.querySelector('.er'), bt = f.querySelector('.go');
+    f.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var v = { fn: f.fn.value.trim(), ln: f.ln.value.trim(), e: f.e.value.trim(), tel: f.tel.value.trim(), opt: f.opt.checked, hp: f.hp.value, lang: g, src: location.pathname };
+      [].forEach.call(f.querySelectorAll('input'), function (i) { i.classList.remove('bad'); });
+      var miss = ['fn', 'ln', 'e', 'tel'].filter(function (k) { return !v[k]; });
+      if (v.e && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.e)) miss.push('e');
+      if (v.tel && v.tel.replace(/\D/g, '').length < 9) miss.push('tel');
+      if (miss.length) { miss.forEach(function (k) { f[k].classList.add('bad'); }); er.textContent = miss.length === 1 && miss[0] === 'e' && v.e ? T.err.email : T.err.champs; return; }
+      er.textContent = ''; bt.disabled = true; bt.textContent = T.wait;
+      api('?app=cpjoin', { method: 'POST', body: JSON.stringify(v) }).then(function (r) {
+        if (r && r.ok) {
+          st('localStorage', KD, '1');
+          try { w.gtag && w.gtag('event', 'generate_lead', { method: 'promo10' }); } catch (e) {}
+          return sent(v.e, r.sent === 'code');
+        }
+        bt.disabled = false; bt.textContent = T.go;
+        if (r && r.fields) r.fields.forEach(function (k) { if (f[k]) f[k].classList.add('bad'); });
+        er.textContent = T.err[(r && r.err) || 'serveur'] || T.err.serveur;
+      }).catch(function () { bt.disabled = false; bt.textContent = T.go; er.textContent = T.err.serveur; });
+    });
+  }
+  function sent(e, again) {
+    body.innerHTML = '<h2 id="rlchT">' + esc(again ? T.againT : T.sentT) + '</h2><p>' + esc((again ? T.againP : T.sentP).replace('{e}', e)) + '</p>' +
+      (again ? '' : '<small class="lgl">' + esc(T.sentN) + '</small>') + '<button type="button" class="st">' + esc(T.close) + '</button>';
+    wire();
+  }
+  function code(r) {
+    var link = BOOK + '?promo=' + encodeURIComponent(r.code);
+    body.innerHTML = '<h2 id="rlchT">' + esc(T.okT) + ' ✓</h2><p>' + esc(r.used ? T.usedP : T.okP) + '</p>' +
+      '<div class="cd"><b>' + esc(r.code) + '</b><button type="button" class="cp">' + esc(T.copy) + '</button></div>' +
+      (r.used ? '' : '<a class="go" href="' + esc(link) + '">' + esc(T.book) + '</a><small class="lgl">' + esc(T.okN) + '</small>') +
+      '<button type="button" class="st">' + esc(T.close) + '</button>';
+    wire();
+    var cp = body.querySelector('.cp');
+    cp.addEventListener('click', function () {
+      try { navigator.clipboard.writeText(r.code).then(function () { cp.textContent = T.copied; }); } catch (e) {}
+    });
+  }
+  function start() {
+    if (d.getElementById('rlch')) return;
+    shell();
+    if (!tok) return form();
+    /* retour du lien de l'e-mail : le jeton est retiré de l'adresse affichée */
+    try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+    body.innerHTML = '<h2 id="rlchT">' + esc(T.wait) + '</h2>';
+    api('?app=cpok&t=' + tok).then(function (r) {
+      if (r && r.ok) { st('localStorage', KD, '1'); return code(r); }
+      body.innerHTML = '<h2 id="rlchT">-10 %</h2><p>' + esc(T.err[(r && r.err) || 'serveur'] || T.err.serveur) + '</p>' + '<button type="button" class="st">' + esc(T.close) + '</button>';
+      wire();
+    }).catch(function () { body.innerHTML = '<p>' + esc(T.err.serveur) + '</p><button type="button" class="st">' + esc(T.close) + '</button>'; wire(); });
+  }
+  if (tok || force) { if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', start); else start(); }
+  else setTimeout(start, 4000);
 })();
 /* Animations sur tout le site (10 nov. 2026, demande de Yassine) : les blocs apparaissent en douceur quand on descend,
    les cartes une par une ; reflet doré sur les boutons. Rien ne bouge si le visiteur a demandé moins d'animations. */

@@ -102,6 +102,29 @@ html,body{height:auto!important}
 #rlch .sto{font-size:12px;color:rgba(255,255,255,.55)}
 #rlch button.st{padding:6px;border:0;background:none;color:rgba(224,186,108,.9);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
 html.rlchon #rlyfab,html.rlchon #rlytz{display:none}
+/* fenêtre -10 % première course (11 nov. 2026) */
+#rlch.rlpm .ph{height:clamp(104px,28vw,136px)}
+#rlch .bd{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%}
+#rlch h2 .pc{color:#E7C27A;white-space:nowrap}
+#rlch .pf{display:flex;flex-direction:column;gap:8px;width:100%;margin:2px 0 0}
+#rlch .pf .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#rlch .pf input:not([type=checkbox]){display:block;width:100%;min-width:0;box-sizing:border-box;padding:12px 13px;border-radius:12px;border:1px solid rgba(224,186,108,.35);background:#16161A;color:#fff;font:500 16px/1.2 Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;outline:none;-webkit-appearance:none;appearance:none}
+#rlch .pf input:focus{border-color:#E0BA6C;box-shadow:0 0 0 3px rgba(224,186,108,.18)}
+#rlch .pf input.bad{border-color:#E5484D}
+#rlch .pf input::placeholder{color:rgba(255,255,255,.45)}
+#rlch .pf .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+#rlch .ck{display:flex;align-items:flex-start;gap:8px;text-align:left;font-size:12px;line-height:1.35;color:rgba(255,255,255,.7);cursor:pointer}
+#rlch .ck input{flex:none;width:16px;height:16px;margin:1px 0 0;accent-color:#D9B36A}
+#rlch .er{font-size:13px;line-height:1.35;color:#FF8A8A}
+#rlch .er:empty{display:none}
+#rlch .go{display:block;width:100%;box-sizing:border-box;padding:14px 16px;border:0;border-radius:14px;background:linear-gradient(135deg,#f0d394 0%,#d9b36a 45%,#b8873f 100%);color:#16110A;font:800 16px/1.2 Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-decoration:none;text-align:center;cursor:pointer;box-shadow:0 8px 24px rgba(199,154,74,.3)}
+#rlch .go[disabled]{opacity:.7;cursor:default}
+#rlch .lgl{font-size:11px;line-height:1.4;color:rgba(255,255,255,.5)}
+#rlch .lgl a{color:rgba(224,186,108,.9)}
+#rlch a.app{font-size:13px;color:#E7C27A}
+#rlch .cd{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;box-sizing:border-box;margin:4px 0;padding:14px;border:2px dashed rgba(224,186,108,.8);border-radius:14px}
+#rlch .cd b{font-size:25px;letter-spacing:.1em;color:#fff}
+#rlch .cd .cp{padding:7px 12px;border-radius:10px;border:1px solid rgba(224,186,108,.7);background:none;color:#E7C27A;font:700 13px Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;cursor:pointer}
 
 /* ===== fond noir doré sur tout le site (10 nov. 2026, demande de Yassine) ===== */
 html,body{background:#0b0b0c!important;color-scheme:dark}
