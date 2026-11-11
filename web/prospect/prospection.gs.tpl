@@ -331,7 +331,8 @@ function apercuLimo() {
   Logger.log(a.sujet + '\n\n' + a.texte);
 }
 /* Relecture : lignes limousine validées (numéros de ligne de la feuille), remplies après chercherEmails */
-var LIMO_OUI = [];
+/* 11 nov. 2026 : 9 adresses génériques trouvées sur les sites officiels (sales, info, reservations…) ; sans adresse publiée : Carey, Music Express, Bermuda, LSF, Wynne, GroundLink, Kevin's */
+var LIMO_OUI = [270, 271, 274, 275, 278, 280, 282, 283, 284];
 var LIMO_CHOIX = {};
 function validerLimo() {
   var sh = ss_().getSheetByName(FEUILLE);
