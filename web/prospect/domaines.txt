@@ -1,0 +1,212 @@
+# categorie | site officiel | nom
+aviation|valljet.com|Valljet
+aviation|oyonnair.com|Oyonnair
+aviation|wijet.com|Wijet
+aviation|aeroaffaires.fr|Aéroaffaires
+aviation|astonjet.com|Astonjet
+aviation|luxaviation.com|Luxaviation
+aviation|ixair.com|IXAIR
+aviation|airlec.fr|Airlec Air Espace
+aviation|twinjet.fr|Twin Jet
+aviation|jetex.com|Jetex
+aviation|signatureaviation.com|Signature Aviation
+aviation|universalweather.com|Universal Aviation
+aviation|geh.aero|AASI Le Bourget
+aviation|jetaviation.com|Jet Aviation
+aviation|aircharterservice.fr|Air Charter Service France
+aviation|airpartner.com|Air Partner
+aviation|lunajets.com|LunaJets
+aviation|privatefly.com|PrivateFly
+aviation|flyvictor.com|Victor
+aviation|vistajet.com|VistaJet
+aviation|elysiumjet.com|Elysium Jet
+aviation|pan-europeenne.com|Pan Européenne Air Service
+aviation|privair.ch|Priv'Air
+aviation|globeair.com|GlobeAir
+aviation|airhamburg.de|Air Hamburg
+aviation|jetfly.com|Jetfly
+aviation|skyvalet.com|Sky Valet
+aviation|abelag.be|Abelag
+aviation|tagaviation.com|TAG Aviation
+aviation|netjets.com|NetJets
+aviation|flexjet.com|Flexjet
+aviation|paramountbusinessjets.com|Paramount Business Jets
+aviation|jettly.com|Jettly
+aviation|stratosjets.com|Stratos Jets
+aviation|flyxo.com|XO
+aviation|chapmanfreeborn.aero|Chapman Freeborn
+aviation|aviapartner.aero|Aviapartner
+aviation|exxaero.com|Exxaero
+aviation|amalthea-aviation.com|Amalthea
+aviation|letsfly.fr|Let's Fly
+aviation|dassaultfalcon.com|Dassault Falcon Service
+aviation|comlux.com|Comlux
+aviation|albinati.com|Albinati Aeronautics
+aviation|executivejetsparis.com|Executive Jets
+aviation|fly-aeolus.com|Aeolus
+aviation|clay-lacy.com|Clay Lacy
+aviation|evojets.com|Evojets
+aviation|airchartereurope.com|Air Charter Europe
+aviation|privatejetcharter.fr|Private Jet Charter France
+maritime|atpi.com|ATPI
+maritime|bluemarinetravel.com|Blue Marine Travel
+maritime|globalmarinetravel.com|Global Marine Travel
+maritime|fraseryachts.com|Fraser
+maritime|burgessyachts.com|Burgess
+maritime|y.co|Y.CO
+maritime|camperandnicholsons.com|Camper & Nicholsons
+maritime|northropandjohnson.com|Northrop & Johnson
+maritime|edmiston.com|Edmiston
+maritime|oceanindependence.com|Ocean Independence
+maritime|hillrobinson.com|Hill Robinson
+maritime|ypicrew.com|YPI Crew
+maritime|wilsonhalligan.com|Wilsonhalligan
+maritime|bluewateryachting.com|Bluewater
+maritime|ponant.com|Ponant
+maritime|lda.fr|Louis Dreyfus Armateurs
+maritime|croisieurope.com|CroisiEurope
+maritime|monacomarine.com|Monaco Marine
+maritime|mb92.com|MB92
+maritime|iyc.com|IYC
+maritime|cecilwright.com|Cecil Wright
+maritime|imperial-yachts.com|Imperial Yachts
+maritime|moranyachts.com|Moran Yacht & Ship
+maritime|twwyachts.com|TWW Yachts
+maritime|quaycrew.com|Quay Crew
+maritime|viking-recruitment.com|Viking Recruitment
+maritime|vgrouplimited.com|V.Group
+maritime|explorajourneys.com|Explora Journeys
+maritime|silversea.com|Silversea
+maritime|seabourn.com|Seabourn
+maritime|merle-wood.com|Merle Wood
+maritime|superyachtsmonaco.com|Superyachts Monaco
+maritime|ruddersmaritime.com|Rudders
+maritime|lurssen.com|Lürssen
+maritime|feadship.nl|Feadship
+maritime|amels-holland.com|Amels
+maritime|riva-yacht.com|Riva
+maritime|wallyyachts.com|Wally
+maritime|yachtcrewregister.com|Yacht Crew Register
+maritime|crewseekers.net|Crewseekers
+luxe|lexceptionnel-france.com|L'Exceptionnel France
+luxe|pacificworld.com|Pacific World
+luxe|kuoni-tumlare.com|Kuoni Tumlare
+luxe|quintessentially.com|Quintessentially
+luxe|tengroup.com|Ten Lifestyle Group
+luxe|johnpaul.com|John Paul
+luxe|bureaubetak.com|Bureau Betak
+luxe|karlaotto.com|Karla Otto
+luxe|kcdworldwide.com|KCD
+luxe|hopscotchgroupe.com|Hopscotch
+luxe|mci-group.com|MCI
+luxe|fhcm.paris|Fédération de la Haute Couture et de la Mode
+luxe|viparis.com|Viparis
+luxe|comexposium.com|Comexposium
+luxe|rxglobal.com|RX France
+luxe|gl-events.com|GL events
+luxe|barnes-international.com|Barnes
+luxe|emile-garcin.fr|Emile Garcin
+luxe|daniel-feau.com|Daniel Féau
+luxe|kretzrealestate.com|Kretz
+luxe|artcurial.com|Artcurial
+luxe|drouot.com|Drouot
+luxe|parisjetset.com|Paris Jet Set
+luxe|elegantparis.com|Elegant Paris
+luxe|frenchescapade.com|French Escapade
+luxe|thefrenchdmc.com|The French DMC
+luxe|deluxe-france.com|Deluxe France
+luxe|le-connoisseur.com|Le Connoisseur
+luxe|nacara-dmc.com|Nacara DMC
+luxe|centuryincoming.com|Century Incoming
+luxe|lafayette-group.com|Lafayette Group
+luxe|french-events.com|French Events
+luxe|amirantes-events.com|Amirantes Events
+luxe|thereal-france.com|The Real France
+luxe|clefsdorfrance.org|Les Clefs d'Or France
+luxe|lesclefsdor.com|Les Clefs d'Or
+luxe|bespokeconcierge.com|Bespoke Concierge
+luxe|lifestyleconcierge.fr|Lifestyle Concierge
+luxe|conciergerie-privee.com|Conciergerie Privée
+finance|actus-finance.com|Actus Finance
+finance|ulysse-communication.com|Ulysse Communication
+finance|shan.fr|Shan
+finance|image7.fr|Image 7
+finance|citigatedewerogerson.com|Citigate Dewe Rogerson
+finance|brunswickgroup.com|Brunswick
+finance|keplercheuvreux.com|Kepler Cheuvreux
+finance|oddo-bhf.com|Oddo BHF
+finance|portzamparc.fr|Portzamparc
+finance|invest-securities.com|Invest Securities
+finance|edmond-de-rothschild.com|Edmond de Rothschild
+finance|rothschildandco.com|Rothschild & Co
+finance|lazard.com|Lazard
+finance|mirabaud.com|Mirabaud
+finance|lombardodier.com|Lombard Odier
+finance|banquetransatlantique.com|Banque Transatlantique
+finance|ca-indosuez.com|Indosuez
+finance|lfde.com|La Financière de l'Échiquier
+finance|carmignac.com|Carmignac
+finance|tikehaucapital.com|Tikehau Capital
+finance|ardian.com|Ardian
+finance|eurazeo.com|Eurazeo
+finance|wendelgroup.com|Wendel
+finance|affo.fr|Association Française du Family Office
+finance|degroofpetercam.com|Degroof Petercam
+finance|montpensier.com|Montpensier Finance
+finance|sycomore-am.com|Sycomore AM
+finance|ofi-invest-am.com|OFI Invest
+finance|rivage-investment.com|Rivage Investment
+hotel|lesaintjamesparis.com|Saint James Paris
+hotel|majestic-hotel.com|Hôtel Majestic
+hotel|raphael-hotel.com|Hôtel Raphael
+hotel|regina-hotel.com|Hôtel Regina Louvre
+hotel|hotel-lancaster.fr|Hôtel Lancaster
+hotel|maisonalbarhotels.com|Maison Albar Hotels
+hotel|hoteldeberri.com|Hôtel de Berri
+hotel|lesjardinsdufaubourg.com|Les Jardins du Faubourg
+hotel|hotelnapoleonparis.com|Hôtel Napoléon
+hotel|monsieurgeorge.com|Monsieur George
+hotel|hoteldaubusson.com|Hôtel d'Aubusson
+hotel|hoteldesers.com|Hôtel de Sers
+hotel|pavillon-de-la-reine.com|Pavillon de la Reine
+hotel|lecinqcodet.com|Le Cinq Codet
+hotel|pavillondesletres.com|Pavillon des Lettres
+hotel|sinnerparis.com|Sinner
+hotel|lamaisonchampselysees.com|La Maison Champs-Élysées
+hotel|hotel-tremoille.com|La Trémoille
+hotel|hotelbalzac.com|Hôtel Balzac
+hotel|champselyseesplaza.com|Champs-Élysées Plaza
+hotel|hotelvernet-paris.com|Hôtel Vernet
+hotel|hotelkeppler.com|Hôtel Keppler
+hotel|hotelsbarriere.com|Hôtel Barrière Le Fouquet's
+hotel|montalembert.com|Hôtel Montalembert
+hotel|hotelbachaumont.com|Hôtel Bachaumont
+hotel|maisonsouquet.com|Maison Souquet
+hotel|maisonbreguet.com|Maison Breguet
+hotel|lenarcisseblanc.com|Le Narcisse Blanc
+hotel|nolinski.com|Nolinski
+hotel|hotel-marignan.com|Hôtel Marignan
+hotel|hotelpowers.com|Hôtel Powers
+hotel|hotelduminister.com|Hôtel du Ministère
+hotel|lamaisonfavart.com|La Maison Favart
+hotel|hotelsplendideroyal.com|Splendide Royal
+hotel|hoteldelavenue.com|Hôtel de l'Avenue
+hotel|hotelfrancoispremier.com|Hôtel François 1er
+hotel|hotel-west-end.com|Hôtel West End
+hotel|hotelchateaubriand.com|Hôtel Chateaubriand
+hotel|lemathurin.com|Le Mathurin
+hotel|hotel-le-bellechasse.com|Le Bellechasse
+hotel|leroch-hotel.com|Le Roch
+hotel|hotelparticulier-paris.com|Hôtel Particulier
+hotel|hotel-galileo.com|Hôtel Galileo
+hotel|leprincedegalles.com|Prince de Galles
+hotel|le-damantin.com|Le Damantin
+hotel|hotelelysia.com|Élysia
+hotel|parister.com|Parister
+hotel|hotelbaume-paris.com|Hôtel Baume
+hotel|hoteldupetitmoulin.com|Hôtel du Petit Moulin
+hotel|hotelfabric.com|Hôtel Fabric
+hotel|hotel-de-nell.com|Hôtel de Nell
+hotel|hotelvillamadame.com|Villa Madame
+hotel|lesbainsparis.com|Les Bains
+hotel|hotelamastan.com|Hôtel Amastan
