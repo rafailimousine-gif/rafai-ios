@@ -125,13 +125,15 @@ var QUI = {
         hotel: 'votre établissement accueille des clients qui ont souvent besoin d’un chauffeur à Paris',
         voyage: 'votre agence envoie régulièrement des clients exigeants à Paris et en France',
         affaires: 'votre agence organise les déplacements de dirigeants et de collaborateurs à Paris',
-        reseau: 'vos membres reçoivent régulièrement des dirigeants et des invités à Paris' },
+        reseau: 'vos membres reçoivent régulièrement des dirigeants et des invités à Paris',
+        limo: 'vos clients voyagent régulièrement à Paris et ont besoin d’un partenaire local de confiance' },
   EN: { aviation: 'your company regularly flies passengers and crews into Paris', maritime: 'your company regularly sends crews and guests through Paris',
         luxe: 'your company regularly welcomes clients and guests in Paris', finance: 'your company regularly organises meetings and executive travel in Paris',
         hotel: 'your hotel welcomes guests who often need a chauffeur in Paris',
         voyage: 'your agency regularly sends discerning clients to Paris and France',
         affaires: 'your agency manages travel for executives and teams coming to Paris',
-        reseau: 'your members regularly welcome executives and guests in Paris' }
+        reseau: 'your members regularly welcome executives and guests in Paris',
+        limo: 'your clients regularly travel to Paris and need a trusted local affiliate there' }
 };
 
 var LIGNE = {
@@ -143,7 +145,8 @@ var LIGNE = {
     hotel: 'les transferts aéroport et le chauffeur à disposition pour vos clients, en complément de votre conciergerie',
     voyage: 'l’accueil à l’aéroport, le chauffeur à disposition et les excursions privées (Versailles, Giverny…) pour vos clients à Paris',
     affaires: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour vos voyageurs d’affaires à Paris',
-    reseau: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour les dirigeants et invités de vos membres à Paris'
+    reseau: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour les dirigeants et invités de vos membres à Paris',
+    limo: 'vos courses à Paris en sous-traitance : accueil à Roissy-CDG, Orly et Le Bourget, chauffeur à disposition, roadshows et événements'
   },
   EN: {
     aviation: 'transfers for your passengers and crews between Paris Le Bourget, Charles de Gaulle (CDG), Orly and central Paris, at any hour',
@@ -153,7 +156,8 @@ var LIGNE = {
     hotel: 'airport transfers and chauffeurs at disposal for your guests in Paris',
     voyage: 'airport meet & greet, chauffeurs at disposal and private day trips (Versailles, Giverny…) for your clients in Paris',
     affaires: 'airport transfers, roadshows and chauffeurs at disposal for your business travellers in Paris',
-    reseau: 'airport transfers, roadshows and chauffeurs at disposal for your members’ executives and guests in Paris'
+    reseau: 'airport transfers, roadshows and chauffeurs at disposal for your members’ executives and guests in Paris',
+    limo: 'your farm-out rides in Paris: meet & greet at Charles de Gaulle (CDG), Orly and Le Bourget, hourly chauffeur service, roadshows and events'
   }
 };
 
@@ -161,7 +165,7 @@ function texte_(cat, societe, lang) {
   lang = lang === 'EN' ? 'EN' : 'FR';
   var l = (LIGNE[lang][cat] || LIGNE[lang].luxe), q = (QUI[lang][cat] || QUI[lang].luxe);
   if (lang === 'EN') {
-    var sujet = 'Rafai Limousine × ' + societe + ' – private chauffeur partnership in Paris';
+    var sujet = 'Rafai Limousine × ' + societe + (cat === 'limo' ? ' – your chauffeur affiliate in Paris' : ' – private chauffeur partnership in Paris');
     var corps = ['Hello,',
       'My name is Yassine Rafaï, founder of Rafai Limousine, a premium private chauffeur company in Paris (CDG, Orly and Le Bourget airports, Paris and the Île-de-France region, 24/7).',
       'I am reaching out because ' + q + ', and we could look after ' + l + '.',
@@ -300,4 +304,38 @@ function ajouter() {
   var add = AJOUTS.filter(function (r) { return !have[r[2]]; });
   if (add.length) sh.getRange(sh.getLastRow() + 1, 1, add.length, 4).setValues(add);
   Logger.log('ajoutées : ' + add.length + ' (lignes ' + (v.length + 1) + ' à ' + (v.length + add.length) + ')');
+}
+
+/* Ajouts du 11 nov. 2026 (demande de Yassine : « Et aussi limousine ») : sociétés de limousine américaines qui ont besoin d'un partenaire à Paris,
+   et Limo Anywhere (logiciel des limousines US relié à GroundSpan ; pas de formulaire, adresse du bouton « Email Sales » de leur page contact) */
+var AJOUTS_LIMO = [
+  ['limo', 'Carey International', 'carey.com', 'EN'], ['limo', 'Empire CLS', 'empirecls.com', 'EN'],
+  ['limo', 'Commonwealth Worldwide Chauffeured Transportation', 'commonwealthlimo.com', 'EN'], ['limo', 'Music Express', 'musicexpress.com', 'EN'],
+  ['limo', 'Bermuda Limousine International', 'bermudalimo.com', 'EN'], ['limo', 'Royal Coachman Worldwide', 'royalcoachman.com', 'EN'],
+  ['limo', 'Reston Limousine', 'restonlimo.com', 'EN'], ['limo', 'Limousines of South Florida', 'limosofsouthflorida.com', 'EN'],
+  ['limo', 'Wynne Transportation', 'wynnetransportation.com', 'EN'], ['limo', 'Windy City Limousine', 'windycitylimos.com', 'EN'],
+  ['limo', 'GroundLink', 'groundlink.com', 'EN'], ['limo', 'KLS Worldwide Chauffeured Services', 'klsworldwide.com', 'EN'],
+  ['limo', "Kevin's Worldwide", 'kevinsworldwide.com', 'EN'], ['limo', 'LimoLink', 'limolink.com', 'EN'],
+  ['limo', 'Carmel Car & Limousine Service', 'carmellimo.com', 'EN'],
+  ['limo', 'Limo Anywhere', 'limoanywhere.com', 'EN', 'sales@limoanywhere.com', 'https://www.limoanywhere.com/contact-us/ (bouton Email Sales)']
+];
+function ajouterLimo() {
+  var sh = ss_().getSheetByName(FEUILLE), v = sh.getDataRange().getValues(), have = {};
+  for (var i = 1; i < v.length; i++) have[String(v[i][2]).toLowerCase()] = 1;
+  var add = AJOUTS_LIMO.filter(function (r) { return !have[r[2]]; }).map(function (r) { return [r[0], r[1], r[2], r[3], r[4] || '', r[5] || '']; });
+  if (add.length) sh.getRange(sh.getLastRow() + 1, 1, add.length, 6).setValues(add);
+  Logger.log('ajoutées : ' + add.length + ' (lignes ' + (v.length + 1) + ' à ' + (v.length + add.length) + ')');
+}
+function apercuLimo() {
+  var a = texte_('limo', 'Empire CLS', 'EN');
+  Logger.log(a.sujet + '\n\n' + a.texte);
+}
+/* Relecture : lignes limousine validées (numéros de ligne de la feuille), remplies après chercherEmails */
+var LIMO_OUI = [];
+var LIMO_CHOIX = {};
+function validerLimo() {
+  var sh = ss_().getSheetByName(FEUILLE);
+  Object.keys(LIMO_CHOIX).forEach(function (r) { sh.getRange(+r, 5).setValue(LIMO_CHOIX[r]); });
+  LIMO_OUI.forEach(function (r) { if (String(sh.getRange(+r, 1).getValue()) === 'limo' && sh.getRange(+r, 5).getValue()) sh.getRange(+r, 7).setValue('OUI'); });
+  Logger.log('limousines validées : ' + LIMO_OUI.length);
 }
