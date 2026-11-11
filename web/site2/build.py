@@ -688,7 +688,7 @@ def css_blocks(css):
     return out
 # la page n'utilise pas site.css (styles de Google Sites) : seulement les règles de l'agent IA et de l'écran appli
 _blk = css_blocks(io.open(os.path.join(HERE, 'site.css.add'), encoding='utf-8').read())
-_sel = [b for b in _blk if re.search(r'rly|rlch|rlwave|rlring', b) and not b.startswith('@keyframes')]
+_sel = [b for b in _blk if re.search(r'rly|rlch|rlpm|rlwave|rlring', b) and not b.startswith('@keyframes')]
 _anim = set(re.findall(r'animation(?:-name)?:\s*([A-Za-z][\w-]*)', '\n'.join(_sel)))
 LIFT_CSS = '\n'.join(_sel + [b for b in _blk if b.startswith('@keyframes') and b.split()[1].split('{')[0] in _anim])
 # polices de l'accueil hébergées sur le site (plus de feuille Google qui bloque l'affichage) ; préchargées et en « optional »

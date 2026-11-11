@@ -125,6 +125,16 @@ html.rlchon #rlyfab,html.rlchon #rlytz{display:none}
 #rlch .cd{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;box-sizing:border-box;margin:4px 0;padding:14px;border:2px dashed rgba(224,186,108,.8);border-radius:14px}
 #rlch .cd b{font-size:25px;letter-spacing:.1em;color:#fff}
 #rlch .cd .cp{padding:7px 12px;border-radius:10px;border:1px solid rgba(224,186,108,.7);background:none;color:#E7C27A;font:700 13px Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;cursor:pointer}
+#rlpmbg{display:none}
+@media (min-width:700px){
+#rlpmbg{display:block;position:fixed;inset:0;z-index:2147483599;background:rgba(5,5,6,.66);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:rlpmFade .35s ease both}
+#rlch.rlpm{top:0;bottom:0;left:0;right:0;margin:auto;height:fit-content;max-width:460px;max-height:calc(100vh - 48px);animation-name:rlpmIn;animation-duration:.45s}
+#rlch.rlpm .ph{height:170px}
+#rlch.rlpm h2{font-size:24px}
+}
+@keyframes rlpmFade{0%{opacity:0}100%{opacity:1}}
+@keyframes rlpmIn{0%{opacity:0;transform:translateY(14px) scale(.96)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#rlpmbg,#rlch.rlpm{animation:none}}
 
 /* ===== fond noir doré sur tout le site (10 nov. 2026, demande de Yassine) ===== */
 html,body{background:#0b0b0c!important;color-scheme:dark}

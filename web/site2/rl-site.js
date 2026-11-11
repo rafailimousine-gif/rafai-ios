@@ -141,6 +141,7 @@
 /* Fenêtre « -10 % sur votre première course » (11 nov. 2026, demande de Yassine) : remplace la fenêtre « Ouvrir l'application ».
    Le visiteur donne prénom, nom, e-mail et téléphone → e-mail « Validez votre adresse » ; le lien de l'e-mail revient sur le site
    (?rlpromo=…) : adresse validée, code personnel RL10-XXXXX affiché (et envoyé par e-mail), bouton vers la réservation avec le code rempli.
+   Ordinateur : fenêtre au centre de l'écran, fond assombri. Téléphone : fenêtre en bas.
    Une fois par visite, jamais dans l'appli, plus du tout une fois inscrit sur ce navigateur. Test : ?promo=1 */
 (function () {
   var API = 'https://script.google.com/macros/s/AKfycbwrVkg7W2mb0onawqUJdwA4f-5LWAEvcDkEfpwtg-LWuD7TX5NlBClvSfbxx7WiipW5/exec';
@@ -180,11 +181,13 @@
         email: 'This e-mail address is not valid.', jeton: 'This link is not valid. Please try again from the website.', serveur: 'Something went wrong, please try again.' } }
   }, T = TX[g];
   function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  var p, body;
+  var p, body, bg;
   function close() {
-    if (p) p.remove(); h.classList.remove('rlchon');
+    if (p) p.remove(); if (bg) bg.remove(); h.classList.remove('rlchon', 'rlpmon');
+    d.removeEventListener('keydown', esc1);
     st('sessionStorage', K, '1');
   }
+  function esc1(e) { if (e.key === 'Escape') close(); }
   function shell() {
     p = d.createElement('div');
     p.id = 'rlch'; p.className = 'rlpm'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-labelledby', 'rlchT');
@@ -192,7 +195,10 @@
       '<div class="bt"><div class="tp"><span class="lg"><img src="/img/logo.png" alt="" width="44" height="44"></span><b>RAFAI LIMOUSINE</b></div><div class="bd"></div></div>';
     body = p.querySelector('.bd');
     p.querySelector('.x').addEventListener('click', close);
-    d.body.appendChild(p); h.classList.add('rlchon');
+    /* ordinateur : vraie fenêtre au centre, le reste de l'écran assombri (clic à côté ou Échap pour fermer) */
+    bg = d.createElement('div'); bg.id = 'rlpmbg'; bg.addEventListener('click', close);
+    d.addEventListener('keydown', esc1);
+    d.body.appendChild(bg); d.body.appendChild(p); h.classList.add('rlchon', 'rlpmon');
   }
   function later() { return '<button type="button" class="st">' + esc(T.later) + '</button>'; }
   function wire() { var b = body.querySelector('button.st'); if (b) b.addEventListener('click', close); }

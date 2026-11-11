@@ -3,7 +3,7 @@
    - routeur POST : cpjoin (inscription) ; routeur GET : cpok (validation de l'adresse par le lien de l'e-mail)
    - cliPromo_ : codes RL10-XXXXX (promoCheck_) ; cliQuote_ : pourcentage dans out.promo.pct
    - cliBook_ : note « Code … : -10 % (prix normal …) » et code marqué utilisé après la réservation
-   Vérifie la syntaxe avant d'écrire. Ne sauvegarde pas. */
+   Vérifie la syntaxe avant d'écrire (hors éditeur : l'éditeur Apps Script interdit new Function, coller le corps dans la console). Ne sauvegarde pas. */
 (async function (RAW) {
   var model = monaco.editor.getModels().filter(function (m) { return /\.js$/.test(m.uri.path); })[0];
   var src = model.getValue();
@@ -28,6 +28,8 @@
       'if (/^c(prof|google|apple|pkreg|pkauth|cancel|edit|pjoin)$/.test(q.app)) return cliPost_(q.app, body);', 'POST');
     rep(": app === 'cedit' ? cliEdit_(body) : { ok: false, err: 'action' };",
       ": app === 'cedit' ? cliEdit_(body) : app === 'cpjoin' ? cliPromoJoin_(body) : { ok: false, err: 'action' };", 'cliPost_');
+    rep('if (/^c(quote|login|verify|mine|one|fleet|ph|pay|sub|msg|inv|del|cfg|pkopt|geo|fn)$/.test(q.app)) return cliRoute_(q);',
+      'if (/^c(quote|login|verify|mine|one|fleet|ph|pay|sub|msg|inv|del|cfg|pkopt|geo|fn|pok)$/.test(q.app)) return cliRoute_(q);', 'GET filtre');
     var R = "case 'cfn': return cliOut_(cliFunnel_(q));";
     var ri = src.indexOf(R); if (ri < 0) throw new Error('cfn introuvable');
     var ind = src.slice(src.lastIndexOf('\n', ri) + 1, ri);
