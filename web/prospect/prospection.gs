@@ -216,8 +216,8 @@ function apercu() {
 
 function envoyerLot() {
   var sh = ss_().getSheetByName(FEUILLE), v = sh.getDataRange().getValues();
-  /* premier envoi le 12 nov. 2026 (accord de Yassine le 11 nov. : « Go ») ; jamais plus de 100 le même jour */
-  if (new Date() < new Date('2026-11-12T00:00:00+01:00')) return Logger.log('pas avant le 12 nov. 2026');
+  /* premier envoi le 11 nov. 2026 à 10 h (demande de Yassine : « Part aujourd'hui à 10:00 ») ; jamais plus de 100 le même jour */
+  if (new Date() < new Date('2026-11-11T10:00:00+01:00')) return Logger.log('pas avant le 11 nov. 2026 à 10 h');
   var jour = Utilities.formatDate(new Date(), 'Europe/Paris', 'yyyy-MM-dd');
   var deja = {}, n = 0, reste = MailApp.getRemainingDailyQuota();
   for (var i = 1; i < v.length; i++) if (v[i][7]) {
@@ -244,6 +244,12 @@ function installerEnvoiQuotidien() {
   ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'envoyerLot') ScriptApp.deleteTrigger(t); });
   ScriptApp.newTrigger('envoyerLot').timeBased().everyDays(1).atHour(9).nearMinute(40).inTimezone('Europe/Paris').create();
   Logger.log('envoi quotidien installé (9 h 40, heure de Paris)');
+}
+
+/* Premier envoi exceptionnel : aujourd'hui 11 nov. 2026 à 10 h (heure de Paris) ; l'envoi quotidien de 9 h 40 continue ensuite */
+function envoiAujourdhui10h() {
+  ScriptApp.newTrigger('envoyerLot').timeBased().at(new Date('2026-11-11T10:00:00+01:00')).create();
+  Logger.log('premier envoi programmé : 11 nov. 2026 à 10 h');
 }
 
 function arreterEnvoiQuotidien() {
