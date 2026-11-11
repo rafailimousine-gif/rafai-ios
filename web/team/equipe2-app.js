@@ -2,7 +2,7 @@
  * - Nouvelle course : « Client existant » (recherche nom / téléphone / e-mail / société) ou « Nouveau client »
  * - Bouton « Nouveau client » à côté de « Nouvelle course »
  * - Fiche client : « ⛔ Bloquer » / « 🔓 Débloquer » et « Supprimer la fiche » (confirmation en 2 clics) ; badge « Bloqué »
- * - Ordinateur : boutons « Accepter » / « Refuser » visibles sur les cartes des nouvelles demandes (sur mobile : glisser)
+ * - Boutons « Accepter » / « Refuser » visibles sur les nouvelles demandes (ordinateur et mobile ; glisser marche toujours)
  * - Recherche des courses : le panneau des filtres s'ouvre tout seul dès qu'on tape
  * - Bouton « Se déconnecter » (en haut, à côté d'Actualiser) */
 function dActs(b){var l=swLeft(b);return l?'<div class="dacts">'+l+'</div>':''}
