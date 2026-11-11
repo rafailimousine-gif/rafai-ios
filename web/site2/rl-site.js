@@ -157,7 +157,7 @@
   var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1), and = /Android/.test(ua);
   var g = String(h.lang || navigator.language || 'en').slice(0, 2).toLowerCase() === 'fr' ? 'fr' : 'en';
   var TX = {
-    fr: { t: 'sur votre première course', s: 'Inscrivez-vous en 30 secondes : nous vous envoyons votre code personnel par e-mail.',
+    fr: { pc: '-10 %', t: 'sur votre première course', s: 'Inscrivez-vous en 30 secondes : nous vous envoyons votre code personnel par e-mail.',
       fn: 'Prénom', ln: 'Nom', e: 'E-mail', tel: 'Téléphone', opt: 'Recevoir nos offres par e-mail (désinscription à tout moment)',
       go: 'Recevoir mon code -10 %', later: 'Plus tard', legal: 'Vos informations servent à vous envoyer votre code et à gérer vos réservations.', priv: 'Confidentialité',
       app: 'Ou téléchargez l’appli gratuite', wait: 'Envoi…',
@@ -168,7 +168,7 @@
       err: { client: 'Cette offre est réservée aux nouveaux clients. Merci de votre fidélité !', deja: 'Un code a déjà été envoyé pour ce numéro de téléphone.',
         utilise: 'Votre code a déjà été utilisé.', quota: 'Trop de demandes : réessayez dans une heure.', champs: 'Merci de remplir tous les champs.',
         email: 'Adresse e-mail non valable.', jeton: 'Ce lien n’est pas valable. Réessayez depuis le site.', serveur: 'Une erreur est survenue, réessayez.' } },
-    en: { t: 'off your first ride', s: 'Sign up in 30 seconds: we will e-mail you your personal code.',
+    en: { pc: '10% off', t: 'your first ride', s: 'Sign up in 30 seconds: we will e-mail you your personal code.',
       fn: 'First name', ln: 'Last name', e: 'E-mail', tel: 'Phone', opt: 'Send me offers by e-mail (unsubscribe anytime)',
       go: 'Get my 10% off code', later: 'Not now', legal: 'Your details are only used to send your code and manage your bookings.', priv: 'Privacy',
       app: 'Or get the free app', wait: 'Sending…',
@@ -204,7 +204,7 @@
   function wire() { var b = body.querySelector('button.st'); if (b) b.addEventListener('click', close); }
   function api(u, o) { return fetch(API + u, o).then(function (r) { return r.json(); }); }
   function form() {
-    body.innerHTML = '<h2 id="rlchT"><span class="pc">-10 %</span> ' + esc(T.t) + '</h2><p>' + esc(T.s) + '</p>' +
+    body.innerHTML = '<h2 id="rlchT"><span class="pc">' + esc(T.pc) + '</span> ' + esc(T.t) + '</h2><p>' + esc(T.s) + '</p>' +
       '<form class="pf" novalidate><div class="two"><input name="fn" autocomplete="given-name" placeholder="' + esc(T.fn) + '" aria-label="' + esc(T.fn) + '">' +
       '<input name="ln" autocomplete="family-name" placeholder="' + esc(T.ln) + '" aria-label="' + esc(T.ln) + '"></div>' +
       '<input name="e" type="email" autocomplete="email" inputmode="email" placeholder="' + esc(T.e) + '" aria-label="' + esc(T.e) + '">' +

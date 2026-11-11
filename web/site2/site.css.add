@@ -128,9 +128,19 @@ html.rlchon #rlyfab,html.rlchon #rlytz{display:none}
 #rlpmbg{display:none}
 @media (min-width:700px){
 #rlpmbg{display:block;position:fixed;inset:0;z-index:2147483599;background:rgba(5,5,6,.66);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:rlpmFade .35s ease both}
-#rlch.rlpm{top:0;bottom:0;left:0;right:0;margin:auto;height:fit-content;max-width:460px;max-height:calc(100vh - 48px);animation-name:rlpmIn;animation-duration:.45s}
-#rlch.rlpm .ph{height:170px}
-#rlch.rlpm h2{font-size:24px}
+#rlch.rlpm{top:0;bottom:0;left:0;right:0;margin:auto;height:fit-content;max-width:580px;max-height:calc(100vh - 40px);border-radius:26px;animation-name:rlpmIn;animation-duration:.45s}
+#rlch.rlpm .ph{height:min(240px,27vh)}
+#rlch.rlpm .bt{gap:10px;padding:0 34px 20px}
+#rlch.rlpm h2{font-size:clamp(26px,3.6vh,32px)}
+#rlch.rlpm p{font-size:16px;max-width:440px}
+#rlch.rlpm .pf{gap:10px}
+#rlch.rlpm .pf .two{gap:10px}
+#rlch.rlpm .pf input:not([type=checkbox]){padding:15px 16px;font-size:17px;border-radius:13px}
+#rlch.rlpm .ck{font-size:13px}
+#rlch.rlpm .go{padding:17px 18px;font-size:18px;border-radius:15px}
+#rlch.rlpm .lgl{font-size:12px}
+#rlch.rlpm button.st{font-size:14px}
+#rlch.rlpm .cd b{font-size:32px}
 }
 @keyframes rlpmFade{0%{opacity:0}100%{opacity:1}}
 @keyframes rlpmIn{0%{opacity:0;transform:translateY(14px) scale(.96)}100%{opacity:1;transform:none}}
