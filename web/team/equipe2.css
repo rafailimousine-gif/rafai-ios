@@ -1,0 +1,31 @@
+/* rlTeam2 v1 (12 nov. 2026) */
+.blk{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--redbg);color:var(--red);font-size:11px;font-weight:800;vertical-align:middle;white-space:nowrap}
+.blkbar{background:var(--redbg);border:1px solid var(--red);color:var(--red);border-radius:12px;padding:10px 12px;margin:0 0 12px;font-size:14px;font-weight:600}
+.btn.armed,.iconbtn.armed{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important}
+.iconbtn.armed{width:auto;padding:0 10px}
+.iconbtn .lotx{font-size:12px;font-weight:800;white-space:nowrap}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.cpseg{display:flex;gap:4px;background:var(--greybg);padding:4px;border-radius:12px;margin:0 0 10px}
+.cpseg button{flex:1;border:0;background:transparent;padding:10px 8px;border-radius:9px;font:inherit;font-weight:700;cursor:pointer;color:var(--muted)}
+.cpseg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.14)}
+label.search.cps{display:flex;width:100%}
+.cpres{display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:340px;overflow:auto}
+.cpi{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:9px 10px;cursor:pointer;font:inherit;width:100%}
+.cpi:hover{border-color:var(--gold)}
+.cpi .av,.cpsel .av{flex:none}
+.cpt{display:flex;flex-direction:column;min-width:0}
+.cpt>span{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpsel{display:flex;align-items:center;gap:10px;border:1.5px solid var(--gold);background:var(--goldbg);border-radius:12px;padding:10px;margin-top:2px}
+.dacts{display:none}
+@media (hover:hover) and (pointer:fine){
+  .dacts{display:flex;gap:8px;margin:10px 0 0;padding-top:10px;border-top:1px dashed var(--line)}
+  .dacts .swb{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;color:#fff;line-height:1}
+  .dacts .swb b{font-size:15px}
+  .dacts .swb.ok{background:var(--green)}
+  .dacts .swb.no{background:var(--red)}
+  .dacts .swb:hover{filter:brightness(1.08)}
+  html[data-theme=dark] .dacts .swb{color:#111113}
+}
+/* mode sombre : boutons et champs restés blancs */
+html[data-theme=dark] .gnl a,html[data-theme=dark] .seg button.on,html[data-theme=dark] .f textarea,html[data-theme=dark] .ivx,html[data-theme=dark] .ftc{background:var(--card);color:var(--ink);border-color:var(--line)}
+html[data-theme=dark] .gnl a:hover{background:var(--line2)}
