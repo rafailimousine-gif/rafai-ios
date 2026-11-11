@@ -127,7 +127,8 @@ var QUI = {
         affaires: 'votre agence organise les déplacements de dirigeants et de collaborateurs à Paris',
         reseau: 'vos membres reçoivent régulièrement des dirigeants et des invités à Paris',
         limo: 'vos clients voyagent régulièrement à Paris et ont besoin d’un partenaire local de confiance',
-        media: 'vos correspondants, vos équipes de tournage et vos invités se déplacent régulièrement à Paris' },
+        media: 'vos correspondants, vos équipes de tournage et vos invités se déplacent régulièrement à Paris',
+        presse: 'vos membres, correspondants de la presse étrangère à Paris, ont souvent besoin d’un transport fiable pour eux, leurs équipes et leurs invités' },
   EN: { aviation: 'your company regularly flies passengers and crews into Paris', maritime: 'your company regularly sends crews and guests through Paris',
         luxe: 'your company regularly welcomes clients and guests in Paris', finance: 'your company regularly organises meetings and executive travel in Paris',
         hotel: 'your hotel welcomes guests who often need a chauffeur in Paris',
@@ -135,7 +136,8 @@ var QUI = {
         affaires: 'your agency manages travel for executives and teams coming to Paris',
         reseau: 'your members regularly welcome executives and guests in Paris',
         limo: 'your clients regularly travel to Paris and need a trusted local affiliate there',
-        media: 'your correspondents, crews and guests regularly travel to Paris' }
+        media: 'your correspondents, crews and guests regularly travel to Paris',
+        presse: 'your members, the foreign correspondents based in Paris, often need reliable transport for themselves, their crews and their guests' }
 };
 
 var LIGNE = {
@@ -149,7 +151,8 @@ var LIGNE = {
     affaires: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour vos voyageurs d’affaires à Paris',
     reseau: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour les dirigeants et invités de vos membres à Paris',
     limo: 'vos courses à Paris en sous-traitance : accueil à Roissy-CDG, Orly et Le Bourget, chauffeur à disposition, roadshows et événements',
-    media: 'leurs transferts aéroport (Roissy-CDG, Orly, Le Bourget) et un chauffeur à disposition pour les tournages, les directs et les interviews, avec Classe V pour les équipes et le matériel'
+    media: 'leurs transferts aéroport (Roissy-CDG, Orly, Le Bourget) et un chauffeur à disposition pour les tournages, les directs et les interviews, avec Classe V pour les équipes et le matériel',
+    presse: 'les transferts aéroport (Roissy-CDG, Orly, Le Bourget) et un chauffeur à disposition pour les tournages, les directs et les interviews, avec Classe V pour les équipes et le matériel'
   },
   EN: {
     aviation: 'transfers for your passengers and crews between Paris Le Bourget, Charles de Gaulle (CDG), Orly and central Paris, at any hour',
@@ -161,7 +164,8 @@ var LIGNE = {
     affaires: 'airport transfers, roadshows and chauffeurs at disposal for your business travellers in Paris',
     reseau: 'airport transfers, roadshows and chauffeurs at disposal for your members’ executives and guests in Paris',
     limo: 'your farm-out rides in Paris: meet & greet at Charles de Gaulle (CDG), Orly and Le Bourget, hourly chauffeur service, roadshows and events',
-    media: 'their airport transfers (CDG, Orly, Le Bourget) and a chauffeur at their disposal for shoots, live coverage and interviews, with V-Class vans for crews and equipment'
+    media: 'their airport transfers (CDG, Orly, Le Bourget) and a chauffeur at their disposal for shoots, live coverage and interviews, with V-Class vans for crews and equipment',
+    presse: 'airport transfers (CDG, Orly, Le Bourget) and a chauffeur at disposal for shoots, live coverage and interviews, with V-Class vans for crews and equipment'
   }
 };
 
@@ -349,7 +353,9 @@ function validerLimo() {
 var AJOUTS_MEDIA = [
   ['media', 'CNN', 'cnn.com', 'EN'], ['media', 'Fox News', 'foxnews.com', 'EN'], ['media', 'CBS News', 'cbsnews.com', 'EN'],
   ['media', 'NBC News', 'nbcnews.com', 'EN'], ['media', 'Al Jazeera', 'aljazeera.com', 'EN'], ['media', 'Al Jazeera Network', 'aljazeera.net', 'EN'],
-  ['media', 'CBC', 'cbc.ca', 'EN'], ['media', 'CNBC', 'cnbc.com', 'EN'], ['media', 'Bloomberg', 'bloomberg.com', 'EN'], ['media', 'Sky News', 'news.sky.com', 'EN']
+  ['media', 'CBC', 'cbc.ca', 'EN'], ['media', 'CNBC', 'cnbc.com', 'EN'], ['media', 'Bloomberg', 'bloomberg.com', 'EN'], ['media', 'Sky News', 'news.sky.com', 'EN'],
+  /* les chaînes ne publient pas d'adresse : associations de leurs correspondants à Paris */
+  ['presse', 'Anglo-American Press Association of Paris', 'aapafrance.org', 'EN'], ['presse', 'Association de la Presse Étrangère', 'apepresseetrangere.org', 'FR']
 ];
 function ajouterMedia() {
   var sh = ss_().getSheetByName(FEUILLE), v = sh.getDataRange().getValues(), have = {};
