@@ -208,10 +208,17 @@ function apercu() {
 
 function envoyerLot() {
   var sh = ss_().getSheetByName(FEUILLE), v = sh.getDataRange().getValues();
+  /* premier envoi le 12 nov. 2026 (accord de Yassine le 11 nov. : « Go ») ; jamais plus de 100 le même jour */
+  if (new Date() < new Date('2026-11-12T00:00:00+01:00')) return Logger.log('pas avant le 12 nov. 2026');
+  var jour = Utilities.formatDate(new Date(), 'Europe/Paris', 'yyyy-MM-dd');
   var deja = {}, n = 0, reste = MailApp.getRemainingDailyQuota();
-  for (var i = 1; i < v.length; i++) if (v[i][7]) deja[String(v[i][4]).toLowerCase()] = 1;
+  for (var i = 1; i < v.length; i++) if (v[i][7]) {
+    deja[String(v[i][4]).toLowerCase()] = 1;
+    if (v[i][7] instanceof Date && Utilities.formatDate(v[i][7], 'Europe/Paris', 'yyyy-MM-dd') === jour) n++;
+  }
+  var dejaJour = n;
   for (var i = 1; i < v.length; i++) {
-    if (n >= MAX_JOUR || reste - n < 20) break;
+    if (n >= MAX_JOUR || reste - (n - dejaJour) < 20) break;
     var mail = String(v[i][4] || '').trim().toLowerCase();
     if (String(v[i][6]).trim().toUpperCase() !== 'OUI' || !mail || v[i][7] || deja[mail] || EXCLUS.test(mail + ' ' + v[i][1])) continue;
     var t = texte_(v[i][0], v[i][1], v[i][3]);
@@ -222,7 +229,7 @@ function envoyerLot() {
     } catch (e) { sh.getRange(i + 1, 9).setValue('erreur : ' + e.message); }
     Utilities.sleep(1200);
   }
-  Logger.log('envoyés aujourd’hui : ' + n);
+  Logger.log('envoyés aujourd’hui : ' + (n - dejaJour) + ' (total du jour : ' + n + ')');
 }
 
 function installerEnvoiQuotidien() {
