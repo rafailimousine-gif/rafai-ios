@@ -235,3 +235,26 @@ function arreterEnvoiQuotidien() {
   ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'envoyerLot') ScriptApp.deleteTrigger(t); });
   Logger.log('envoi quotidien arrêté');
 }
+
+/* Relecture de la liste : une ligne par société (numéro de ligne ; catégorie ; société ; adresse retenue ; autres adresses ou motif) */
+function exporter() {
+  var v = ss_().getSheetByName(FEUILLE).getDataRange().getValues(), out = [];
+  for (var i = 1; i < v.length; i++) {
+    var f = String(v[i][5] || ''), aut = f.split('| autres : ')[1] || '';
+    out.push((i + 1) + ';' + v[i][0] + ';' + v[i][1] + ';' + v[i][4] + ';' + (v[i][4] ? aut : f.slice(0, 30)));
+  }
+  for (var k = 0; k < out.length; k += 20) Logger.log(out.slice(k, k + 20).join(' || '));
+}
+
+/* Corrections après relecture : numéro de ligne -> adresse retenue ('' = écartée, aucun envoi) */
+var CHOIX = {};
+var A_VALIDER = [];
+function appliquerChoix() {
+  var sh = ss_().getSheetByName(FEUILLE);
+  Object.keys(CHOIX).forEach(function (r) {
+    if (CHOIX[r]) sh.getRange(+r, 5).setValue(CHOIX[r]);
+    else { sh.getRange(+r, 5).setValue(''); sh.getRange(+r, 9).setValue('écartée (adresse non adaptée)'); }
+  });
+  A_VALIDER.forEach(function (r) { sh.getRange(+r, 7).setValue('OUI'); });
+  Logger.log('corrections : ' + Object.keys(CHOIX).length + ' ; validées : ' + A_VALIDER.length);
+}
