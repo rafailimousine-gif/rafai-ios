@@ -71,6 +71,7 @@ var rlTeam=(function(){
 if '</head>' not in s:
     print('ARRET </head> absent'); sys.exit(1)
 s = s.replace('</head>', HEAD + '\n</head>', 1)
-s = re.sub(r'<title>[^<]*</title>', '<title>Rafai Team – Espace équipe</title>', s, count=1)
+if re.search(r'<title>', s): s = re.sub(r'<title>[^<]*</title>', '<title>Rafai Team – Espace équipe</title>', s, count=1)
+else: s = s.replace('<link rel="manifest"', '<title>Rafai Team – Espace équipe</title>\n<link rel="manifest"', 1)
 io.open(out, 'w', encoding='utf-8').write(s)
 print('ok rlTeamWeb v1', len(s))
