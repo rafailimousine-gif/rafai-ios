@@ -247,14 +247,14 @@ function exporter() {
 }
 
 /* Corrections après relecture : numéro de ligne -> adresse retenue ('' = écartée, aucun envoi) */
-var CHOIX = {};
-var A_VALIDER = [];
+/* Relecture du 11 nov. 2026 : priorité Paris / Île-de-France (demande de Yassine) et adresses génériques seulement */
+var CHOIX = { 160: 'concierge@majestic-hotel.com', 161: 'concierge@raphael-hotel.com', 162: 'management@regina-hotel.com', 195: 'contact@hotel-west-end.com', 98: 'info.paris@karlaotto.com', 214: 'hello@smartflyer.com' };
+var ECARTEES = [3, 7, 18, 19, 21, 22, 25, 30, 33, 36, 37, 38, 39, 48, 50, 52, 54, 55, 56, 57, 61, 62, 63, 64, 66, 67, 68, 69, 71, 73, 77, 78, 79, 80, 82, 84, 85, 99, 102, 103, 104, 105, 106, 115, 118, 122, 127, 135, 137, 141, 143, 145, 147, 150, 219, 221, 232];
+var A_VALIDER = [2, 4, 5, 6, 8, 14, 91, 96, 98, 111, 112, 132, 153, 156, 160, 161, 162, 163, 168, 169, 170, 183, 184, 185, 186, 188, 191, 195, 199, 207, 208, 213, 214, 216, 217, 222, 229, 231, 233, 234, 235, 237, 238, 239];
 function appliquerChoix() {
   var sh = ss_().getSheetByName(FEUILLE);
-  Object.keys(CHOIX).forEach(function (r) {
-    if (CHOIX[r]) sh.getRange(+r, 5).setValue(CHOIX[r]);
-    else { sh.getRange(+r, 5).setValue(''); sh.getRange(+r, 9).setValue('écartée (adresse non adaptée)'); }
-  });
+  Object.keys(CHOIX).forEach(function (r) { sh.getRange(+r, 5).setValue(CHOIX[r]); });
+  ECARTEES.forEach(function (r) { sh.getRange(+r, 9).setValue('écartée : hors Paris / Île-de-France ou adresse non adaptée (presse, juridique, personnelle…)'); });
   A_VALIDER.forEach(function (r) { sh.getRange(+r, 7).setValue('OUI'); });
   Logger.log('corrections : ' + Object.keys(CHOIX).length + ' ; validées : ' + A_VALIDER.length);
 }
