@@ -126,14 +126,16 @@ var QUI = {
         voyage: 'votre agence envoie régulièrement des clients exigeants à Paris et en France',
         affaires: 'votre agence organise les déplacements de dirigeants et de collaborateurs à Paris',
         reseau: 'vos membres reçoivent régulièrement des dirigeants et des invités à Paris',
-        limo: 'vos clients voyagent régulièrement à Paris et ont besoin d’un partenaire local de confiance' },
+        limo: 'vos clients voyagent régulièrement à Paris et ont besoin d’un partenaire local de confiance',
+        media: 'vos correspondants, vos équipes de tournage et vos invités se déplacent régulièrement à Paris' },
   EN: { aviation: 'your company regularly flies passengers and crews into Paris', maritime: 'your company regularly sends crews and guests through Paris',
         luxe: 'your company regularly welcomes clients and guests in Paris', finance: 'your company regularly organises meetings and executive travel in Paris',
         hotel: 'your hotel welcomes guests who often need a chauffeur in Paris',
         voyage: 'your agency regularly sends discerning clients to Paris and France',
         affaires: 'your agency manages travel for executives and teams coming to Paris',
         reseau: 'your members regularly welcome executives and guests in Paris',
-        limo: 'your clients regularly travel to Paris and need a trusted local affiliate there' }
+        limo: 'your clients regularly travel to Paris and need a trusted local affiliate there',
+        media: 'your correspondents, crews and guests regularly travel to Paris' }
 };
 
 var LIGNE = {
@@ -146,7 +148,8 @@ var LIGNE = {
     voyage: 'l’accueil à l’aéroport, le chauffeur à disposition et les excursions privées (Versailles, Giverny…) pour vos clients à Paris',
     affaires: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour vos voyageurs d’affaires à Paris',
     reseau: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour les dirigeants et invités de vos membres à Paris',
-    limo: 'vos courses à Paris en sous-traitance : accueil à Roissy-CDG, Orly et Le Bourget, chauffeur à disposition, roadshows et événements'
+    limo: 'vos courses à Paris en sous-traitance : accueil à Roissy-CDG, Orly et Le Bourget, chauffeur à disposition, roadshows et événements',
+    media: 'leurs transferts aéroport (Roissy-CDG, Orly, Le Bourget) et un chauffeur à disposition pour les tournages, les directs et les interviews, avec Classe V pour les équipes et le matériel'
   },
   EN: {
     aviation: 'transfers for your passengers and crews between Paris Le Bourget, Charles de Gaulle (CDG), Orly and central Paris, at any hour',
@@ -157,7 +160,8 @@ var LIGNE = {
     voyage: 'airport meet & greet, chauffeurs at disposal and private day trips (Versailles, Giverny…) for your clients in Paris',
     affaires: 'airport transfers, roadshows and chauffeurs at disposal for your business travellers in Paris',
     reseau: 'airport transfers, roadshows and chauffeurs at disposal for your members’ executives and guests in Paris',
-    limo: 'your farm-out rides in Paris: meet & greet at Charles de Gaulle (CDG), Orly and Le Bourget, hourly chauffeur service, roadshows and events'
+    limo: 'your farm-out rides in Paris: meet & greet at Charles de Gaulle (CDG), Orly and Le Bourget, hourly chauffeur service, roadshows and events',
+    media: 'their airport transfers (CDG, Orly, Le Bourget) and a chauffeur at their disposal for shoots, live coverage and interviews, with V-Class vans for crews and equipment'
   }
 };
 
@@ -339,4 +343,37 @@ function validerLimo() {
   Object.keys(LIMO_CHOIX).forEach(function (r) { sh.getRange(+r, 5).setValue(LIMO_CHOIX[r]); });
   LIMO_OUI.forEach(function (r) { if (String(sh.getRange(+r, 1).getValue()) === 'limo' && sh.getRange(+r, 5).getValue()) sh.getRange(+r, 7).setValue('OUI'); });
   Logger.log('limousines validées : ' + LIMO_OUI.length);
+}
+
+/* Ajouts du 11 nov. 2026 (demande de Yassine) : grandes chaînes d'info quand leurs équipes viennent à Paris */
+var AJOUTS_MEDIA = [
+  ['media', 'CNN', 'cnn.com', 'EN'], ['media', 'Fox News', 'foxnews.com', 'EN'], ['media', 'CBS News', 'cbsnews.com', 'EN'],
+  ['media', 'NBC News', 'nbcnews.com', 'EN'], ['media', 'Al Jazeera', 'aljazeera.com', 'EN'], ['media', 'Al Jazeera Network', 'aljazeera.net', 'EN'],
+  ['media', 'CBC', 'cbc.ca', 'EN'], ['media', 'CNBC', 'cnbc.com', 'EN'], ['media', 'Bloomberg', 'bloomberg.com', 'EN'], ['media', 'Sky News', 'news.sky.com', 'EN']
+];
+function ajouterMedia() {
+  var sh = ss_().getSheetByName(FEUILLE), v = sh.getDataRange().getValues(), have = {};
+  for (var i = 1; i < v.length; i++) have[String(v[i][2]).toLowerCase()] = 1;
+  var add = AJOUTS_MEDIA.filter(function (r) { return !have[r[2]]; }).map(function (r) { return [r[0], r[1], r[2], r[3], r[4] || '', r[5] || '']; });
+  if (add.length) sh.getRange(sh.getLastRow() + 1, 1, add.length, 6).setValues(add);
+  Logger.log('ajoutées : ' + add.length + ' (lignes ' + (v.length + 1) + ' à ' + (v.length + add.length) + ')');
+}
+/* Lignes media : adresse trouvée + toutes les autres (pour relecture : pas d'adresse presse ni personnelle) */
+function exporterMedia() {
+  var v = ss_().getSheetByName(FEUILLE).getDataRange().getValues(), out = [];
+  for (var i = 1; i < v.length; i++) if (v[i][0] === 'media') out.push((i + 1) + ';' + v[i][1] + ';' + v[i][4] + ';' + String(v[i][5]).slice(0, 160));
+  Logger.log(out.join(' || '));
+}
+
+/* Carmel : leur réponse automatique donne seulement le service client ; demande de Yassine (« Oui c'est bon ») : mail pour le service des affiliés */
+function envoyerCarmel() {
+  var corps = ['Hello,',
+    'Could you please forward this message to your affiliate or farm-out department?',
+    'I am Yassine Rafaï, founder of Rafai Limousine, a premium private chauffeur company in Paris (CDG, Orly and Le Bourget airports, Paris and Île-de-France, 24/7). We would like to be Carmel\'s affiliate in Paris for your clients traveling to France: airport meet & greet, hourly chauffeur service, roadshows and events.',
+    'Mercedes S-Class, E-Class, V-Class and Range Rover, live GPS tracking for passengers, fixed prices agreed in advance, invoicing to your company.',
+    'Who would be the right person to talk to? You can reach me at ' + TEL + ' or ' + REPLY + '.',
+    'Thank you,', 'Yassine Rafaï\nFounder – Rafai Limousine\nwww.rafai-limousine.com'];
+  MailApp.sendEmail('customerservice@carmellimo.com', 'Paris affiliate – Rafai Limousine (please forward to your affiliate department)', corps.join('\n\n'),
+    { name: 'Yassine Rafaï – Rafai Limousine', replyTo: REPLY });
+  Logger.log('envoyé à Carmel (service client, pour le service des affiliés)');
 }
