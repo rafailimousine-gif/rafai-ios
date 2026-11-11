@@ -58,3 +58,15 @@ function teamHttp_(body) {
   catch (err) { return cliOut_({ ok: false, err: String((err && err.message) || err).slice(0, 300) }); }
   finally { TEAM_ME_ = ''; }
 }
+/* Ancienne adresse Google de l'Espace équipe : fermée le 12 nov. 2026 (demande de Yassine) → page « nouvelle adresse ».
+ * Pour la rouvrir : TEAM_OLD_CLOSED = false, puis nouvelle version du déploiement de l'équipe. */
+var TEAM_OLD_CLOSED = true;
+var TEAM_NEW_URL = 'https://rafai-equipe.web.app';
+function teamMovedHtml_() {
+  return '<!doctype html><html><head><meta charset="utf-8"><base target="_top"></head><body style="margin:0;font-family:Helvetica,Arial,sans-serif;background:#0b0b0c;color:#f6f1e7;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center">' +
+    '<div style="padding:28px;max-width:420px"><div style="color:#E0BA6C;letter-spacing:.24em;font-weight:800;font-size:12px">RAFAI LIMOUSINE · ÉQUIPE</div>' +
+    '<h1 style="font-family:Georgia,serif;font-weight:600;font-size:26px;margin:16px 0 10px">L’Espace équipe a changé d’adresse</h1>' +
+    '<p style="color:rgba(246,241,231,.7);font-size:15px;line-height:1.5;margin:0 0 22px">Il est plus rapide. Connectez-vous avec votre e-mail : vous recevrez un code.</p>' +
+    '<a href="' + TEAM_NEW_URL + '" target="_top" style="display:inline-block;padding:15px 26px;border-radius:14px;background:linear-gradient(135deg,#f0d394,#d9b36a 45%,#b8873f);color:#16110a;font-weight:800;text-decoration:none">Ouvrir le nouvel Espace équipe</a>' +
+    '<p style="margin:18px 0 0;font-size:13px;color:rgba(246,241,231,.5)">' + TEAM_NEW_URL.replace('https://', '') + '</p></div></body></html>';
+}
