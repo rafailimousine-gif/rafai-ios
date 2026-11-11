@@ -123,11 +123,15 @@ var QUI = {
   FR: { aviation: 'votre société accueille régulièrement des passagers et des équipages à Paris', maritime: 'votre société fait régulièrement voyager des équipages et des clients par Paris',
         luxe: 'votre société reçoit régulièrement des clients et des invités à Paris', finance: 'votre société organise régulièrement des rendez-vous et des déplacements à Paris',
         hotel: 'votre établissement accueille des clients qui ont souvent besoin d’un chauffeur à Paris',
-        voyage: 'votre agence envoie régulièrement des clients exigeants à Paris et en France' },
+        voyage: 'votre agence envoie régulièrement des clients exigeants à Paris et en France',
+        affaires: 'votre agence organise les déplacements de dirigeants et de collaborateurs à Paris',
+        reseau: 'vos membres reçoivent régulièrement des dirigeants et des invités à Paris' },
   EN: { aviation: 'your company regularly flies passengers and crews into Paris', maritime: 'your company regularly sends crews and guests through Paris',
         luxe: 'your company regularly welcomes clients and guests in Paris', finance: 'your company regularly organises meetings and executive travel in Paris',
         hotel: 'your hotel welcomes guests who often need a chauffeur in Paris',
-        voyage: 'your agency regularly sends discerning clients to Paris and France' }
+        voyage: 'your agency regularly sends discerning clients to Paris and France',
+        affaires: 'your agency manages travel for executives and teams coming to Paris',
+        reseau: 'your members regularly welcome executives and guests in Paris' }
 };
 
 var LIGNE = {
@@ -137,7 +141,9 @@ var LIGNE = {
     luxe: "l'accueil et les déplacements de vos clients et invités à Paris (événements, défilés, rendez-vous, visites, shopping)",
     finance: 'les roadshows, rendez-vous investisseurs et déplacements de vos dirigeants à Paris, avec chauffeur à disposition à l’heure ou à la journée',
     hotel: 'les transferts aéroport et le chauffeur à disposition pour vos clients, en complément de votre conciergerie',
-    voyage: 'l’accueil à l’aéroport, le chauffeur à disposition et les excursions privées (Versailles, Giverny…) pour vos clients à Paris'
+    voyage: 'l’accueil à l’aéroport, le chauffeur à disposition et les excursions privées (Versailles, Giverny…) pour vos clients à Paris',
+    affaires: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour vos voyageurs d’affaires à Paris',
+    reseau: 'les transferts aéroport, les roadshows et le chauffeur à disposition pour les dirigeants et invités de vos membres à Paris'
   },
   EN: {
     aviation: 'transfers for your passengers and crews between Paris Le Bourget, Charles de Gaulle (CDG), Orly and central Paris, at any hour',
@@ -145,7 +151,9 @@ var LIGNE = {
     luxe: 'meet & greet and chauffeur services for your clients and guests in Paris (events, shows, appointments, viewings, shopping)',
     finance: 'roadshows, investor meetings and executive travel in Paris, with a chauffeur at your disposal by the hour or by the day',
     hotel: 'airport transfers and chauffeurs at disposal for your guests in Paris',
-    voyage: 'airport meet & greet, chauffeurs at disposal and private day trips (Versailles, Giverny…) for your clients in Paris'
+    voyage: 'airport meet & greet, chauffeurs at disposal and private day trips (Versailles, Giverny…) for your clients in Paris',
+    affaires: 'airport transfers, roadshows and chauffeurs at disposal for your business travellers in Paris',
+    reseau: 'airport transfers, roadshows and chauffeurs at disposal for your members’ executives and guests in Paris'
   }
 };
 
@@ -264,4 +272,26 @@ function appliquerChoix() {
   ECARTEES.forEach(function (r) { sh.getRange(+r, 9).setValue('écartée : hors Paris / Île-de-France ou adresse non adaptée (presse, juridique, personnelle…)'); });
   A_VALIDER.forEach(function (r) { sh.getRange(+r, 7).setValue('OUI'); });
   Logger.log('corrections : ' + Object.keys(CHOIX).length + ' ; validées : ' + A_VALIDER.length);
+}
+
+/* Ajouts du 11 nov. 2026 (demande de Yassine) : agences de voyage d'affaires (American Express GBT…), AmCham, agences de luxe américaines */
+var AJOUTS = [
+  ['affaires', 'American Express Global Business Travel', 'amexglobalbusinesstravel.com', 'EN'], ['affaires', 'Amex GBT', 'amexgbt.com', 'EN'],
+  ['affaires', 'BCD Travel', 'bcdtravel.com', 'EN'], ['affaires', 'CWT', 'mycwt.com', 'EN'], ['affaires', 'FCM Travel', 'fcmtravel.com', 'EN'],
+  ['affaires', 'Egencia', 'egencia.com', 'EN'], ['affaires', 'Corporate Travel Management', 'travelctm.com', 'EN'], ['affaires', 'Direct Travel', 'directtravel.com', 'EN'],
+  ['affaires', 'Internova Travel Group', 'internova.com', 'EN'], ['affaires', 'Navan', 'navan.com', 'EN'], ['affaires', 'Selectour', 'selectour.com', 'FR'],
+  ['affaires', 'Travel Planet', 'travelplanet.fr', 'FR'], ['affaires', 'ATPI', 'atpi.com', 'EN'], ['affaires', 'Ovation DMC', 'ovationdmc.com', 'EN'],
+  ['reseau', 'AmCham France', 'amchamfrance.org', 'FR'],
+  ['voyage', 'Virtuoso', 'virtuoso.com', 'EN'], ['voyage', 'Signature Travel Network', 'signaturetravelnetwork.com', 'EN'], ['voyage', 'Global Travel Collection', 'globaltravelcollection.com', 'EN'],
+  ['voyage', 'Classic Vacations', 'classicvacations.com', 'EN'], ['voyage', 'Zicasso', 'zicasso.com', 'EN'], ['voyage', 'Tauck', 'tauck.com', 'EN'],
+  ['voyage', 'Europe Express', 'europeexpress.com', 'EN'], ['voyage', 'Avanti Destinations', 'avantidestinations.com', 'EN'], ['voyage', 'Departure Lounge', 'departurelounge.com', 'EN'],
+  ['voyage', 'Coastline Travel Advisors', 'coastlinetravel.com', 'EN'], ['voyage', 'Andavo Travel', 'andavotravel.com', 'EN'], ['voyage', 'Backroads', 'backroads.com', 'EN'],
+  ['voyage', 'Red Savannah', 'redsavannah.com', 'EN'], ['voyage', 'Travel + Leisure Co.', 'travelandleisureco.com', 'EN'], ['voyage', 'Jet Set World Travel', 'jetsetworldtravel.com', 'EN']
+];
+function ajouter() {
+  var sh = ss_().getSheetByName(FEUILLE), v = sh.getDataRange().getValues(), have = {};
+  for (var i = 1; i < v.length; i++) have[String(v[i][2]).toLowerCase()] = 1;
+  var add = AJOUTS.filter(function (r) { return !have[r[2]]; });
+  if (add.length) sh.getRange(sh.getLastRow() + 1, 1, add.length, 4).setValues(add);
+  Logger.log('ajoutées : ' + add.length + ' (lignes ' + (v.length + 1) + ' à ' + (v.length + add.length) + ')');
 }
