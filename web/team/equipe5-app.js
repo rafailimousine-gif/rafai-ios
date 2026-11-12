@@ -7,8 +7,9 @@ function vehOk(b,d,s){
   var l=allVeh(d),vr=$('input[name="veh"]:checked',s),v=l[vr?Number(vr.value):autoVeh(d,b)]||l[0],want=vcls(b.car),got=vcls((v&&(v.carType||v.car))||'');
   var old=$('#vehWarn',s);if(old)old.remove();
   if(got&&got===want)return true;
+  if(!got){toast('Catégorie du véhicule inconnue : vérifiez que c’est bien une '+want);return true}
   var bx=$('#asgBtn',s),w=document.createElement('div');w.id='vehWarn';w.className='blkbar';
-  w.innerHTML='⚠ Course réservée en <b>'+esc(want)+'</b>'+(got?' : le véhicule choisi est <b>'+esc(got)+'</b>.':' : le véhicule de ce chauffeur n’a pas de catégorie.')+' Choisissez un chauffeur avec une <b>'+esc(want)+'</b>, ou changez d’abord la catégorie de la course (Modifier).';
+  w.innerHTML='⚠ Course réservée en <b>'+esc(want)+'</b>'+' : le véhicule choisi est <b>'+esc(got)+'</b>.'+' Choisissez un chauffeur avec une <b>'+esc(want)+'</b>, ou changez d’abord la catégorie de la course (Modifier).';
   if(bx&&bx.parentNode)bx.parentNode.insertBefore(w,bx);else toast('Catégorie du véhicule différente de la course',true);
   toast('Il faut une '+want+' pour cette course',true);
   try{w.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){}
