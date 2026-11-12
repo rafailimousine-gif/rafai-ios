@@ -14,7 +14,7 @@ if len(pat.findall(s)) != 1:
     print('ARRET call() introuvable', len(pat.findall(s))); sys.exit(1)
 CALL = r'''function call(action,payload){return rlTeam.ready().then(function(t){return fetch(rlTeam.api+'?app=team',{method:'POST',body:JSON.stringify({a:action,p:payload||{},t:t})}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok)return j.r;if(j&&j.err==='auth'){rlTeam.forget();return call(action,payload)}throw new Error((j&&j.err)||'Erreur réseau')})}).catch(function(e){throw (e&&e.message)?e.message:String(e)})}'''
 s = pat.sub(lambda m: CALL, s)
-HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no">
+HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, shrink-to-fit=no">
 <meta name="description" content="Espace équipe Rafai Limousine : courses, clients, chauffeurs, suivi et factures.">
 <link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#0b0b0c">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -115,12 +115,12 @@ s = s.replace('</head>', HEAD + '\n</head>', 1)
 if re.search(r'<title>', s): s = re.sub(r'<title>[^<]*</title>', '<title>Rafai Team – Espace équipe</title>', s, count=1)
 else: s = s.replace('<link rel="manifest"', '<title>Rafai Team – Espace équipe</title>\n<link rel="manifest"', 1)
 import hashlib, os
-# polices Google : chargées sans bloquer l'affichage
+# polices Google : chargées juste après le premier affichage (n'empêchent plus la page de s'afficher)
+FONTS = []
 def _font(m):
-    href = m.group(1)
-    return ('<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'">'
-            '<noscript><link rel="stylesheet" href="%s"></noscript>') % (href, href)
+    FONTS.append(m.group(1)); return ''
 s = re.sub(r'<link href="(https://fonts\.googleapis\.com/css2[^"]+)" rel="stylesheet">', _font, s)
+s = re.sub(r'<link rel="preconnect" href="https://fonts\.(googleapis|gstatic)\.com"( crossorigin)?>\n?', '', s)
 # écran de connexion dès l'ouverture de la page
 s = re.sub(r'(<body[^>]*>)', lambda m: m.group(1) + '<script>rlTeam.early()</script>', s, count=1)
 # le gros script de l'appli → fichier à part, chargé en « defer » (la page s'affiche sans l'attendre)
@@ -131,7 +131,13 @@ if big is not None and len(big.group(1)) > 50000:
     code = big.group(1)
     name = 'app.' + hashlib.md5(code.encode('utf-8')).hexdigest()[:10] + '.js'
     io.open(os.path.join(os.path.dirname(os.path.abspath(out)), name), 'w', encoding='utf-8').write(code)
-    s = s[:big.start()] + '<script src="/' + name + '" defer></script>' + s[big.end():]
+    s = s[:big.start()] + s[big.end():]
+    import json as _j
+    loader = ('<script>(function(){function go(){var d=document;' + _j.dumps(FONTS) + '.forEach(function(h){var l=d.createElement("link");l.rel="stylesheet";l.href=h;d.head.appendChild(l)});'
+              'var s=d.createElement("script");s.src="/' + name + '";d.body.appendChild(s)}'
+              'requestAnimationFrame(function(){requestAnimationFrame(function(){setTimeout(go,0)})})})()</script>')
+    i = s.rfind('</body>')
+    s = s[:i] + loader + '\n' + s[i:]
     print('appli', name, len(code))
 io.open(out, 'w', encoding='utf-8').write(s)
-print('ok rlTeamWeb v4', len(s))
+print('ok rlTeamWeb v5', len(s))
