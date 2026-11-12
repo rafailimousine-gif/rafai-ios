@@ -5,9 +5,7 @@
  * - Adresses : comme le site internet — propositions immédiates (Base Adresse Nationale + OpenStreetMap, gratuits, sans clé),
  *   Google Maps seulement si elles ne trouvent rien. */
 (function(){
-  var _c=call,K='rl_c_';
-  function get(k){try{var v=localStorage.getItem(K+k);return v?JSON.parse(v):null}catch(e){return null}}
-  function put(k,v){try{localStorage.setItem(K+k,JSON.stringify(v))}catch(e){try{localStorage.removeItem(K+k)}catch(z){}}}
+  var _c=call;
   function fast(q){
     function g(u,ms){var c=('AbortController' in window)?new AbortController():null;if(c)setTimeout(function(){c.abort()},ms);return fetch(u,c?{signal:c.signal,credentials:'omit'}:{credentials:'omit'}).then(function(r){if(!r.ok)throw 0;return r.json()})}
     var ban=g('https://data.geopf.fr/geocodage/search?limit=5&autocomplete=1&lat=48.8566&lon=2.3522&q='+encodeURIComponent(q),1400).then(function(j){
@@ -32,12 +30,6 @@
     if(a==='geo'&&p.q){
       var q=String(p.q).slice(0,160);
       return fast(q).then(function(l){if(l.length>=2)return {results:l};return _c(a,p).then(function(d){var g=(d&&d.results)||[];return {results:l.concat(g).slice(0,6)}}).catch(function(){return {results:l}})});
-    }
-    if(a==='valList'){
-      var h2=get('valList'),f2=_c(a,p).then(function(d){put('valList',d);return d});
-      if(!h2)return f2;
-      f2.then(function(d){S.inv=d.list||[];try{if(S.view==='invoices')invList()}catch(e){}}).catch(function(){});
-      return Promise.resolve(h2);
     }
     return _c(a,p);
   };
