@@ -1,0 +1,10 @@
+/* rlTeam9 v1 : onglet Fournisseurs */
+.spseg{margin:0 0 14px;flex-wrap:wrap}
+.spseg button span{opacity:.6;font-weight:600;margin-left:3px}
+.spc{cursor:pointer;position:relative}
+.spm{display:flex;flex-direction:column;gap:2px;margin-top:10px;font-size:12.5px;color:var(--ink2);overflow:hidden}
+.spm span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sptag{display:inline-block;align-self:flex-start;margin-top:10px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;background:var(--paper);border:1px solid var(--line);color:var(--ink2)}
+.sptag.sp-mail{background:var(--goldbg);border-color:var(--goldline);color:var(--ink)}
+.splinks{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.splinks .btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
