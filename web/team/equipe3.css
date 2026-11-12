@@ -1,0 +1,23 @@
+/* rlTeam3 v1 (12 nov. 2026) */
+.swr>.dacts{position:relative;z-index:2;background:var(--card);padding:8px 14px 12px;margin:0;border-top:1px dashed var(--line)}
+.cswr{position:relative;overflow:hidden;border-radius:var(--r);display:flex}
+.cswr>.dcard{position:relative;z-index:1;flex:1;min-width:0;touch-action:pan-y}
+.cswa{position:absolute;top:0;right:0;bottom:0;display:flex}
+.cswb{border:0;width:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:inherit;font-weight:800;font-size:13px;color:#fff;cursor:pointer}
+.cswb svg{width:20px;height:20px}
+.cswb.ed{background:#245B9E}.cswb.de{background:#B42318}.cswb.armed{background:#7A1A12!important}
+@media (max-width:760px){
+  .swr>.card{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;grid-template-areas:"d c s" "t t p"!important;gap:3px 10px!important;padding:10px 12px!important;min-height:0!important;align-items:center;text-align:left}
+  .swr>.card>span{margin:0!important;padding:0!important}
+  .swr>.card .c-d{grid-area:d;font-weight:800;font-size:13px;white-space:nowrap}
+  .swr>.card .c-c{grid-area:c;min-width:0;display:block!important;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .swr>.card .c-c b{font-size:14px}
+  .swr>.card .c-c i{display:none!important}
+  .swr>.card .c-s{grid-area:s;justify-self:end;display:flex!important;gap:4px;flex-wrap:nowrap;white-space:nowrap}
+  .swr>.card .c-s .badge,.swr>.card .c-s .tag{font-size:11px}
+  .swr>.card .c-t{grid-area:t;min-width:0;display:block!important;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:12.5px;color:var(--muted)}
+  .swr>.card .c-t b,.swr>.card .c-t i{display:inline!important;font-style:normal;font-weight:600;font-size:12.5px}
+  .swr>.card .c-t b{color:var(--ink2)}
+  .swr>.card .c-p{grid-area:p;justify-self:end;font-size:13px;font-weight:700;white-space:nowrap}
+  .swr>.card .c-r,.swr>.card .c-x{display:none!important}
+}

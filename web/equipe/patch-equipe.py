@@ -15,6 +15,8 @@ if len(pat.findall(s)) != 1:
 CALL = r'''function call(action,payload){return rlTeam.ready().then(function(t){return fetch(rlTeam.api+'?app=team',{method:'POST',body:JSON.stringify({a:action,p:payload||{},t:t})}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok)return j.r;if(j&&j.err==='auth'){rlTeam.forget();return call(action,payload)}throw new Error((j&&j.err)||'Erreur réseau')})}).catch(function(e){throw (e&&e.message)?e.message:String(e)})}'''
 s = pat.sub(lambda m: CALL, s)
 HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Espace équipe Rafai Limousine : courses, clients, chauffeurs, suivi et factures.">
+<link rel="preload" as="image" href="/logo.webp" fetchpriority="high">
 <link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#0b0b0c">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Rafai Team"><link rel="apple-touch-icon" href="/icon-192.png"><link rel="icon" href="/icon-192.png">
@@ -23,7 +25,7 @@ HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, v
   background:radial-gradient(ellipse 700px 600px at 50% 35%,rgba(201,160,99,.18),transparent 70%),#0b0b0c;color:#f6f1e7;
   font:500 16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 #rlLogin .c{width:100%;max-width:380px;text-align:center}
-#rlLogin img{width:150px}
+#rlLogin img{width:150px;height:auto}
 #rlLogin .k{margin:18px 0 4px;font-size:12px;font-weight:800;letter-spacing:.24em;color:#E0BA6C}
 #rlLogin h1{margin:0 0 18px;font:600 26px/1.2 Georgia,"Times New Roman",serif}
 #rlLogin input{display:block;width:100%;box-sizing:border-box;margin:0 0 10px;padding:14px 15px;border-radius:13px;border:1px solid rgba(224,186,108,.35);
@@ -61,7 +63,7 @@ var rlTeam=(function(){
   function finish(d,t){ls(KT,t);d.remove();var f=done;wait=null;done=null;if(f)f(t)}
   function offer(d,t){
     if(!PK||ls(KP)==='1'){finish(d,t);return}
-    d.querySelector('.c').innerHTML='<img src="/logo.png" alt="Rafai Limousine"><div class="k">ESPACE ÉQUIPE</div><h1>Activer Face ID ?</h1>'+
+    d.querySelector('.c').innerHTML='<img src="/logo.webp" width="150" height="144" alt="Rafai Limousine"><div class="k">ESPACE ÉQUIPE</div><h1>Activer Face ID ?</h1>'+
       '<p class="s" style="font-size:15px;margin:0 0 16px">La prochaine fois, connectez-vous avec Face ID (ou Touch ID), sans code par e-mail.</p>'+
       '<button id="rlPkOn">Activer Face ID</button><button id="rlPkNo" class="ghost">Plus tard</button><div class="e" id="rlErr"></div>';
     document.getElementById('rlPkNo').onclick=function(){finish(d,t)};
@@ -71,7 +73,7 @@ var rlTeam=(function(){
   function screen(){
     if(document.getElementById('rlLogin'))return;
     var d=document.createElement('div');d.id='rlLogin';
-    d.innerHTML='<div class="c"><img src="/logo.png" alt="Rafai Limousine"><div class="k">ESPACE ÉQUIPE</div><h1>Connexion</h1>'+
+    d.innerHTML='<div class="c"><img src="/logo.webp" width="150" height="144" alt="Rafai Limousine"><div class="k">ESPACE ÉQUIPE</div><h1>Connexion</h1>'+
       (PK?'<button id="rlPk" type="button">Se connecter avec Face ID</button><div class="or">ou avec un code par e-mail</div>':'')+
       '<form id="rlF1"><input id="rlE" type="email" autocomplete="email" inputmode="email" placeholder="Votre e-mail" required><button id="rlB1"'+(PK?' class="ghost"':'')+'>Recevoir un code</button></form>'+
       '<form id="rlF2" style="display:none"><input id="rlC" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Code à 6 chiffres" required><button id="rlB2">Se connecter</button>'+
@@ -91,7 +93,8 @@ var rlTeam=(function(){
     document.getElementById('rlBack').onclick=function(ev){ev.preventDefault();document.getElementById('rlF2').style.display='none';document.getElementById('rlF1').style.display='block';E.focus()};
     if(!pb)setTimeout(function(){(E.value?document.getElementById('rlB1'):E).focus()},50);
   }
-  return{api:API,pk:PK,
+  function early(){if(!ls(KT)&&!wait){wait=new Promise(function(r){done=r});screen()}}
+  return{api:API,pk:PK,early:early,
     ready:function(){var t=ls(KT);if(t)return Promise.resolve(t);if(!wait){wait=new Promise(function(r){done=r});if(document.body)screen();else document.addEventListener('DOMContentLoaded',screen)}return wait},
     forget:function(){ls(KT,null)},
     logout:function(){ls(KT,null);location.reload()}};
@@ -103,5 +106,24 @@ if '</head>' not in s:
 s = s.replace('</head>', HEAD + '\n</head>', 1)
 if re.search(r'<title>', s): s = re.sub(r'<title>[^<]*</title>', '<title>Rafai Team – Espace équipe</title>', s, count=1)
 else: s = s.replace('<link rel="manifest"', '<title>Rafai Team – Espace équipe</title>\n<link rel="manifest"', 1)
+import hashlib, os
+# polices Google : chargées sans bloquer l'affichage
+def _font(m):
+    href = m.group(1)
+    return ('<link rel="preload" as="style" href="%s" onload="this.onload=null;this.rel=\'stylesheet\'">'
+            '<noscript><link rel="stylesheet" href="%s"></noscript>') % (href, href)
+s = re.sub(r'<link href="(https://fonts\.googleapis\.com/css2[^"]+)" rel="stylesheet">', _font, s)
+# écran de connexion dès l'ouverture de la page
+s = re.sub(r'(<body[^>]*>)', lambda m: m.group(1) + '<script>rlTeam.early()</script>', s, count=1)
+# le gros script de l'appli → fichier à part, chargé en « defer » (la page s'affiche sans l'attendre)
+big = None
+for m in re.finditer(r'<script>([\s\S]*?)</script>', s):
+    if big is None or len(m.group(1)) > len(big.group(1)): big = m
+if big is not None and len(big.group(1)) > 50000:
+    code = big.group(1)
+    name = 'app.' + hashlib.md5(code.encode('utf-8')).hexdigest()[:10] + '.js'
+    io.open(os.path.join(os.path.dirname(os.path.abspath(out)), name), 'w', encoding='utf-8').write(code)
+    s = s[:big.start()] + '<script src="/' + name + '" defer></script>' + s[big.end():]
+    print('appli', name, len(code))
 io.open(out, 'w', encoding='utf-8').write(s)
-print('ok rlTeamWeb v2', len(s))
+print('ok rlTeamWeb v3', len(s))
