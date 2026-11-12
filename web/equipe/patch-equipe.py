@@ -14,9 +14,8 @@ if len(pat.findall(s)) != 1:
     print('ARRET call() introuvable', len(pat.findall(s))); sys.exit(1)
 CALL = r'''function call(action,payload){return rlTeam.ready().then(function(t){return fetch(rlTeam.api+'?app=team',{method:'POST',body:JSON.stringify({a:action,p:payload||{},t:t})}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok)return j.r;if(j&&j.err==='auth'){rlTeam.forget();return call(action,payload)}throw new Error((j&&j.err)||'Erreur réseau')})}).catch(function(e){throw (e&&e.message)?e.message:String(e)})}'''
 s = pat.sub(lambda m: CALL, s)
-HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no">
 <meta name="description" content="Espace équipe Rafai Limousine : courses, clients, chauffeurs, suivi et factures.">
-<link rel="preload" as="image" href="/logo.webp" fetchpriority="high">
 <link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#0b0b0c">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Rafai Team"><link rel="apple-touch-icon" href="/icon-192.png"><link rel="icon" href="/icon-192.png">
@@ -24,6 +23,7 @@ HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, v
 #rlLogin{position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;justify-content:center;padding:24px;
   background:radial-gradient(ellipse 700px 600px at 50% 35%,rgba(201,160,99,.18),transparent 70%),#0b0b0c;color:#f6f1e7;
   font:500 16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+html,body{overflow-x:hidden;overflow-x:clip;max-width:100%}
 #rlLogin .c{width:100%;max-width:380px;text-align:center}
 #rlLogin img{width:150px;height:auto}
 #rlLogin .k{margin:18px 0 4px;font-size:12px;font-weight:800;letter-spacing:.24em;color:#E0BA6C}
@@ -42,7 +42,7 @@ HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, v
 </style>
 <script>
 var rlTeam=(function(){
-  var API='__API__',KT='rl_team_t',KE='rl_team_e',KP='rl_team_pk',RP='equipe.rafai-limousine.com',wait=null,done=null;
+  var LOGO='/logo.webp',API='__API__',KT='rl_team_t',KE='rl_team_e',KP='rl_team_pk',RP='equipe.rafai-limousine.com',wait=null,done=null;
   function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(x){}return null}
   if(/[?&]logout=1/.test(location.search)){ls(KT,null);try{history.replaceState(null,'',location.pathname)}catch(x){}}
   function post(app,o){return fetch(API+'?app='+app,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
@@ -63,7 +63,7 @@ var rlTeam=(function(){
   function finish(d,t){ls(KT,t);d.remove();var f=done;wait=null;done=null;if(f)f(t)}
   function offer(d,t){
     if(!PK||ls(KP)==='1'){finish(d,t);return}
-    d.querySelector('.c').innerHTML='<img src="/logo.webp" width="150" height="144" alt="Rafai Limousine"><div class="k">ESPACE ÉQUIPE</div><h1>Activer Face ID ?</h1>'+
+    d.querySelector('.c').innerHTML='<img src="'+LOGO+'" width="150" height="144" alt="Rafai Limousine"><div class="k">ESPACE ÉQUIPE</div><h1>Activer Face ID ?</h1>'+
       '<p class="s" style="font-size:15px;margin:0 0 16px">La prochaine fois, connectez-vous avec Face ID (ou Touch ID), sans code par e-mail.</p>'+
       '<button id="rlPkOn">Activer Face ID</button><button id="rlPkNo" class="ghost">Plus tard</button><div class="e" id="rlErr"></div>';
     document.getElementById('rlPkNo').onclick=function(){finish(d,t)};
@@ -73,7 +73,7 @@ var rlTeam=(function(){
   function screen(){
     if(document.getElementById('rlLogin'))return;
     var d=document.createElement('div');d.id='rlLogin';
-    d.innerHTML='<div class="c"><img src="/logo.webp" width="150" height="144" alt="Rafai Limousine"><div class="k">ESPACE ÉQUIPE</div><h1>Connexion</h1>'+
+    d.innerHTML='<div class="c"><img src="'+LOGO+'" width="150" height="144" alt="Rafai Limousine"><div class="k">ESPACE ÉQUIPE</div><h1>Connexion</h1>'+
       (PK?'<button id="rlPk" type="button">Se connecter avec Face ID</button><div class="or">ou avec un code par e-mail</div>':'')+
       '<form id="rlF1"><input id="rlE" type="email" autocomplete="email" inputmode="email" placeholder="Votre e-mail" required><button id="rlB1"'+(PK?' class="ghost"':'')+'>Recevoir un code</button></form>'+
       '<form id="rlF2" style="display:none"><input id="rlC" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Code à 6 chiffres" required><button id="rlB2">Se connecter</button>'+
@@ -94,13 +94,21 @@ var rlTeam=(function(){
     if(!pb)setTimeout(function(){(E.value?document.getElementById('rlB1'):E).focus()},50);
   }
   function early(){if(!ls(KT)&&!wait){wait=new Promise(function(r){done=r});screen()}}
-  return{api:API,pk:PK,early:early,
+  function later(){var d=document.createElement('div');d.id='rlLogin';d.innerHTML='<div class="c"></div>';document.body.appendChild(d);
+    var t=ls(KT);offer(d,t);var no=document.getElementById('rlPkNo');if(no)no.onclick=function(){ls('rl_team_pk_later','1');d.remove()};
+    var on=document.getElementById('rlPkOn');if(on){var f=on.onclick;on.onclick=function(){var b=this,er=document.getElementById('rlErr');b.disabled=true;er.textContent='';pkAdd(t).then(function(){d.remove()}).catch(function(x){b.disabled=false;er.textContent=ERR[x]||ERR.serveur})}}}
+  if(PK&&ls(KT)&&ls(KP)!=='1'&&!ls('rl_team_pk_later'))window.addEventListener('load',function(){setTimeout(function(){if(!document.getElementById('rlLogin'))later()},1500)});
+  return{api:API,pk:PK,early:early,pkOn:function(){return ls(KP)==='1'},pkSetup:function(){return pkAdd(ls(KT))},me:function(){return ls(KE)||''},
     ready:function(){var t=ls(KT);if(t)return Promise.resolve(t);if(!wait){wait=new Promise(function(r){done=r});if(document.body)screen();else document.addEventListener('DOMContentLoaded',screen)}return wait},
     forget:function(){ls(KT,null)},
     logout:function(){ls(KT,null);location.reload()}};
 })();
 </script>'''.replace('__API__', api)
-if re.search(r'<meta[^>]+name=.viewport', s): HEAD = HEAD.split('\n', 1)[1]
+s = re.sub(r'<meta[^>]+name=.viewport[^>]*>\n?', '', s)
+import base64, os
+_lw = os.path.join(os.path.dirname(os.path.abspath(out)), 'logo.webp')
+if os.path.exists(_lw):
+    HEAD = HEAD.replace("var LOGO='/logo.webp'", "var LOGO='data:image/webp;base64," + base64.b64encode(open(_lw, 'rb').read()).decode() + "'")
 if '</head>' not in s:
     print('ARRET </head> absent'); sys.exit(1)
 s = s.replace('</head>', HEAD + '\n</head>', 1)
@@ -126,4 +134,4 @@ if big is not None and len(big.group(1)) > 50000:
     s = s[:big.start()] + '<script src="/' + name + '" defer></script>' + s[big.end():]
     print('appli', name, len(code))
 io.open(out, 'w', encoding='utf-8').write(s)
-print('ok rlTeamWeb v3', len(s))
+print('ok rlTeamWeb v4', len(s))
