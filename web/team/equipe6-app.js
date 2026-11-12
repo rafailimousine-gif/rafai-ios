@@ -21,7 +21,7 @@
     return new Promise(function(res){
       var R={b:null,o:null},done=false;
       function out(){if(done)return;done=true;var b=R.b||[],o=R.o||[],first=/^\s*\d/.test(q)?b.concat(o):o.concat(b),seen={},l=[];
-        first.forEach(function(x){var k=String(x.addr).toLowerCase().replace(/\W+/g,'');if(!x.addr||seen[k]||!isFinite(x.lat)||!isFinite(x.lng))return;seen[k]=1;l.push(x)});res(l.slice(0,6))}
+        first.forEach(function(x){var k=String(x.addr).toLowerCase().replace(/\W+/g,'');if(!x.addr||seen[k]||!isFinite(x.lat)||!isFinite(x.lng))return;seen[k]=1;l.push(x)});l=l.filter(function(x){return /France$/.test(x.addr)}).concat(l.filter(function(x){return !/France$/.test(x.addr)}));res(l.slice(0,6))}
       ban.then(function(l){R.b=l;if(R.o)out()});
       osm.then(function(l){R.o=l;if(R.b||l.length>=2)setTimeout(out,R.b?0:150)});
       setTimeout(out,1500);
