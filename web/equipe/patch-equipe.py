@@ -12,7 +12,7 @@ if not s.lower().startswith('<!doctype') or 'function call(action,payload)' not 
 pat = re.compile(r"function call\(action,payload\)\{\s*return new Promise\(function\(res,rej\)\{\s*google\.script\.run[\s\S]*?\.api\(action,payload\|\|\{\}\);\s*\}\);\s*\}")
 if len(pat.findall(s)) != 1:
     print('ARRET call() introuvable', len(pat.findall(s))); sys.exit(1)
-CALL = r'''function call(action,payload){return rlTeam.ready().then(function(t){return fetch(rlTeam.api+'?app=team',{method:'POST',body:JSON.stringify({a:action,p:payload||{},t:t})}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok)return j.r;if(j&&j.err==='auth'){rlTeam.forget();return call(action,payload)}throw new Error((j&&j.err)||'Erreur réseau')})}).catch(function(e){throw (e&&e.message)?e.message:String(e)})}'''
+CALL = r'''function call(action,payload){var net=function(){return rlTeam.ready().then(function(t){return fetch(rlTeam.api+'?app=team',{method:'POST',body:JSON.stringify({a:action,p:payload||{},t:t})}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok)return j.r;if(j&&j.err==='auth'){rlTeam.forget();return call(action,payload)}throw new Error((j&&j.err)||'Erreur réseau')})}).catch(function(e){throw (e&&e.message)?e.message:String(e)})};if(action==='init'&&rlTeam.has()){var c=rlTeam.cget('init'),f=net().then(function(d){rlTeam.cput('init',d);return d});if(c){f.then(function(d){if(window.rlFresh)window.rlFresh('init',d)}).catch(function(){});return Promise.resolve(c)}return f}if(action==='init')return net().then(function(d){rlTeam.cput('init',d);return d});return net()}'''
 s = pat.sub(lambda m: CALL, s)
 HEAD = r'''<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, shrink-to-fit=no">
 <meta name="description" content="Espace équipe Rafai Limousine : courses, clients, chauffeurs, suivi et factures.">
@@ -88,7 +88,7 @@ var rlTeam=(function(){
         document.getElementById('rlF2').style.display='block';document.getElementById('rlEm').textContent=E.value.trim();C.focus()}else er.textContent=ERR[(j&&j.err)||'serveur']||ERR.serveur})
       .catch(function(){b.disabled=false;er.textContent=ERR.serveur})};
     document.getElementById('rlF2').onsubmit=function(ev){ev.preventDefault();var b=document.getElementById('rlB2');b.disabled=true;er.textContent='';
-      post('tverify',{e:ls(KE),c:C.value}).then(function(j){b.disabled=false;if(j&&j.ok&&j.t){offer(d,j.t)}else er.textContent=ERR[(j&&j.err)||'serveur']||ERR.serveur})
+      post('tverify',{e:ls(KE),c:C.value}).then(function(j){b.disabled=false;if(j&&j.ok&&j.t){cclear();offer(d,j.t)}else er.textContent=ERR[(j&&j.err)||'serveur']||ERR.serveur})
       .catch(function(){b.disabled=false;er.textContent=ERR.serveur})};
     document.getElementById('rlBack').onclick=function(ev){ev.preventDefault();document.getElementById('rlF2').style.display='none';document.getElementById('rlF1').style.display='block';E.focus()};
     if(!pb)setTimeout(function(){(E.value?document.getElementById('rlB1'):E).focus()},50);
@@ -98,10 +98,13 @@ var rlTeam=(function(){
     var t=ls(KT);offer(d,t);var no=document.getElementById('rlPkNo');if(no)no.onclick=function(){ls('rl_team_pk_later','1');d.remove()};
     var on=document.getElementById('rlPkOn');if(on){var f=on.onclick;on.onclick=function(){var b=this,er=document.getElementById('rlErr');b.disabled=true;er.textContent='';pkAdd(t).then(function(){d.remove()}).catch(function(x){b.disabled=false;er.textContent=ERR[x]||ERR.serveur})}}}
   if(PK&&ls(KT)&&ls(KP)!=='1'&&!ls('rl_team_pk_later'))window.addEventListener('load',function(){setTimeout(function(){if(!document.getElementById('rlLogin'))later()},1500)});
-  return{api:API,pk:PK,early:early,pkOn:function(){return ls(KP)==='1'},pkSetup:function(){return pkAdd(ls(KT))},me:function(){return ls(KE)||''},
+  function cget(k){try{var v=localStorage.getItem('rl_c_'+k);return v?JSON.parse(v):null}catch(x){return null}}
+  function cput(k,v){try{localStorage.setItem('rl_c_'+k,JSON.stringify(v))}catch(x){try{localStorage.removeItem('rl_c_'+k)}catch(z){}}}
+  function cclear(){try{Object.keys(localStorage).forEach(function(k){if(k.indexOf('rl_c_')===0)localStorage.removeItem(k)})}catch(x){}}
+  return{api:API,pk:PK,early:early,has:function(){return !!ls(KT)},cget:cget,cput:cput,pkOn:function(){return ls(KP)==='1'},pkSetup:function(){return pkAdd(ls(KT))},me:function(){return ls(KE)||''},
     ready:function(){var t=ls(KT);if(t)return Promise.resolve(t);if(!wait){wait=new Promise(function(r){done=r});if(document.body)screen();else document.addEventListener('DOMContentLoaded',screen)}return wait},
     forget:function(){ls(KT,null)},
-    logout:function(){ls(KT,null);location.reload()}};
+    logout:function(){ls(KT,null);cclear();location.reload()}};
 })();
 </script>'''.replace('__API__', api)
 s = re.sub(r'<meta[^>]+name=.viewport[^>]*>\n?', '', s)
@@ -140,4 +143,4 @@ if big is not None and len(big.group(1)) > 50000:
     s = s[:i] + loader + '\n' + s[i:]
     print('appli', name, len(code))
 io.open(out, 'w', encoding='utf-8').write(s)
-print('ok rlTeamWeb v5', len(s))
+print('ok rlTeamWeb v6', len(s))
