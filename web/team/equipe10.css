@@ -1,18 +1,18 @@
-/* rlTeam10 v1 : onglet Chauffeurs en lignes + carte */
+/* rlTeam10 v1 : onglet Chauffeurs en lignes + carte (v1.1 : fonds du thème, lisible en mode sombre) */
 .dlbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:6px 0 10px}
 .dlbar .cpseg{margin:0}
-.dlcat{margin:0 0 12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.dlcat{margin:0 0 12px;border:1px solid var(--line);border-radius:14px}
 .dlcat>summary{cursor:pointer;padding:12px 16px;font-weight:700;font-size:13.5px;list-style:none}
 .dlcat>summary::-webkit-details-marker{display:none}
 .dlcat>summary:before{content:'▸';display:inline-block;margin-right:8px;transition:transform .15s}
 .dlcat[open]>summary:before{transform:rotate(90deg)}
 .dlcat .catbox{margin:0;border:0;box-shadow:none}
-.dlist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+.dlist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .dlhead,.dlist .drow{display:grid;grid-template-columns:minmax(190px,1.6fr) 1fr 1.2fr 1.15fr 1.15fr .9fr auto;gap:12px;align-items:center;padding:10px 14px}
 .dlhead{background:var(--paper);font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);border-bottom:1px solid var(--line)}
-.dlist .drow{margin:0;border:0;border-radius:0;box-shadow:none;background:#fff;border-bottom:1px solid var(--line);cursor:pointer;min-height:0;font-size:13.5px}
+.dlist .drow{margin:0;border:0;border-radius:0;box-shadow:none;border-bottom:1px solid var(--line);cursor:pointer;min-height:0;font-size:13.5px}
 .dlist .drow:last-child{border-bottom:0}
-.dlist .drow:hover{background:#FBF9F5}
+@media (hover:hover){.dlist .drow:hover{background:var(--paper)}}
 .dlist .drow.off{opacity:.6}
 .dlist .drow small{display:block;font-size:11.5px;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dl-who{display:flex;align-items:center;gap:10px;min-width:0}
