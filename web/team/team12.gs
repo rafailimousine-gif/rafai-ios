@@ -1,5 +1,6 @@
 /* ---------- rlTeam12 (13 nov. 2026, demande de Yassine) ----------
  * Plusieurs courses pour un même client, payées en une seule fois (un seul lien Stripe pour le total).
+ * v2 (13 nov. 15:50) : chaque course a son véhicule, ses passagers et sa prestation (ex. 6 véhicules pour un client) ; grpInfo_ renvoie véhicule et chauffeur.
  * - createGroup_  : « Nouvelle course » avec des courses en plus (p.more) : une réf. par course, toutes liées par la colonne « Paiement groupé » (= réf. de la 1re course).
  * - grpInfo_      : état du groupe (courses, prix, payé ou non, reste à payer).
  * - grpPayLink_   : un seul lien Stripe Checkout, une ligne par course, le total à payer. Feuille Paiements : une ligne par course (même session), Motif « Groupe <réf> · … ».
@@ -23,7 +24,7 @@ function createGroup_(p, me) {
   var r1 = createBooking_(p, me), grp = r1.booking.ref, refs = [grp];
   more.forEach(function (x) {
     var f = JSON.parse(JSON.stringify(base));
-    ['date', 'time', 'from', 'to', 'flight'].forEach(function (k) { f[k] = String(x[k] == null ? '' : x[k]); });
+    ['date', 'time', 'from', 'to', 'flight', 'car', 'pax', 'service'].forEach(function (k) { if (x[k] !== undefined) f[k] = String(x[k] == null ? '' : x[k]); });
     f.stops = ''; f.price = '';
     refs.push(createBooking_({ fields: f, status: p.status, priceOk: x.priceOk }, me).booking.ref);
   });
@@ -51,7 +52,7 @@ function grpInfo_(p) {
   var items = grpList_(b, grp).map(function (x) {
     var pr = grpPrice_(x), pi = pa[x.ref] || {}, st = x.status === 'Annulée' ? 'annulee' : /partenaire/i.test(x.pay || '') ? 'partenaire' : pi.paid ? 'paye' : pr === '' ? 'prix' : 'du';
     if (st === 'du') { due += pr; n++; } else if (st === 'prix') missing++;
-    return { ref: x.ref, date: x.date, time: x.time, from: x.from, to: x.to, price: pr === '' ? null : pr, st: st };
+    return { ref: x.ref, date: x.date, time: x.time, from: x.from, to: x.to, car: x.car, driver: x.driver, status: x.status, price: pr === '' ? null : pr, st: st };
   });
   return { grp: grp, items: items, due: Math.round(due * 100) / 100, n: n, missing: missing, ready: !!stripeKey_() };
 }

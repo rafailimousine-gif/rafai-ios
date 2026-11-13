@@ -1,33 +1,49 @@
-/* rlTeam12 (13 nov. 2026) : plusieurs courses pour un client, un seul paiement du total */
+/* rlTeam12 (13 nov. 2026) : plusieurs courses pour un client, un seul paiement du total
+   v2 : chaque course a sa prestation, son véhicule et ses passagers (ex. 6 véhicules pour un client), « Même trajet, autre véhicule »,
+   adresses avec suggestions Google (smartAddr), véhicule et chauffeur de chaque course dans « Paiement groupé » */
 (function(){
   FIELDS.grp='Paiement groupé';
   function num(v){var n=Number(String(v==null?'':v).replace(',','.').replace(/[^\d.]/g,''));return isFinite(n)?n:0}
   function dd(d){var m=String(d||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?m[3]+'/'+m[2]:String(d||'')}
-  function rowH(){return '<div class="grpR" style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px">'+
+  function mv(k){var nb=$('#newBox'),i=nb&&$('[data-k="'+k+'"]',nb);return i?String(i.value||''):''}
+  function sl(k,list,v,lab){return '<label class="f">'+lab+'<select data-g="'+k+'">'+opt(list||[],v||'','—')+'</select></label>'}
+  function inp(k,lab,v,type,extra,ph,im){return '<label class="f'+(extra||'')+'">'+lab+'<input data-g="'+k+'" type="'+(type||'text')+'" value="'+esc(v||'')+'"'+(ph?' placeholder="'+ph+'"':'')+(im?' inputmode="'+im+'"':'')+'></label>'}
+  function rowH(p){p=p||{};return '<div class="grpR" style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px">'+
     '<div class="row" style="justify-content:space-between;align-items:center"><b class="grpN">Course</b><button type="button" class="btn small" data-grp="del">Retirer</button></div>'+
     '<div class="fg" style="margin-top:8px">'+
-    '<label class="f">Date<input type="date" data-g="date"></label><label class="f">Heure<input type="time" data-g="time"></label>'+
-    '<label class="f full">Départ<input type="text" data-g="from" placeholder="Adresse de prise en charge"></label>'+
-    '<label class="f full">Arrivée<input type="text" data-g="to" placeholder="Adresse d’arrivée"></label>'+
-    '<label class="f">Vol / train<input type="text" data-g="flight" placeholder="Facultatif"></label>'+
-    '<label class="f">Prix client (€)<input type="text" inputmode="decimal" data-g="priceOk"></label></div></div>'}
+    sl('service',S.services,p.service,'Prestation')+sl('car',S.cars,p.car,'Véhicule')+
+    inp('date','Date',p.date,'date')+inp('time','Heure',p.time,'time')+
+    inp('from','Départ',p.from,'text',' full','Adresse de prise en charge')+inp('to','Arrivée',p.to,'text',' full','Adresse d’arrivée')+
+    inp('flight','Vol / train',p.flight,'text','','Facultatif')+inp('pax','Passagers',p.pax,'number')+
+    inp('priceOk','Prix client (€)',p.priceOk,'text','','','decimal')+'</div></div>'}
   function boxH(){return '<div class="box" id="grpBox"><h3>Plusieurs courses pour ce client</h3>'+
-    '<div class="hint" style="margin:0 0 4px">Même client et même véhicule. Chaque course garde sa référence et son chauffeur, et le client paie le total en une seule fois avec un seul lien.</div>'+
-    '<div id="grpList"></div><div class="row" style="margin-top:10px"><button type="button" class="btn small" data-grp="add">'+I.plus+'Ajouter une course</button></div>'+
+    '<div class="hint" style="margin:0 0 4px">Même client. Chaque course a sa référence, son véhicule et son chauffeur (à assigner ensuite dans chaque course, comme d’habitude). Le client paie le total en une seule fois avec un seul lien.</div>'+
+    '<div id="grpList"></div><div class="row" style="margin-top:10px;flex-wrap:wrap;gap:6px">'+
+    '<button type="button" class="btn small dark" data-grp="dup">'+I.plus+'Même trajet, autre véhicule</button>'+
+    '<button type="button" class="btn small" data-grp="add">'+I.plus+'Autre course</button></div>'+
     '<div class="hint hidden" id="grpTot" style="margin-top:10px"></div></div>'}
   function upd(){
     var L=document.querySelectorAll('#grpList .grpR'),t=$('#grpTot'),cb=$('#createB');if(!t)return;
     Array.prototype.forEach.call(L,function(r,i){var n=r.querySelector('.grpN');if(n)n.textContent='Course '+(i+2)});
     if(!L.length){t.classList.add('hidden');if(cb)cb.innerHTML=I.plus+'Créer la course';return}
-    var tot=num(($('#npo')||{}).value),miss=num(($('#npo')||{}).value)>0?0:1;
-    Array.prototype.forEach.call(L,function(r){var v=num(r.querySelector('[data-g="priceOk"]').value);tot+=v;if(!(v>0))miss++});
-    t.innerHTML='<b>Total pour le client : '+(L.length+1)+' courses · '+esc(eur(tot))+'</b>'+(miss?'<br>Prix client manquant sur '+miss+' course'+(miss>1?'s':'')+' : il faudra le mettre avant de créer le lien de paiement.':'')+
-      '<br>Après la création, ouvrez une des courses et cliquez sur « Créer le lien du total ».';
+    var tot=num(($('#npo')||{}).value),miss=num(($('#npo')||{}).value)>0?0:1,cars={};
+    var c1=mv('car');if(c1)cars[c1]=(cars[c1]||0)+1;
+    Array.prototype.forEach.call(L,function(r){var v=num(r.querySelector('[data-g="priceOk"]').value);tot+=v;if(!(v>0))miss++;var c=r.querySelector('[data-g="car"]').value;if(c)cars[c]=(cars[c]||0)+1});
+    var cl=Object.keys(cars).map(function(k){return cars[k]+' × '+k}).join(', ');
+    t.innerHTML='<b>Total pour le client : '+(L.length+1)+' courses · '+esc(eur(tot))+'</b>'+(cl?'<br>Véhicules : '+esc(cl):'')+(miss?'<br>Prix client manquant sur '+miss+' course'+(miss>1?'s':'')+' : il faudra le mettre avant de créer le lien de paiement.':'')+
+      '<br>Après la création, assignez un chauffeur à chaque course, puis cliquez sur « Créer le lien du total » dans l’une d’elles.';
     t.classList.remove('hidden');if(cb)cb.innerHTML=I.plus+'Créer les '+(L.length+1)+' courses';
+  }
+  function addRow(p){
+    var l=$('#grpList');if(!l)return;if(l.querySelectorAll('.grpR').length>=29){toast('29 courses en plus au maximum',true);return}
+    l.insertAdjacentHTML('beforeend',rowH(p));var r=l.lastElementChild;
+    ['from','to'].forEach(function(k){var i=r.querySelector('[data-g="'+k+'"]');try{if(i&&typeof smartAddr==='function')smartAddr(i,r)}catch(e){}});
+    upd();var f=r.querySelector(p&&p.date?'[data-g="car"]':'[data-g="date"]');if(f)f.focus();
   }
   var _on=openNew;
   openNew=function(){var r=_on.apply(this,arguments);try{var cb=$('#createB'),rw=cb&&cb.closest('.row');if(rw&&!$('#grpBox'))rw.insertAdjacentHTML('beforebegin',boxH())}catch(e){}return r};
   document.addEventListener('input',function(e){var t=e.target;if(t&&(t.id==='npo'||(t.closest&&t.closest('#grpList'))))upd()});
+  document.addEventListener('change',function(e){var t=e.target;if(t&&t.closest&&(t.closest('#grpList')||(t.matches&&t.matches('#newBox [data-k="car"]'))))upd()});
 
   var _c=call;
   call=function(name,p){
@@ -43,10 +59,15 @@
   function grpView(d){
     var st=$('#grpSt'),ls=$('#grpLst'),mk=$('#grpMk');if(!st)return;
     if(!d||!d.grp){st.textContent='Pas de groupe.';return}
-    var lab={du:'à payer',paye:'✓ payé',annulee:'annulée',partenaire:'partenaire',prix:'prix manquant'};
-    ls.innerHTML='<div style="display:grid;gap:6px;margin:0 0 10px">'+d.items.map(function(x){
-      return '<div class="row" style="justify-content:space-between;gap:8px;font-size:14px'+(x.ref===S.open?';font-weight:600':'')+'"><span>'+esc(x.ref)+' · '+esc(dd(x.date)+' '+(x.time||''))+'<br><span class="hint">'+esc(String(x.from||'')+(x.to?' → '+x.to:''))+'</span></span>'+
-        '<span style="text-align:right;white-space:nowrap">'+(x.price!=null?esc(eur(x.price)):'—')+'<br><span class="hint"'+(x.st==='paye'?' style="color:#1E7B46"':'')+'>'+lab[x.st]+'</span></span></div>'}).join('')+'</div>';
+    var lab={du:'à payer',paye:'✓ payé',annulee:'annulée',partenaire:'partenaire',prix:'prix manquant'},nd=0;
+    ls.innerHTML='<div style="display:grid;gap:8px;margin:0 0 10px">'+d.items.map(function(x){
+      if(!x.driver&&x.st!=='annulee')nd++;
+      return '<div class="row" style="justify-content:space-between;gap:8px;font-size:14px;align-items:flex-start'+(x.ref===S.open?';font-weight:600':'')+'"><span>'+
+        (x.ref===S.open?esc(x.ref):'<a href="#" data-grp="open" data-ref="'+esc(x.ref)+'">'+esc(x.ref)+'</a>')+' · '+esc(dd(x.date)+' '+(x.time||''))+
+        '<br><span class="hint">'+esc(String(x.from||'')+(x.to?' → '+x.to:''))+'</span>'+
+        '<br><span class="hint">'+esc(x.car||'Véhicule ?')+' · '+(x.driver?esc(x.driver):'<b style="color:#B4541A">chauffeur à assigner</b>')+'</span></span>'+
+        '<span style="text-align:right;white-space:nowrap">'+(x.price!=null?esc(eur(x.price)):'—')+'<br><span class="hint"'+(x.st==='paye'?' style="color:#1E7B46"':'')+'>'+lab[x.st]+'</span></span></div>'}).join('')+'</div>'+
+      (nd?'<div class="hint" style="margin:0 0 10px">'+nd+' course'+(nd>1?'s':'')+' sans chauffeur : touchez la référence pour l’ouvrir et assigner.</div>':'');
     if(!d.ready){st.textContent='Stripe n’est pas encore branché.';mk.classList.add('hidden');return}
     if(!d.n&&!d.missing){st.innerHTML='<b style="color:#1E7B46">✓ Tout est payé</b> ('+d.items.length+' courses)';mk.classList.add('hidden');return}
     if(d.missing){st.textContent='Mettez le prix client sur toutes les courses du groupe avant de créer le lien ('+d.missing+' manquant'+(d.missing>1?'s':'')+').';mk.classList.add('hidden');return}
@@ -66,8 +87,10 @@
   document.addEventListener('click',function(ev){
     var t=ev.target&&ev.target.closest&&ev.target.closest('[data-grp]');if(!t||t.disabled)return;
     var a=t.dataset.grp;
-    if(a==='add'){var l=$('#grpList');if(!l)return;if(l.querySelectorAll('.grpR').length>=29){toast('29 courses en plus au maximum',true);return}l.insertAdjacentHTML('beforeend',rowH());upd();var n=l.lastElementChild&&l.lastElementChild.querySelector('[data-g="date"]');if(n)n.focus();return}
+    if(a==='add'){addRow({car:mv('car'),service:mv('service')});return}
+    if(a==='dup'){addRow({service:mv('service'),car:mv('car'),date:mv('date'),time:mv('time'),from:mv('from'),to:mv('to'),flight:mv('flight'),priceOk:($('#npo')||{}).value||''});return}
     if(a==='del'){var r=t.closest('.grpR');if(r)r.remove();upd();return}
+    if(a==='open'){ev.preventDefault();var rf0=t.dataset.ref;if(rf0)openBooking(rf0);return}
     if(a==='copy'){var u=$('#grpUrl');if(u&&u.value)copy(u.value);return}
     if(a==='link'){var rf=S.open;if(!rf)return;busy(t,true);
       call('grpPayLink',{ref:rf}).then(function(r){busy(t,false);if(r.paid){grpLoad(rf);toast('Tout est déjà payé');return}
