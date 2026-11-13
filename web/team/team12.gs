@@ -1,6 +1,8 @@
 /* ---------- rlTeam12 (13 nov. 2026, demande de Yassine) ----------
  * Plusieurs courses pour un même client, payées en une seule fois (un seul lien Stripe pour le total).
  * v2 (13 nov. 15:50) : chaque course a son véhicule, ses passagers et sa prestation (ex. 6 véhicules pour un client) ; grpInfo_ renvoie véhicule et chauffeur.
+ * v3 (13 nov. 16:40) : « Dupliquer » : toutes les options de la course 1 (GRP_KEYS) ; p.grpWith = réf. d'une course existante :
+ *                      la copie est regroupée avec elle (le groupe prend la réf. de la course d'origine).
  * - createGroup_  : « Nouvelle course » avec des courses en plus (p.more) : une réf. par course, toutes liées par la colonne « Paiement groupé » (= réf. de la 1re course).
  * - grpInfo_      : état du groupe (courses, prix, payé ou non, reste à payer).
  * - grpPayLink_   : un seul lien Stripe Checkout, une ligne par course, le total à payer. Feuille Paiements : une ligne par course (même session), Motif « Groupe <réf> · … ».
@@ -8,7 +10,7 @@
  *
  * Branchements dans Code.gs :
  * - BOOK_COLS    : grp: 'Paiement groupé' ; ADMIN_KEYS : + 'grp'
- * - api          : case 'createBooking' → createGroup_ si p.more ; case 'grpInfo' ; case 'grpPayLink'
+ * - api          : case 'createBooking' → createGroup_ si p.more ou p.grpWith ; case 'grpInfo' ; case 'grpPayLink'
  * - payCheck_    : montant de la ligne (pas le total) pour une ligne « Groupe », puis grpPaid_ ; le client reçoit un seul message « payé »
  * - cliAfterPay_ : 3e paramètre quiet (pas de message « payé » pour les autres courses du groupe ; la confirmation avec chauffeur part quand même)
  * - payLink_     : ne reprend pas un lien de groupe pour le paiement d'une seule course */
@@ -21,22 +23,28 @@ function createGroup_(p, me) {
     if (!String(x.date || '').trim() || !String(x.time || '').trim()) throw new Error('Course ' + n + ' : la date et l’heure sont obligatoires');
     if (!String(x.from || '').trim()) throw new Error('Course ' + n + ' : l’adresse de prise en charge est obligatoire');
   });
-  var r1 = createBooking_(p, me), grp = r1.booking.ref, refs = [grp];
+  var b0 = null, grp = '';
+  if (p.grpWith) { b0 = getBooking_(book_(), String(p.grpWith)); grp = String(b0.grp || b0.ref); }
+  var r1 = createBooking_(p, me), refs = [r1.booking.ref];
+  grp = grp || r1.booking.ref;
   more.forEach(function (x) {
     var f = JSON.parse(JSON.stringify(base));
-    ['date', 'time', 'from', 'to', 'flight', 'car', 'pax', 'service'].forEach(function (k) { if (x[k] !== undefined) f[k] = String(x[k] == null ? '' : x[k]); });
-    f.stops = ''; f.price = '';
+    GRP_KEYS.forEach(function (k) { if (x[k] !== undefined) f[k] = String(x[k] == null ? '' : x[k]); });
+    if (x.stops === undefined) f.stops = '';
+    f.price = '';
     refs.push(createBooking_({ fields: f, status: p.status, priceOk: x.priceOk }, me).booking.ref);
   });
-  var b = book_(), out = [];
-  refs.forEach(function (ref) {
+  var b = book_(), out = [], all = (b0 && !b0.grp ? [b0.ref] : []).concat(refs);
+  all.forEach(function (ref) {
     var bk = getBooking_(b, ref);
     setCells_(b, bk._row, { grp: grp });
-    log_(ref, 'Paiement groupé', 'Groupe ' + grp + ' · ' + refs.length + ' courses : ' + refs.join(', '), me);
-    out.push(clean_(getBooking_(b, ref)));
+    log_(ref, 'Paiement groupé', 'Groupe ' + grp + (b0 ? ' · copie de ' + b0.ref : '') + ' · ajout : ' + refs.join(', '), me);
   });
-  return { booking: out[0], bookings: out, clients: listClients_() };
+  refs.forEach(function (ref) { out.push(clean_(getBooking_(b, ref))); });
+  var upd = b0 ? [clean_(getBooking_(b, b0.ref))] : [];
+  return { booking: out[0], bookings: out.concat(upd), created: refs.length, grp: grp, clients: listClients_() };
 }
+var GRP_KEYS = ['service', 'flight', 'date', 'time', 'from', 'stops', 'to', 'duration', 'car', 'pax', 'bags', 'notes'];
 function grpList_(b, grp) {
   var n = b.sh.getLastRow() - 1, out = [];
   if (n < 1 || !b.idx.grp || !grp) return out;

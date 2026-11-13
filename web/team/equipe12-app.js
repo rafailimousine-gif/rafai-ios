@@ -1,25 +1,31 @@
 /* rlTeam12 (13 nov. 2026) : plusieurs courses pour un client, un seul paiement du total
-   v2 : chaque course a sa prestation, son véhicule et ses passagers (ex. 6 véhicules pour un client), « Même trajet, autre véhicule »,
-   adresses avec suggestions Google (smartAddr), véhicule et chauffeur de chaque course dans « Paiement groupé » */
+   v2 : chaque course a sa prestation, son véhicule et ses passagers (ex. 6 véhicules pour un client),
+   adresses avec suggestions Google (smartAddr), véhicule et chauffeur de chaque course dans « Paiement groupé »
+   v3 : « Dupliquer la course 1 » reprend toutes ses options ; bouton « Dupliquer la course » sur chaque course :
+   nouvelle course pré-remplie (client, entreprise, options), regroupée avec l'originale (p.grpWith) */
 (function(){
   FIELDS.grp='Paiement groupé';
+  var DUP=null;
   function num(v){var n=Number(String(v==null?'':v).replace(',','.').replace(/[^\d.]/g,''));return isFinite(n)?n:0}
   function dd(d){var m=String(d||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?m[3]+'/'+m[2]:String(d||'')}
   function mv(k){var nb=$('#newBox'),i=nb&&$('[data-k="'+k+'"]',nb);return i?String(i.value||''):''}
   function sl(k,list,v,lab){return '<label class="f">'+lab+'<select data-g="'+k+'">'+opt(list||[],v||'','—')+'</select></label>'}
   function inp(k,lab,v,type,extra,ph,im){return '<label class="f'+(extra||'')+'">'+lab+'<input data-g="'+k+'" type="'+(type||'text')+'" value="'+esc(v||'')+'"'+(ph?' placeholder="'+ph+'"':'')+(im?' inputmode="'+im+'"':'')+'></label>'}
-  function rowH(p){p=p||{};return '<div class="grpR" style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px">'+
+  function rowH(p){p=p||{};var more=!!(p.stops||p.duration||p.bags||p.notes);return '<div class="grpR" style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px">'+
     '<div class="row" style="justify-content:space-between;align-items:center"><b class="grpN">Course</b><button type="button" class="btn small" data-grp="del">Retirer</button></div>'+
     '<div class="fg" style="margin-top:8px">'+
     sl('service',S.services,p.service,'Prestation')+sl('car',S.cars,p.car,'Véhicule')+
     inp('date','Date',p.date,'date')+inp('time','Heure',p.time,'time')+
     inp('from','Départ',p.from,'text',' full','Adresse de prise en charge')+inp('to','Arrivée',p.to,'text',' full','Adresse d’arrivée')+
     inp('flight','Vol / train',p.flight,'text','','Facultatif')+inp('pax','Passagers',p.pax,'number')+
-    inp('priceOk','Prix client (€)',p.priceOk,'text','','','decimal')+'</div></div>'}
+    inp('priceOk','Prix client (€)',p.priceOk,'text','','','decimal')+'</div>'+
+    '<details style="margin-top:8px"'+(more?' open':'')+'><summary class="hint" style="cursor:pointer">Autres options : arrêts, durée, bagages, note</summary><div class="fg" style="margin-top:8px">'+
+    inp('stops',FIELDS.stops||'Arrêts',p.stops,'text',' full')+inp('duration',FIELDS.duration||'Durée',p.duration)+inp('bags',FIELDS.bags||'Bagages',p.bags,'number')+
+    '<label class="f full">'+(FIELDS.notes||'Note')+'<textarea data-g="notes">'+esc(p.notes||'')+'</textarea></label></div></details></div>'}
   function boxH(){return '<div class="box" id="grpBox"><h3>Plusieurs courses pour ce client</h3>'+
-    '<div class="hint" style="margin:0 0 4px">Même client. Chaque course a sa référence, son véhicule et son chauffeur (à assigner ensuite dans chaque course, comme d’habitude). Le client paie le total en une seule fois avec un seul lien.</div>'+
+    '<div class="hint" style="margin:0 0 4px">Même client. « Dupliquer la course 1 » reprend toutes ses options : vous changez seulement ce qui est différent (véhicule, heure, adresse…). Chaque course a sa référence et son chauffeur (à assigner ensuite, comme d’habitude). Toutes les courses sont regroupées : le client paie le total en une seule fois.</div>'+
     '<div id="grpList"></div><div class="row" style="margin-top:10px;flex-wrap:wrap;gap:6px">'+
-    '<button type="button" class="btn small dark" data-grp="dup">'+I.plus+'Même trajet, autre véhicule</button>'+
+    '<button type="button" class="btn small dark" data-grp="dup">⧉ Dupliquer la course 1</button>'+
     '<button type="button" class="btn small" data-grp="add">'+I.plus+'Autre course</button></div>'+
     '<div class="hint hidden" id="grpTot" style="margin-top:10px"></div></div>'}
   function upd(){
@@ -40,18 +46,42 @@
     ['from','to'].forEach(function(k){var i=r.querySelector('[data-g="'+k+'"]');try{if(i&&typeof smartAddr==='function')smartAddr(i,r)}catch(e){}});
     upd();var f=r.querySelector(p&&p.date?'[data-g="car"]':'[data-g="date"]');if(f)f.focus();
   }
+  /* « Dupliquer la course » depuis une course : formulaire pré-rempli avec toutes ses options */
+  var _ff=fieldsForm;
+  fieldsForm=function(b,isNewB){if(isNewB&&DUP){var d={};Object.keys(DUP).forEach(function(k){d[k]=DUP[k]});b=d}return _ff(b,isNewB)};
+  function dupNew(ref){
+    var b=booking(ref);if(!b)return;
+    var tel=String(b.tel||'').replace(/\D/g,'').slice(-9),em=String(b.email||'').trim().toLowerCase(),c=null;
+    S.clients.forEach(function(x){if(c)return;var xt=String(x.tel||'').replace(/\D/g,'').slice(-9),xe=String(x.email||'').trim().toLowerCase();if((tel&&xt===tel)||(em&&xe===em))c=x});
+    var d={};Object.keys(b).forEach(function(k){d[k]=b[k]});d.notes=String(b.notes||'').replace(/^✦ FAST TRACK VIP[^\n]*?( \/ |$)/,'');
+    DUP=d;try{openNew(c||{lname:b.lname,fname:b.fname,tel:b.tel,email:b.email,lang:b.lang})}finally{DUP=null}
+    S.dupOf=b.ref;
+    var po=$('#npo');if(po&&b.priceOk)po.value=b.priceOk;
+    var nb=$('#newBox');if(nb)nb.insertAdjacentHTML('afterbegin','<div class="hint" id="dupNote" style="margin:0 0 10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px">⧉ <b>Copie de la course '+esc(b.ref)+'</b> : mêmes client et options. Changez ce qui est différent. Elle sera <b>regroupée avec '+esc(b.grp||b.ref)+'</b> : un seul paiement pour le total.'+(/^✦ FAST TRACK VIP/.test(String(b.notes||''))?' Le Fast Track VIP n’est pas recopié : cochez-le si besoin.':'')+'</div>');
+    upd();
+  }
+  var _ab=assignBox;
+  assignBox=function(b){var h=_ab(b);if(!b||!b.ref)return h;
+    return '<div class="box" id="dupBar" style="padding:12px 14px"><div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span class="hint" style="margin:0">Même client, autre véhicule ou autre heure ? Copie avec toutes les options, regroupée avec cette course.</span>'+
+      '<button type="button" class="btn small dark" data-dupb="'+esc(b.ref)+'">⧉ Dupliquer la course</button></div></div>'+h};
+
   var _on=openNew;
-  openNew=function(){var r=_on.apply(this,arguments);try{var cb=$('#createB'),rw=cb&&cb.closest('.row');if(rw&&!$('#grpBox'))rw.insertAdjacentHTML('beforebegin',boxH())}catch(e){}return r};
+  openNew=function(){if(!DUP)S.dupOf=null;var r=_on.apply(this,arguments);try{var cb=$('#createB'),rw=cb&&cb.closest('.row');if(rw&&!$('#grpBox'))rw.insertAdjacentHTML('beforebegin',boxH())}catch(e){}return r};
   document.addEventListener('input',function(e){var t=e.target;if(t&&(t.id==='npo'||(t.closest&&t.closest('#grpList'))))upd()});
   document.addEventListener('change',function(e){var t=e.target;if(t&&t.closest&&(t.closest('#grpList')||(t.matches&&t.matches('#newBox [data-k="car"]'))))upd()});
 
   var _c=call;
   call=function(name,p){
-    if(name==='createBooking'&&p&&!p.more){var rs=document.querySelectorAll('#grpList .grpR');
-      if(rs.length)p.more=Array.prototype.map.call(rs,function(r){var o={};Array.prototype.forEach.call(r.querySelectorAll('[data-g]'),function(x){o[x.dataset.g]=String(x.value||'').trim()});return o})}
+    var grouped=false;
+    if(name==='createBooking'&&p){
+      if(S.dupOf&&S.open==='new'&&!p.grpWith){p.grpWith=S.dupOf;grouped=true}
+      var rs=document.querySelectorAll('#grpList .grpR');
+      if(!p.more&&rs.length){p.more=Array.prototype.map.call(rs,function(r){var o={};Array.prototype.forEach.call(r.querySelectorAll('[data-g]'),function(x){o[x.dataset.g]=String(x.value||'').trim()});return o});grouped=true}
+    }
     var pr=_c.apply(this,arguments);
-    if(name==='createBooking'&&p&&p.more&&pr&&pr.then)return pr.then(function(r){
-      if(r&&r.bookings){r.bookings.forEach(function(x){upsert(x);S.seen[x.ref]=1});setTimeout(function(){toast(r.bookings.length+' courses créées · paiement groupé '+r.booking.ref)},60)}
+    if(grouped&&pr&&pr.then)return pr.then(function(r){
+      if(r&&r.bookings){r.bookings.forEach(function(x){upsert(x);S.seen[x.ref]=1});S.dupOf=null;
+        var n=r.created||1;setTimeout(function(){toast((n>1?n+' courses créées':'Course '+r.booking.ref+' créée')+' · regroupée'+(n>1?'s':'')+' avec '+(r.grp||r.booking.ref))},60)}
       return r});
     return pr;
   };
@@ -85,10 +115,11 @@
       '<input class="hidden" id="grpUrl" readonly style="margin-top:8px;width:100%"></div>';
   };
   document.addEventListener('click',function(ev){
+    var db=ev.target&&ev.target.closest&&ev.target.closest('[data-dupb]');if(db){dupNew(db.dataset.dupb);return}
     var t=ev.target&&ev.target.closest&&ev.target.closest('[data-grp]');if(!t||t.disabled)return;
     var a=t.dataset.grp;
     if(a==='add'){addRow({car:mv('car'),service:mv('service')});return}
-    if(a==='dup'){addRow({service:mv('service'),car:mv('car'),date:mv('date'),time:mv('time'),from:mv('from'),to:mv('to'),flight:mv('flight'),priceOk:($('#npo')||{}).value||''});return}
+    if(a==='dup'){var p={priceOk:($('#npo')||{}).value||''};['service','car','date','time','from','to','flight','pax','stops','duration','bags','notes'].forEach(function(k){p[k]=mv(k)});addRow(p);return}
     if(a==='del'){var r=t.closest('.grpR');if(r)r.remove();upd();return}
     if(a==='open'){ev.preventDefault();var rf0=t.dataset.ref;if(rf0)openBooking(rf0);return}
     if(a==='copy'){var u=$('#grpUrl');if(u&&u.value)copy(u.value);return}
