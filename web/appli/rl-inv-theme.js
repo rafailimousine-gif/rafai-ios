@@ -59,6 +59,7 @@
     if (d) { s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn); h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; }
     return { h: h, s: s, l: l };
   }
+  function chr(c) { return (Math.max(c.r, c.g, c.b) - Math.min(c.r, c.g, c.b)) / 255; }
   function hs(h, s, l, a) { return 'hsla(' + Math.round(h) + ',' + Math.round(s * 100) + '%,' + Math.round(l * 100) + '%,' + (a == null ? 1 : Math.round(a * 100) / 100) + ')'; }
   function lightGrad(v) {
     var cs = v.match(/#[0-9a-f]{3,8}\b|rgba?\([^)]+\)/gi) || []; if (!cs.length) return false;
@@ -77,22 +78,22 @@
   function mapRule(st) {
     var out = [], bgS = (st.getPropertyValue('background') || '') + ' ' + (st.getPropertyValue('background-image') || ''), bgC = st.getPropertyValue('background-color') || '';
     var bgc = rgb(bgC), accent = /var\(--gold/.test(bgS + bgC) || (/gradient/.test(bgS) && !lightGrad(bgS));
-    if (bgc) { var b0 = hsl(bgc); if (bgc.a > 0.3 && b0.s > 0.3 && b0.l > 0.3 && b0.l < 0.8) accent = true; }
+    if (bgc) { var b0 = hsl(bgc); if (bgc.a > 0.3 && chr(bgc) > 0.2 && b0.l > 0.3 && b0.l < 0.8) accent = true; }
     if (/var\(--ink\)/.test(bgS + bgC)) out.push('background-color:#0B0B0C');
     else if (/gradient/.test(bgS) && lightGrad(bgS)) out.push('background:#1B1B1E');
     else if (bgc && bgc.a > 0.2) {
       var k = hsl(bgc);
-      if (k.l > 0.8) out.push('background-color:' + (k.s < 0.3 ? (k.l > 0.965 ? hs(240, 0.05, 0.105, bgc.a) : hs(40, 0.09, 0.14, bgc.a)) : hs(k.h, Math.min(k.s, 0.45), 0.17, bgc.a)));
+      if (k.l > 0.8) out.push('background-color:' + (chr(bgc) < 0.06 ? (k.l > 0.965 ? hs(240, 0.05, 0.105, bgc.a) : hs(40, 0.06, 0.15, bgc.a)) : hs(k.h, 0.3, 0.17, bgc.a)));
     }
     var col = st.getPropertyValue('color') || '';
     if (/var\(--ink\)/.test(col)) { if (accent) out.push('color:#111113'); }
     else {
       var c = rgb(col);
       if (c && c.a > 0.3 && !accent) {
-        var q = hsl(c);
-        if (q.l < 0.3) out.push('color:' + (q.s > 0.35 ? hs(q.h, Math.min(q.s, 0.7), 0.64, c.a) : '#ECE8E0'));
-        else if (q.l < 0.6 && q.s < 0.25) out.push('color:#A3A3A8');
-        else if (q.l < 0.5 && q.s >= 0.35) out.push('color:' + hs(q.h, Math.min(q.s, 0.7), 0.62, c.a));
+        var q = hsl(c), cc = chr(c);
+        if (q.l < 0.3) out.push('color:' + (cc > 0.15 ? hs(q.h, Math.min(q.s, 0.7), 0.64, c.a) : '#ECE8E0'));
+        else if (q.l < 0.6 && cc < 0.12) out.push('color:#A3A3A8');
+        else if (q.l < 0.5 && cc >= 0.15) out.push('color:' + hs(q.h, Math.min(q.s, 0.7), 0.62, c.a));
       }
     }
     ['top', 'right', 'bottom', 'left'].forEach(function (sd) {
