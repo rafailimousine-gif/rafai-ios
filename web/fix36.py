@@ -114,7 +114,9 @@ JS = r'''/* ---------- rlInvTheme v1 (14 nov. 2026, demande de Yassine) --------
     'html[data-th=d]{color-scheme:dark}',
     'html[data-th=d] .btn.dark{background:#2C2C31;color:#fff;border-color:#3A3A40}',
     'html[data-th=d] .btn.gold{color:#111113}',
+    'html[data-th=d] .seg{background:#212125}',
     'html[data-th=d] .seg button.on{background:#3A3833;color:#F3EFE7}',
+    'html[data-th=d] .note{color:#E2D6BE}',
     'html[data-th=d] .in::placeholder,html[data-th=d] input::placeholder,html[data-th=d] textarea::placeholder{color:#7C7C82}',
     'html[data-th=d] #thB{color:#E3C786}'
   ].join('\n');
@@ -239,7 +241,8 @@ JS = r'''/* ---------- rlInvTheme v1 (14 nov. 2026, demande de Yassine) --------
   var css = D.createElement('style'); css.id = 'rlThS';
   css.textContent = '.seg.rlTh3{grid-template-columns:repeat(3,1fr);margin:0}.seg.rlTh3 button{display:flex;align-items:center;justify-content:center;gap:6px}' +
     '.seg.rlTh3 svg,#thB svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}' +
-    '#thB{border:0;background:none;cursor:pointer;color:inherit}' +
+    '#thB{border:0;background:none;cursor:pointer;color:inherit;width:34px;min-width:34px;padding:0;display:flex;align-items:center;justify-content:center}' +
+    '@media (max-width:440px){.top b{white-space:nowrap;letter-spacing:.12em;font-size:13px}.top .t{overflow:hidden}.top .t small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}}' +
     '.rlInvC{cursor:default}.rlInvC .ft b{font-weight:800}.rlInvB{min-height:46px;margin-top:12px;font-size:15px}#rvSeg{margin-bottom:12px}';
   D.head.appendChild(css);
   if (TEST) window.__rlITt = { rides: function (r) { RIDES = r; renderRides(); }, tab: function (n) { try { tab(n); } catch (e) {} }, inv: openInvList };
