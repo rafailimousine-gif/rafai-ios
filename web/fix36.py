@@ -10,6 +10,7 @@ JS = r'''/* ---------- rlInvTheme v1 (14 nov. 2026, demande de Yassine) --------
  * 1. « Mes factures » : dans « Mes courses », un onglet Factures liste les factures Qonto déposées par l'équipe
  *    (course avec x.inv) ; « Voir la facture » utilise getInv (aperçu natif dans l'appli iPhone).
  *    Aussi dans Compte et par le lien #factures.
+ * 3. Photo du chauffeur (.drv img.av) dans un cadre « arche » doré comme sur le site.
  * 2. Bouton Sombre / Clair / Auto : en haut (un appui = mode suivant) et dans Compte. Clair par défaut.
  *    Le mode sombre est calculé à partir des styles de la page (fonds clairs -> sombres, textes foncés -> clairs). */
 (function () {
@@ -243,6 +244,7 @@ JS = r'''/* ---------- rlInvTheme v1 (14 nov. 2026, demande de Yassine) --------
     '.seg.rlTh3 svg,#thB svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}' +
     '#thB{border:0;background:none;cursor:pointer;color:inherit;width:34px;min-width:34px;padding:0;display:flex;align-items:center;justify-content:center}' +
     '@media (max-width:440px){.top b{white-space:nowrap;letter-spacing:.12em;font-size:13px}.top .t{overflow:hidden}.top .t small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}}' +
+    '.drv img.av{width:58px;height:76px;border-radius:50% 50% 14% 14%/40% 40% 10% 10%;object-fit:cover;object-position:50% 18%;border:2px solid #D9B46A;box-shadow:0 0 0 1px rgba(111,81,32,.45),0 4px 14px rgba(224,186,108,.3);background:#141312}' +
     '.rlInvC{cursor:default}.rlInvC .ft b{font-weight:800}.rlInvB{min-height:46px;margin-top:12px;font-size:15px}#rvSeg{margin-bottom:12px}';
   D.head.appendChild(css);
   if (TEST) window.__rlITt = { rides: function (r) { RIDES = r; renderRides(); }, tab: function (n) { try { tab(n); } catch (e) {} }, inv: openInvList };
