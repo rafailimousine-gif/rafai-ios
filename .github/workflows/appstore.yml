@@ -1,44 +1,30 @@
 name: App Store (validation)
 
+# Lancé par un envoi sur la branche « appstore-envoi » : lit appstore/demande.json (une ligne par appli).
 on:
-  workflow_dispatch:
-    inputs:
-      appli:
-        description: "Appli"
-        type: choice
-        options: [client, chauffeur]
-      version:
-        description: "Version (ex. 1.1)"
-        required: true
-      build:
-        description: "Numéro de build TestFlight"
-        required: true
-      notes_fr:
-        description: "Nouveautés (français)"
-        required: true
-      notes_en:
-        description: "What's new (English)"
-        required: true
-      soumettre:
-        description: "Soumettre à Apple (sinon : préparer seulement)"
-        type: boolean
-        default: false
+  push:
+    branches: [appstore-envoi]
+    paths: ['appstore/demande.json']
 
 jobs:
   envoi:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
     env:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID || '22UZ38MH33' }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID || 'c21c0ed2-11e3-4992-a0b9-72a8b99066f9' }}
       ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
-      BUNDLE: ${{ inputs.appli == 'chauffeur' && 'com.rafailimousine.driver' || 'com.rafailimousine.client' }}
-      VERSION: ${{ inputs.version }}
-      BUILD: ${{ inputs.build }}
-      NOTES_FR: ${{ inputs.notes_fr }}
-      NOTES_EN: ${{ inputs.notes_en }}
-      SUBMIT: ${{ inputs.soumettre && '1' || '0' }}
     steps:
       - uses: actions/checkout@v4
       - run: pip install --quiet pyjwt cryptography
-      - run: python3 appstore/asc_submit.py
+      - name: Envoi à Apple
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          ok = True
+          for d in json.load(open('appstore/demande.json')):
+              env = dict(os.environ, BUNDLE=d['bundle'], VERSION=d['version'], BUILD=str(d['build']), NOTES_FR=d['fr'], NOTES_EN=d['en'], SUBMIT='1' if d.get('soumettre') else '0')
+              print('==', d['bundle'], d['version'], 'build', d['build'], flush=True)
+              ok = subprocess.call([sys.executable, 'appstore/asc_submit.py'], env=env) == 0 and ok
+          sys.exit(0 if ok else 1)
+          PY
