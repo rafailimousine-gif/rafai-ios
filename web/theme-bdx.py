@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# rlBdx v1 — Lifting « bordeaux & blanc » (16 nov. 2026, demande de Yassine). VERSION TEST.
+# rlBdx v1 (v2 : popup du site, fond RL Driver) — Lifting « bordeaux & blanc » (16 nov. 2026, demande de Yassine). VERSION TEST.
 # Ajoute une couche de couleurs bordeaux / blanc dans les pages (site, réservation, RL Driver, suivi, espace équipe).
 # Elle ne s'allume QUE sur les adresses d'aperçu Firebase « --bordeaux » (ou avec ?bdx=1) : sans effet sur les vraies adresses.
 # usage : python3 theme-bdx.py APP fichier1.html [fichier2.html ...]   (APP = www | bk | suivi | team)
@@ -26,6 +26,9 @@ html.bdx.bdx-bk,html.bdx.bdx-bk[data-th]{--gold:#7A1F33!important;--gold2:#5E142
 html.bdx-bk li::before{background:#F1D9DE!important}
 html.bdx.bdx-drv{--bg:#5A1426!important;--card:#6B1A2E!important;--line:#84304A!important;--txt:#fff!important;--mut:#E6C7CF!important;--dim:#BC96A0!important;--gold:#fff!important;--gold2:#F1D9DE!important}
 html.bdx-drv,html.bdx-drv body{background:#5A1426!important}
+html.bdx-drv #rlgbg{background-color:#5A1426!important}
+html.bdx-www #rlch,html.bdx-www #rlch .ph{background-color:#4A0F1C!important}
+html.bdx-www #rlch :is(input,select,textarea){background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.3)!important;color:#fff!important}
 html.bdx-team #rlLogin{background:radial-gradient(ellipse 700px 600px at 50% 35%,rgba(255,255,255,.12),transparent 70%),#5A1426!important}
 html.bdx-team #rlLogin .k{color:#F1D9DE!important}
 html.bdx-team #rlLogin img{filter:brightness(0) invert(1)!important}
@@ -53,14 +56,17 @@ function one(el){var cs=getComputedStyle(el),c=rgb(cs.color),bg=rgb(cs.backgroun
   else{set(el,'background-image','linear-gradient(135deg,#9B3049,#6E1A2B 55%,#4A0F1C)');if(el.tagName!=='SPAN')set(el,'color','#fff')}}}
  ['Top','Right','Bottom','Left'].forEach(function(s){var w=parseFloat(cs['border'+s+'Width']);if(w>0&&gold(rgb(cs['border'+s+'Color'])))set(el,'border-'+s.toLowerCase()+'-color',D()?'rgba(255,255,255,.6)':B)});
  var sh=cs.boxShadow;if(sh&&sh!=='none'&&(sh.match(/rgba?\([^)]+\)/g)||[]).map(rgb).some(gold))set(el,'box-shadow','0 6px 22px rgba(122,31,51,.22)');
+ if(el.tagName==='IMG'&&/\/img\/logo\.png/.test(el.getAttribute('src')||'')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none');set(el,'border-radius','22%')}return}
  if(el.tagName==='IMG'&&/logo/i.test((el.getAttribute('src')||'')+' '+el.className+' '+el.alt)&&!/App Store|Google Play/i.test(el.alt))set(el,'filter',D()?'brightness(0) invert(1)':'brightness(0) saturate(100%) invert(14%) sepia(60%) saturate(3500%) hue-rotate(325deg) brightness(85%) contrast(98%)');
  if(el.closest('svg')){var f=rgb(cs.fill),s2=rgb(cs.stroke);if(gold(f))set(el,'fill',D()?'#fff':B);if(gold(s2))set(el,'stroke',D()?'#fff':B)}
  if(APP==='bk'&&bg&&bg.a>.6&&lum(bg)<40&&el.getBoundingClientRect().width<1000&&!el.querySelector('input,select,textarea')){var lightIn=false;el.querySelectorAll('*').forEach(function(x){var b2=rgb(getComputedStyle(x).backgroundColor);if(b2&&b2.a>.6&&lum(b2)>200)lightIn=true});if(!lightIn&&el.children.length){set(el,'background-color',B);el.querySelectorAll('*').forEach(function(x){if(!x.closest('svg'))set(x,'color','#F6E9EC')})}}
 }
 function topbar(){if(APP!=='bk'&&APP!=='drv')return;var els=document.body.querySelectorAll('header,nav,div');for(var i=0;i<els.length;i++){var e=els[i],r=e.getBoundingClientRect(),cs=getComputedStyle(e);if(r.top<=1&&r.width>innerWidth*.8&&r.height>30&&r.height<90&&(cs.position==='fixed'||cs.position==='sticky')){set(e,'background','#5A1426');set(e,'border-color','rgba(255,255,255,.1)');var im=e.querySelector('img');if(im&&im.getBoundingClientRect().width<=72){im.src=ICON;set(im,'filter','none')}break}}}
+function drvbg(){if(APP!=='drv')return;var g=document.getElementById('rlgbg');if(!g||document.getElementById('rlBdxG'))return;var css='';['::before','::after'].forEach(function(p){var bi=getComputedStyle(g,p).backgroundImage;if(bi&&bi!=='none'&&bi.indexOf('17, 17, 19')>=0)css+='html.bdx-drv #rlgbg'+p+'{background-image:'+bi.split('17, 17, 19').join('90, 20, 38')+'!important}'});if(css){var st=document.createElement('style');st.id='rlBdxG';st.textContent=css;document.head.appendChild(st)}}
+
 function all(root){try{(root||document.body).querySelectorAll('*').forEach(one)}catch(e){}}
 var q=[],t=0;function flush(){var l=q;q=[];t=0;l.forEach(function(n){if(n.nodeType===1&&n.isConnected){one(n);all(n)}})}
-function go(){var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#4A0F1C');topbar();all();new MutationObserver(function(ms){ms.forEach(function(x){x.addedNodes.forEach(function(n){q.push(n)})});if(!t)t=setTimeout(flush,250)}).observe(document.body,{childList:true,subtree:true});setTimeout(function(){topbar();all()},1200);setTimeout(all,3500)}
+function go(){drvbg();var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#4A0F1C');topbar();all();new MutationObserver(function(ms){ms.forEach(function(x){x.addedNodes.forEach(function(n){q.push(n)})});if(!t)t=setTimeout(flush,250)}).observe(document.body,{childList:true,subtree:true});setTimeout(function(){drvbg();topbar();all()},1200);setTimeout(all,3500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
 }catch(e){}})();'''
 TAG = '<style id="rlBdxCss">' + CSS + '</style><script id="rlBdx">/* rlBdx v1 */' + JS.replace('%APP%', APP).replace('%ICON%', ICON) + '</script>'
