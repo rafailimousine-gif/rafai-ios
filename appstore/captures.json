@@ -1,4 +1,4 @@
 [
- {"bundle": "com.rafailimousine.client", "version": "1.1", "dir": "appstore/bordeaux/client"},
+ {"bundle": "com.rafailimousine.client", "version": "1.1", "dir": "appstore/bordeaux/client", "date": "2026-11-17"},
  {"bundle": "com.rafailimousine.driver", "version": "1.2", "dir": "appstore/bordeaux/driver"}
 ]
