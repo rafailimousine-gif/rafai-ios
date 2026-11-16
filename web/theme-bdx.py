@@ -35,8 +35,14 @@ html.bdx-www .ftw .sg button.on{background:#fff!important;color:#6E1A2B!importan
 html.bdx-www .ftw .bk{background:#fff!important;background-image:none!important;color:#6E1A2B!important;box-shadow:none!important}
 html.bdx-www .ftw .wa{background:transparent!important;color:#fff!important;border-color:#fff!important}
 html.bdx-www .ftw-x{background:#4A0F1C!important;border-color:rgba(255,255,255,.35)!important}
-html.bdx.bdx-bk,html.bdx.bdx-bk[data-th]{--gold:#7A1F33!important;--gold2:#5E1426!important;--goldbg:#F7EDEF!important;--bg:#FBF7F6!important;--line:#EBDDE0!important;--ink:#1E0E12!important;--card:#fff!important}
+html.bdx.bdx-bk,html.bdx.bdx-bk[data-th]{--gold:#7A1F33!important;--gold2:#5E1426!important;--goldbg:#F7EDEF!important;--bg:#FBF7F6!important;--line:#EBDDE0!important;--ink:#1E0E12!important;--card:#fff!important;--mut:#4A3940!important;--dim:#8A767C!important}
 html.bdx-bk li::before{background:#F1D9DE!important}
+html.bdx.bdx-bk .seg{background:#F4E4E8!important;border:1px solid #E8CBD2!important}
+html.bdx.bdx-bk .seg button{color:#7A1F33!important;font-weight:700!important;font-size:16px!important;padding:12px 10px!important;transition:background .2s,color .2s}
+html.bdx.bdx-bk .seg button.on{background:#7A1F33!important;color:#fff!important;box-shadow:0 4px 12px rgba(122,31,51,.3)!important}
+html.bdx.bdx-bk label.f>span{color:#5A1426!important;font-size:13px!important;letter-spacing:.02em!important}
+html.bdx.bdx-bk .chip.g{border-color:#E3C3CB!important}
+html.bdx.bdx-bk input::placeholder,html.bdx.bdx-bk textarea::placeholder{color:#8A767C!important;opacity:1!important}
 html.bdx #rlBv{background:#FFFFFF!important}
 html.bdx #rlBv .lg{width:210px!important;height:210px!important;border-radius:46px!important;box-shadow:0 24px 60px -18px rgba(122,31,51,.5)!important}
 html.bdx #rlBv .lg img{content:url(https://equipe.rafai-limousine.com/icon-512.png)}
