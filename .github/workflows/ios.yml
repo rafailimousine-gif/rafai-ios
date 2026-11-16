@@ -22,7 +22,7 @@ on:
       machine:
         description: "Machine Mac de GitHub (macos-15-intel si les Mac M1 sont saturés)"
         type: choice
-        options: [macos-15, macos-15-intel]
+        options: [macos-15, macos-15-intel, macos-26]
         default: macos-15
 
 concurrency:
