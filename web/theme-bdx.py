@@ -40,6 +40,10 @@ html.bdx-bk li::before{background:#F1D9DE!important}
 @media (max-width:899px){html.bdx.bdx-bk .hero{background:linear-gradient(160deg,#8E2A3F,#7A1F33 45%,#5A1426)!important;color:#fff!important;box-shadow:0 10px 26px rgba(122,31,51,.22)!important}html.bdx.bdx-bk .hero h1{color:#fff!important}html.bdx.bdx-bk .hero p{color:#F6E4E8!important}}
 html.bdx.bdx-bk .btn.dark,html.bdx.bdx-bk #toast,html.bdx.bdx-bk .drv .av,html.bdx.bdx-bk .ov .bar{background:#7A1F33!important;color:#fff!important}
 html.bdx.bdx-bk .top .tb{background:rgba(255,255,255,.14)!important;border-color:rgba(255,255,255,.28)!important;color:#fff!important}
+html.bdx.bdx-bk .rlbd{background:linear-gradient(135deg,#8E2A3F,#7A1F33 55%,#5A1426)!important;color:#fff!important;border-color:transparent!important}
+html.bdx.bdx-bk .rlbd .t{color:#F1D9DE!important}
+html.bdx.bdx-bk .rlbd .i{color:#fff!important}
+html.bdx.bdx-bk .rlbd .c{background:rgba(255,255,255,.14)!important;color:#fff!important}
 html.bdx.bdx-bk .seg{background:#F4E4E8!important;border:1px solid #E8CBD2!important}
 html.bdx.bdx-bk .seg button{color:#7A1F33!important;font-weight:700!important;font-size:16px!important;padding:12px 10px!important;transition:background .2s,color .2s}
 html.bdx.bdx-bk .seg button.on{background:#7A1F33!important;color:#fff!important;box-shadow:0 4px 12px rgba(122,31,51,.3)!important}
