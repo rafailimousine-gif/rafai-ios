@@ -11,6 +11,9 @@ rm -f public/app.*.js
 for f in icon-192.png icon-512.png logo.png logo.webp manifest.webmanifest; do curl -sLf -o "public/$f" "$R/$f"; done
 curl -sLf -o app.html "$API?teamapp=1"
 python3 patch-equipe.py app.html "$API" public/index.html < /dev/null
+# Lifting bordeaux & blanc (rlBdx, 16 nov. 2026)
+curl -sLf -o ~/theme-bdx.py "https://raw.githubusercontent.com/rafailimousine-gif/rafai-ios/$H/web/theme-bdx.py" && grep -q 'rlBdx v1' ~/theme-bdx.py || { echo "ARRET theme-bdx absent"; exit 1; }
+python3 ~/theme-bdx.py --live team public/index.html
 node -e "const fs=require('fs');const s=fs.readFileSync('public/index.html','utf8')+fs.readdirSync('public').filter(f=>/^app\..*\.js$/.test(f)).map(f=>'<script>'+fs.readFileSync('public/'+f,'utf8')+'</script>').join('');const m=[...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)];m.forEach((x,i)=>{try{new Function(x[1])}catch(e){console.log('ERREUR script',i,e.message);process.exit(1)}});console.log('scripts ok',m.length)"
 SITE=""
 for s in rafai-equipe rafai-limousine-equipe rafai-team-paris; do

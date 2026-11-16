@@ -19,6 +19,9 @@ rm -rf public/zh public/ar public/zh.html public/ar.html
 python3 src/build.py "${2:-}"
 tools/node_modules/.bin/purgecss --css atari.css --content 'public/**/*.html' --output public/css/ >/dev/null
 cat public/css/atari.css src/site.css.add > public/css/site.css && rm public/css/atari.css
+# Lifting bordeaux & blanc (rlBdx, 16 nov. 2026, « Publie » de Yassine) : couleurs bordeaux / blanc sur toutes les pages
+curl -sLf -o ~/theme-bdx.py "https://raw.githubusercontent.com/rafailimousine-gif/rafai-ios/$COMMIT/web/theme-bdx.py" && grep -q 'rlBdx v1' ~/theme-bdx.py || { echo "ARRET theme-bdx absent"; exit 1; }
+find public -name '*.html' -not -path 'public/e/*' -print0 | xargs -0 python3 ~/theme-bdx.py --live www
 V=$(cat public/css/site.css public/css/site.js | md5sum | cut -c1-8)
 find public -name '*.html' -not -path 'public/e/*' -print0 | xargs -0 sed -i "s#/css/site\.css\"#/css/site.css?v=$V\"#; s#/css/site\.js\"#/css/site.js?v=$V\"#"
 [ -f public/img/og.jpg ] || curl -sLf -o public/img/og.jpg "https://raw.githubusercontent.com/rafailimousine-gif/rafai-ios/$COMMIT/web/site/rafai-accueil-5.jpg"

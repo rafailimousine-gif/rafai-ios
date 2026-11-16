@@ -61,11 +61,11 @@ function dark(el){if(APP==='drv')return true;if(el.closest&&el.closest('.hero,[c
 function set(el,k,v){el.style.setProperty(k,v,'important')}
 function one(el){var cs=getComputedStyle(el),c=rgb(cs.color),bg=rgb(cs.backgroundColor),bi=cs.backgroundImage,d=null;function D(){if(d===null)d=dark(el);return d}
  if(gold(c))set(el,'color',D()?ROSE:B);
- if(gold(bg)){if(D()){set(el,'background-color','#fff');set(el,'color','#6E1A2B')}else{set(el,'background-color',B);set(el,'color','#fff')}}
+ if(gold(bg)){if(D()){set(el,'background-color','#fff');set(el,'color','#6E1A2B')}else{set(el,'background-color',B);set(el,'color','#fff');if(el.getBoundingClientRect().width<700)el.querySelectorAll('*').forEach(function(x){if(!x.closest('svg'))set(x,'color','#fff')})}}
  if(bi&&bi!=='none'&&bi.indexOf('gradient')>=0&&bi.indexOf('url(')<0){var cols=(bi.match(/rgba?\([^)]+\)/g)||[]).map(rgb);if(cols.some(gold)){
   if(cs.webkitBackgroundClip==='text'||cs.backgroundClip==='text')set(el,'background-image',D()?'linear-gradient(100deg,#fff,#F1D9DE,#fff)':'linear-gradient(100deg,#5E1426,#9B3049,#5E1426)');
   else if(D()&&el.tagName!=='SPAN'){set(el,'background-image','none');set(el,'background-color','#fff');set(el,'color','#6E1A2B')}
-  else{set(el,'background-image','linear-gradient(135deg,#9B3049,#6E1A2B 55%,#4A0F1C)');if(el.tagName!=='SPAN')set(el,'color','#fff')}}}
+  else{set(el,'background-image','linear-gradient(135deg,#9B3049,#6E1A2B 55%,#4A0F1C)');if(el.tagName!=='SPAN'){set(el,'color','#fff');if(el.getBoundingClientRect().width<700)el.querySelectorAll('*').forEach(function(x){if(!x.closest('svg'))set(x,'color','#fff')})}}}}
  ['Top','Right','Bottom','Left'].forEach(function(s){var w=parseFloat(cs['border'+s+'Width']);if(w>0&&gold(rgb(cs['border'+s+'Color'])))set(el,'border-'+s.toLowerCase()+'-color',D()?'rgba(255,255,255,.6)':B)});
  var sh=cs.boxShadow;if(sh&&sh!=='none'&&(sh.match(/rgba?\([^)]+\)/g)||[]).map(rgb).some(gold))set(el,'box-shadow','0 6px 22px rgba(122,31,51,.22)');
  if(el.tagName==='IMG'&&/\/img\/logo\.png/.test(el.getAttribute('src')||'')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none');set(el,'border-radius','22%')}return}
