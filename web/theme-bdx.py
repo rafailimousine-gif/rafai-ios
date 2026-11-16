@@ -61,6 +61,13 @@ html.bdx-team #rlLogin .k{color:#F1D9DE!important}
 html.bdx-team #rlLogin img{filter:brightness(0) invert(1)!important}
 html.bdx-team #rlLogin input{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.35)!important}
 html.bdx-team #rlLogin button{background:#fff!important;background-image:none!important;color:#6E1A2B!important}
+html.bdx-team #nwb{background:#5A1426!important;border:1px solid rgba(255,255,255,.35)!important;box-shadow:0 18px 44px rgba(74,15,28,.38)!important;color:#fff!important}
+html.bdx-team #nwb .nwh b{color:#fff!important}
+html.bdx-team #nwb .nwh button{background:rgba(255,255,255,.16)!important;color:#fff!important}
+html.bdx-team #nwb .nwi{background:#6B1A2E!important;color:#fff!important}
+html.bdx-team #nwb .nwi span{color:#EAD3D9!important}
+html.bdx-team #nwb .nwi em{background:#fff!important;color:#5A1426!important}
+html.bdx-team .brand img{border-radius:22%!important}
 html.bdx-team #rlLogin button.ghost{background:transparent!important;color:#fff!important;border:1px solid rgba(255,255,255,.6)!important}
 '''
 JS = r'''(function(){try{
@@ -94,6 +101,7 @@ function one(el){var cs=getComputedStyle(el),c=rgb(cs.color),bg=rgb(cs.backgroun
  ['Top','Right','Bottom','Left'].forEach(function(s){var w=parseFloat(cs['border'+s+'Width']);if(w>0&&gold(rgb(cs['border'+s+'Color'])))set(el,'border-'+s.toLowerCase()+'-color',D()?'rgba(255,255,255,.6)':B)});
  var sh=cs.boxShadow;if(sh&&sh!=='none'&&(sh.match(/rgba?\([^)]+\)/g)||[]).map(rgb).some(gold))set(el,'box-shadow','0 6px 22px rgba(122,31,51,.22)');
  if(el.tagName==='IMG'&&/\/img\/logo\.png/.test(el.getAttribute('src')||'')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none');set(el,'border-radius','22%')}return}
+ if(APP==='team'&&el.tagName==='IMG'&&el.closest('.brand')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none')}return}
  if((APP==='bk'||APP==='drv'||APP==='trk')&&el.tagName==='IMG'&&/logo|icon/i.test(el.getAttribute('src')||'')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none');set(el,'border-radius','22%')}return}
  if(el.tagName==='IMG'&&/logo/i.test((el.getAttribute('src')||'')+' '+el.className+' '+el.alt)&&!/App Store|Google Play/i.test(el.alt))set(el,'filter',D()?'brightness(0) invert(1)':'brightness(0) saturate(100%) invert(14%) sepia(60%) saturate(3500%) hue-rotate(325deg) brightness(85%) contrast(98%)');
  if(el.closest('svg')){var f=rgb(cs.fill),s2=rgb(cs.stroke);if(gold(f))set(el,'fill',D()?W:B);if(gold(s2))set(el,'stroke',D()?W:B)}
@@ -129,7 +137,8 @@ function conv(root){if(APP!=='www'||document.body.classList.contains('rllift'))r
 function all(root){swapTh();conv(root);try{(root||document.body).querySelectorAll('*').forEach(one)}catch(e){}}
 var q=[],t=0;function flush(){var l=q;q=[];t=0;l.forEach(function(n){if(n.nodeType===1&&n.isConnected){one(n);all(n)}})}
 var LK=null;function mode(){var k=LT();if(LK===null){LK=k;return}if(k!==LK){LK=k;reset();rw();topbar();all()}}
-function go(){rw();drvbg();LK=LT();new MutationObserver(mode).observe(H,{attributes:true,attributeFilter:['class','data-th']});var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#4A0F1C');topbar();all();new MutationObserver(function(ms){ms.forEach(function(x){x.addedNodes.forEach(function(n){q.push(n)})});if(!t)t=setTimeout(flush,250)}).observe(document.body,{childList:true,subtree:true});setTimeout(function(){rw();drvbg();topbar();all()},1200);setTimeout(all,3500)}
+function fav(){document.querySelectorAll('link[rel~=icon],link[rel=apple-touch-icon]').forEach(function(l){if(l.getAttribute('href')!==ICON){l.setAttribute('href',ICON);l.removeAttribute('type')}})}
+function go(){fav();rw();drvbg();LK=LT();new MutationObserver(mode).observe(H,{attributes:true,attributeFilter:['class','data-th']});var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#4A0F1C');topbar();all();new MutationObserver(function(ms){ms.forEach(function(x){x.addedNodes.forEach(function(n){q.push(n)})});if(!t)t=setTimeout(flush,250)}).observe(document.body,{childList:true,subtree:true});setTimeout(function(){rw();drvbg();topbar();all()},1200);setTimeout(all,3500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
 }catch(e){}})();'''
 TAG = '<style id="rlBdxCss">' + CSS + '</style><script id="rlBdx">/* rlBdx v1 */' + JS.replace('%APP%', APP).replace('%LIVE%', 'true' if LIVE else 'false').replace('%ICON%', ICON) + '</script>'
