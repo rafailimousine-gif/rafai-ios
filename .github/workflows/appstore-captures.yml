@@ -1,0 +1,30 @@
+name: App Store (captures)
+
+# Lancé par un envoi sur la branche « appstore-captures » : remplace les captures iPhone (appstore/captures.json) et renvoie à la validation.
+on:
+  push:
+    branches: [appstore-captures]
+    paths: ['appstore/captures.json']
+
+jobs:
+  captures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID || '22UZ38MH33' }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID || 'c21c0ed2-11e3-4992-a0b9-72a8b99066f9' }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install --quiet pyjwt cryptography
+      - name: Captures App Store
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          ok = True
+          for d in json.load(open('appstore/captures.json')):
+              env = dict(os.environ, BUNDLE=d['bundle'], VERSION=d['version'], DIR=d['dir'])
+              print('==', d['bundle'], d['version'], flush=True)
+              ok = subprocess.call([sys.executable, 'appstore/asc_shots.py'], env=env) == 0 and ok
+          sys.exit(0 if ok else 1)
+          PY
