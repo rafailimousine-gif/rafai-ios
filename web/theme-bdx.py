@@ -50,6 +50,8 @@ html.bdx.bdx-drv.rllight{--bg:#FFFFFF!important;--card:#7A1F33!important;--line:
 html.bdx.bdx-drv.rllight,html.bdx.bdx-drv.rllight body{background:#FFFFFF!important}
 html.bdx.bdx-drv.rllight #rlgbg{background-color:#FFFFFF!important}
 html.bdx.bdx-drv.rllight .top{background:var(--bdxW)!important}
+html.bdx.bdx-drv .msg{font-size:16px!important;font-weight:600!important;line-height:1.5!important;letter-spacing:.01em!important;color:var(--txt)!important}
+html.bdx.bdx-drv .msg small{color:var(--gold)!important;font-weight:700!important;font-size:12px!important;opacity:1!important}
 html.bdx.bdx-drv.rllight #rlsb{background:var(--bdxDD)!important}
 html.bdx.bdx-drv.rllight .rlac-lo{background:var(--bdxB)!important;color:var(--bdxW)!important}
 html.bdx.bdx-drv:not(.rllight) .rlac-lo{background:var(--bdxW)!important;color:var(--bdxDD)!important}
@@ -96,7 +98,7 @@ function dark(el){if((APP==='drv'||APP==='bk')&&!LT())return true;if(el.closest&
 function set(el,k,v){var o=T.get(el);if(!o){o={};T.set(el,o)}if(!(k in o))o[k]=[el.style.getPropertyValue(k),el.style.getPropertyPriority(k)];el.style.setProperty(k,v,'important')}
 function reset(){T.forEach(function(o,el){for(var k in o){if(o[k][0])el.style.setProperty(k,o[k][0],o[k][1]);else el.style.removeProperty(k)}});T=new Map()}
 function one(el){var cs=getComputedStyle(el),c=rgb(cs.color),bg=rgb(cs.backgroundColor),bi=cs.backgroundImage,d=null;function D(){if(d===null)d=dark(el);return d}
- if((APP==='drv'||APP==='bk')&&!LT()){if(bg&&bg.a>.03&&lum(bg)<75&&neu(bg)){set(el,'background-color',bg.a>=.99?sv(bg):bord(bg));bg=null}if(c&&c.a>.3&&neu(c)&&lum(c)>85&&lum(c)<200)set(el,'color','var(--mut)')}
+ if((APP==='drv'||APP==='bk')&&!LT()){if(bg&&bg.a>.03&&lum(bg)<75&&neu(bg)){set(el,'background-color',bg.a>=.99?sv(bg):bord(bg));bg=null}if(c&&c.a>.3&&neu(c)&&lum(c)>85&&lum(c)<200)set(el,'color','var(--mut)');else if(c&&c.a>.5&&neu(c)&&lum(c)>=200&&!effDk(el))set(el,'color','var(--txt)')}
  if(APP==='drv'&&c&&c.a>.3&&lum(c)<80&&(!bg||bg.a<.3)&&effDk(el))set(el,'color',W);
  if((APP==='drv'||(APP==='bk'&&LT()))&&(isB(bg)||(bi&&bi.indexOf('122, 31, 51')>=0))&&c&&lum(c)<90)set(el,'color',W);
  if(gold(c))set(el,'color',D()?ROSE:B);
@@ -126,7 +128,7 @@ function rw(){if(APP!=='drv')return;var DS='html.bdx.bdx-drv:not(.rllight)',LS='
   if(!r.selectorText||!r.style||/rllight|data-th|bdx/.test(r.selectorText))continue;var dk=[],lt=[],goldBg=false,darkTx=false,isCard=false,bsh=(r.style.getPropertyValue('background')||'')+' '+(r.style.getPropertyValue('background-color')||'')+' '+(r.style.getPropertyValue('background-image')||'');if(/var\(--card\)/.test(bsh))isCard=true;if(/var\(--gold/.test(bsh))goldBg=true;
   for(var j=0;j<r.style.length;j++){var p=r.style[j],k=kind(p);if(!k)continue;var v=r.style.getPropertyValue(p);if(!v)continue;
    if(/^background/.test(p)&&/var\(--gold/.test(v))goldBg=true;if(/^background/.test(p)&&/var\(--card\)/.test(v))isCard=true;if(p==='color'&&(/var\(--ink\)/.test(v)||/#11111[0-9]|#000\b/i.test(v)))darkTx=true;
-   var vd=v.replace(RE,function(m,r1,g1,b1,a1,h1){var c=tok(m,r1,g1,b1,a1,h1);if(gold(c)){if(/^background/.test(p))goldBg=true;return k==='tx'?ROSE:(/^border|^outline/.test(p)?'rgba(255,255,255,.55)':'#ffffff')}if(neu(c)&&lum(c)<75&&k==='bg')return c.a>=.99?sv(c):bord(c);if(neu(c)&&k==='tx'&&lum(c)>85&&lum(c)<200)return 'var(--mut)';return m});
+   var vd=v.replace(RE,function(m,r1,g1,b1,a1,h1){var c=tok(m,r1,g1,b1,a1,h1);if(gold(c)){if(/^background/.test(p))goldBg=true;return k==='tx'?ROSE:(/^border|^outline/.test(p)?'rgba(255,255,255,.55)':'#ffffff')}if(neu(c)&&lum(c)<75&&k==='bg')return c.a>=.99?sv(c):bord(c);if(neu(c)&&k==='tx'&&lum(c)>85&&lum(c)<200)return 'var(--mut)';if(neu(c)&&k==='tx'&&lum(c)>=200&&c.a>.5)return 'var(--txt)';return m});
    var vl=v.replace(RE,function(m,r1,g1,b1,a1,h1){var c=tok(m,r1,g1,b1,a1,h1);if(gold(c))return B;if(neu(c)&&k==='bg'&&lum(c)<75&&c.a>=.99)return sv(c);if(neu(c)&&k==='tx'&&lum(c)>85&&lum(c)<200)return 'var(--mut)';if(neu(c)&&k==='tx'&&lum(c)>=200&&c.a>.5)return 'var(--txt)';return m});
    if(vd!==v)dk.push(p+':'+vd+' !important');if(vl!==v)lt.push(p+':'+vl+' !important')}
   if(goldBg&&(darkTx||lt.length))lt.push('color:var(--bdxW) !important');
