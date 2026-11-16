@@ -57,9 +57,9 @@ final class WebController: NSObject, ObservableObject {
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.isOpaque = false
-        webView.backgroundColor = UIColor(rgb: 0xF4F0E8)
-        webView.underPageBackgroundColor = UIColor(rgb: 0x111113)
-        webView.scrollView.backgroundColor = UIColor(rgb: 0xF4F0E8)
+        webView.backgroundColor = UIColor(rgb: 0xFBF7F6)
+        webView.underPageBackgroundColor = UIColor(rgb: 0x5A1426)
+        webView.scrollView.backgroundColor = UIColor(rgb: 0xFBF7F6)
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.scrollView.keyboardDismissMode = .interactive
         webView.allowsLinkPreview = false
@@ -218,7 +218,7 @@ final class WebController: NSObject, ObservableObject {
         let s = (url.scheme ?? "").lowercased()
         guard s == "http" || s == "https" else { UIApplication.shared.open(url); return }
         let vc = SFSafariViewController(url: url)
-        vc.preferredControlTintColor = UIColor(rgb: 0xA9813F)
+        vc.preferredControlTintColor = UIColor(rgb: 0x7A1F33)
         vc.dismissButtonStyle = .close
         vc.modalPresentationStyle = .pageSheet
         topViewController()?.present(vc, animated: true)

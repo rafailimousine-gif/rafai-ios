@@ -6,7 +6,7 @@ struct DriverRootView: View {
 
     var body: some View {
         ZStack {
-            Color(red: 0x11 / 255, green: 0x11 / 255, blue: 0x13 / 255).ignoresSafeArea()
+            Color(red: 0x5A / 255, green: 0x14 / 255, blue: 0x26 / 255).ignoresSafeArea()
             DriverWebHost(webView: web.webView)
                 .ignoresSafeArea()
             if web.offline {
@@ -42,9 +42,9 @@ struct DriverSplashView: View {
     @State private var flareOn = false
     @Environment(\.accessibilityReduceMotion) private var reduce
 
-    private let bg = Color(red: 0x11 / 255, green: 0x11 / 255, blue: 0x13 / 255)
-    private let gold = Color(red: 0xC9 / 255, green: 0xA0 / 255, blue: 0x63 / 255)
-    private let goldLight = Color(red: 0xF3 / 255, green: 0xD9 / 255, blue: 0xA6 / 255)
+    private let bg = Color(red: 0x5A / 255, green: 0x14 / 255, blue: 0x26 / 255)
+    private let gold = Color(red: 0xFF / 255, green: 0xFF / 255, blue: 0xFF / 255)
+    private let goldLight = Color(red: 0xF1 / 255, green: 0xD9 / 255, blue: 0xDE / 255)
 
     var body: some View {
         GeometryReader { geo in
@@ -122,7 +122,7 @@ struct DriverSplashView: View {
 
 struct DriverOfflineView: View {
     @EnvironmentObject var web: DriverController
-    private let gold = Color(red: 0xC9 / 255, green: 0xA0 / 255, blue: 0x63 / 255)
+    private let gold = Color(red: 0xFF / 255, green: 0xFF / 255, blue: 0xFF / 255)
 
     var body: some View {
         VStack(spacing: 14) {
@@ -134,13 +134,13 @@ struct DriverOfflineView: View {
                 .foregroundColor(.white)
             Text("Vos missions s’afficheront dès que le réseau revient. En cas d’urgence, appelez Rafai Limousine.")
                 .font(.system(size: 15))
-                .foregroundColor(Color(red: 0.79, green: 0.76, blue: 0.72))
+                .foregroundColor(Color(red: 0.92, green: 0.83, blue: 0.85))
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 8)
             Button { web.load() } label: {
                 Text("Réessayer")
                     .font(.system(size: 17, weight: .bold))
-                    .foregroundColor(Color(red: 0x11 / 255, green: 0x11 / 255, blue: 0x13 / 255))
+                    .foregroundColor(Color(red: 0x5A / 255, green: 0x14 / 255, blue: 0x26 / 255))
                     .frame(maxWidth: .infinity, minHeight: 54)
                     .background(RoundedRectangle(cornerRadius: 16).fill(gold))
             }
@@ -159,6 +159,6 @@ struct DriverOfflineView: View {
         .padding(28)
         .frame(maxWidth: 460)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(red: 0x11 / 255, green: 0x11 / 255, blue: 0x13 / 255).ignoresSafeArea())
+        .background(Color(red: 0x5A / 255, green: 0x14 / 255, blue: 0x26 / 255).ignoresSafeArea())
     }
 }

@@ -5,13 +5,13 @@ extension Color {
     init(rgb: UInt32) {
         self.init(red: Double((rgb >> 16) & 0xFF) / 255, green: Double((rgb >> 8) & 0xFF) / 255, blue: Double(rgb & 0xFF) / 255)
     }
-    static let ink = Color(rgb: 0x111113)
-    static let paper = Color(rgb: 0xF4F0E8)
-    static let gold = Color(rgb: 0xC9A063)
-    static let gold2 = Color(rgb: 0xA9813F)
-    static let goldLight = Color(rgb: 0xE0BA6C)
+    static let ink = Color(rgb: 0x5A1426)   // bordeaux (lifting nov. 2026)
+    static let paper = Color(rgb: 0xFBF7F6)
+    static let gold = Color(rgb: 0xFFFFFF)   // accents blancs sur bordeaux
+    static let gold2 = Color(rgb: 0x7A1F33)
+    static let goldLight = Color(rgb: 0xF1D9DE)
     static let mut = Color(rgb: 0x6E6E73)
-    static let line = Color(rgb: 0xE9E2D4)
+    static let line = Color(rgb: 0xEBDDE0)
 }
 
 enum Contact {
@@ -163,7 +163,7 @@ struct ContactView: View {
                         .frame(minHeight: 62)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
-                                .fill(LinearGradient(colors: [Color(rgb: 0xE2C072), Color(rgb: 0xB68F3E)], startPoint: .top, endPoint: .bottom))
+                                .fill(LinearGradient(colors: [Color(rgb: 0xFFFFFF), Color(rgb: 0xF1D9DE)], startPoint: .top, endPoint: .bottom))
                         )
                     }
                     .buttonStyle(.plain)
@@ -256,7 +256,7 @@ struct OfflineView: View {
                 .multilineTextAlignment(.center)
             Text(L10n.s("offS", web.lang))
                 .font(.system(size: 15))
-                .foregroundColor(Color(rgb: 0xC9C3B8))
+                .foregroundColor(Color(rgb: 0xEAD3D9))
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 8)
             Button { web.load() } label: {
@@ -272,7 +272,7 @@ struct OfflineView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, minHeight: 54)
-                    .background(RoundedRectangle(cornerRadius: 16).stroke(Color(rgb: 0x3A3A3F), lineWidth: 1))
+                    .background(RoundedRectangle(cornerRadius: 16).stroke(Color(rgb: 0x9B3049), lineWidth: 1))
             }
             .buttonStyle(.plain)
         }
