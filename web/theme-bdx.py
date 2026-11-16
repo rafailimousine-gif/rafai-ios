@@ -99,6 +99,11 @@ html.bdx-team:not([data-theme="dark"]) .seg,html.bdx-team:not([data-theme="dark"
 html.bdx-team:not([data-theme="dark"]) .seg button,html.bdx-team:not([data-theme="dark"]) .cpseg button{color:#7A1F33!important}
 html.bdx-team:not([data-theme="dark"]) .seg button.on,html.bdx-team:not([data-theme="dark"]) .cpseg button.on{background:#7A1F33!important;color:#fff!important;box-shadow:0 3px 10px rgba(122,31,51,.28)!important}
 html.bdx-team:not([data-theme="dark"]) .seg button *,html.bdx-team:not([data-theme="dark"]) .cpseg button *{color:inherit!important}
+html.bdx-team:not([data-theme="dark"]){--gold:#7A1F33!important;--gold2:#5E1426!important;--goldbg:#F7EDEF!important}
+html.bdx-team[data-theme="dark"]{--gold:#E3AEBB!important;--gold2:#C98A99!important}
+html.bdx-team .btn.gold{background:#7A1F33!important;border-color:#7A1F33!important;color:#fff!important}
+html.bdx-team .btn.gold:hover{background:#6E1A2B!important;border-color:#6E1A2B!important}
+html.bdx-team .lvpin{background:#7A1F33!important}
 html.bdx-team .brand img{border-radius:22%!important}
 html.bdx-team #rlLogin button.ghost{background:transparent!important;color:#fff!important;border:1px solid rgba(255,255,255,.6)!important}
 '''
@@ -163,7 +168,7 @@ function rw(){if(APP!=='drv')return;var DS='html.bdx.bdx-drv:not(.rllight)',LS='
  for(var i=0;i<document.styleSheets.length;i++){var sh=document.styleSheets[i],n=sh.ownerNode;if(n&&/^(rlBdxCss|rlBdxRW|rlBdxG|rlthcss|rlThG)$/.test(n.id))continue;try{walk(sh.cssRules,'')}catch(e){}}
  var st=document.getElementById('rlBdxRW');if(!st){st=document.createElement('style');st.id='rlBdxRW'}st.textContent=out.join('\n');document.head.appendChild(st)}
 function effDk(el){var p=el;while(p&&p!==H){var cs=getComputedStyle(p);if(cs.backgroundImage&&cs.backgroundImage!=='none')return false;var b=rgb(cs.backgroundColor);if(b&&b.a>.5)return lum(b)<110;p=p.parentElement}return !LT()}
-function swapTh(){if(APP!=='drv')return;document.querySelectorAll('.rlseg').forEach(function(g){if(g.getAttribute('data-bdxsw'))return;var d=g.querySelector('[data-rlth=dark]'),l=g.querySelector('[data-rlth=light]');if(!d||!l)return;var t=d.innerHTML;d.innerHTML=l.innerHTML;l.innerHTML=t;g.insertBefore(l,d);g.setAttribute('data-bdxsw','1')})}
+function swapTh(){return;/* Yassine 17 nov. : Sombre = fond bordeaux, Clair = fond blanc (libellés d'origine) */if(APP!=='drv')return;document.querySelectorAll('.rlseg').forEach(function(g){if(g.getAttribute('data-bdxsw'))return;var d=g.querySelector('[data-rlth=dark]'),l=g.querySelector('[data-rlth=light]');if(!d||!l)return;var t=d.innerHTML;d.innerHTML=l.innerHTML;l.innerHTML=t;g.insertBefore(l,d);g.setAttribute('data-bdxsw','1')})}
 function onDk(el){var p=el;while(p&&p!==document.body){var cs=getComputedStyle(p),b=rgb(cs.backgroundColor);if(cs.backgroundImage&&cs.backgroundImage!=='none')return true;if(b&&b.a>.5)return lum(b)<150;p=p.parentElement}return false}
 function conv(root){if(APP!=='www'||document.body.classList.contains('rllift'))return;(root||document.body).querySelectorAll('*').forEach(function(el){if(el.closest('body>header,footer,.hero,[class*=hero],.ftw,#rlch,svg,.hl.dark'))return;var cs=getComputedStyle(el),bg=rgb(cs.backgroundColor);
  if(bg&&bg.a>.5&&lum(bg)<60&&cs.backgroundImage.indexOf('url(')<0){var L0=lum(bg);set(el,'background-color',L0<22?'#FFFFFF':'#F7F1EF');if(L0>=22)set(el,'border-color','rgba(122,31,51,.16)')}
