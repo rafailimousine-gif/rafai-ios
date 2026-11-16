@@ -19,6 +19,11 @@ on:
         type: choice
         options: [client, chauffeur]
         default: client
+      machine:
+        description: "Machine Mac de GitHub (macos-15-intel si les Mac M1 sont saturés)"
+        type: choice
+        options: [macos-15, macos-15-intel]
+        default: macos-15
 
 concurrency:
   group: ios-${{ github.ref }}-${{ github.event_name }}-${{ inputs.appli }}
@@ -67,7 +72,7 @@ jobs:
   testflight:
     name: Envoi sur TestFlight (${{ inputs.appli }})
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.testflight }}
-    runs-on: macos-15
+    runs-on: ${{ inputs.machine || 'macos-15' }}
     timeout-minutes: 60
     env:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID || '22UZ38MH33' }}
