@@ -77,9 +77,10 @@ function one(el){var cs=getComputedStyle(el),c=rgb(cs.color),bg=rgb(cs.backgroun
 function topbar(){if(APP!=='bk'&&APP!=='drv')return;var els=document.body.querySelectorAll('header,nav,div');for(var i=0;i<els.length;i++){var e=els[i],r=e.getBoundingClientRect(),cs=getComputedStyle(e);if(r.top<=1&&r.width>innerWidth*.8&&r.height>30&&r.height<90&&(cs.position==='fixed'||cs.position==='sticky')){set(e,'background','#5A1426');set(e,'border-color','rgba(255,255,255,.1)');var im=e.querySelector('img');if(im&&im.getBoundingClientRect().width<=72){im.src=ICON;set(im,'filter','none')}break}}}
 function drvbg(){if(APP!=='drv')return;var g=document.getElementById('rlgbg');if(!g||document.getElementById('rlBdxG'))return;var css='';['::before','::after'].forEach(function(p){var bi=getComputedStyle(g,p).backgroundImage;if(bi&&bi!=='none'&&bi.indexOf('17, 17, 19')>=0)css+='html.bdx-drv #rlgbg'+p+'{background-image:'+bi.split('17, 17, 19').join('90, 20, 38')+'!important}'});if(css){var st=document.createElement('style');st.id='rlBdxG';st.textContent=css;document.head.appendChild(st)}}
 
+function onDk(el){var p=el;while(p&&p!==document.body){var cs=getComputedStyle(p),b=rgb(cs.backgroundColor);if(cs.backgroundImage&&cs.backgroundImage!=='none')return true;if(b&&b.a>.5)return lum(b)<150;p=p.parentElement}return false}
 function conv(root){if(APP!=='www'||document.body.classList.contains('rllift'))return;(root||document.body).querySelectorAll('*').forEach(function(el){if(el.closest('body>header,footer,.hero,[class*=hero],.ftw,#rlch,svg,.hl.dark'))return;var cs=getComputedStyle(el),bg=rgb(cs.backgroundColor);
  if(bg&&bg.a>.5&&lum(bg)<60&&cs.backgroundImage.indexOf('url(')<0){var L0=lum(bg);set(el,'background-color',L0<22?'#FFFFFF':'#F7F1EF');if(L0>=22)set(el,'border-color','rgba(122,31,51,.16)')}
- var c=rgb(cs.color);if(c&&!gold(c)){var L=lum(c);if(L>165)set(el,'color',/^H[1-4]$/.test(el.tagName)?'#2B0C14':'#4B3A3F');else if(L>100&&Math.abs(c.r-c.b)<45)set(el,'color','#7F6B70')}
+ var c=rgb(cs.color);if(c&&!gold(c)&&!onDk(el)){var L=lum(c);if(L>165)set(el,'color',/^H[1-4]$/.test(el.tagName)?'#2B0C14':'#4B3A3F');else if(L>100&&Math.abs(c.r-c.b)<45)set(el,'color','#7F6B70')}
  ['Top','Right','Bottom','Left'].forEach(function(s){var w=parseFloat(cs['border'+s+'Width']),b=rgb(cs['border'+s+'Color']);if(w>0&&b&&lum(b)>150&&!gold(b))set(el,'border-'+s.toLowerCase()+'-color','rgba(122,31,51,.18)')})})}
 function all(root){conv(root);try{(root||document.body).querySelectorAll('*').forEach(one)}catch(e){}}
 var q=[],t=0;function flush(){var l=q;q=[];t=0;l.forEach(function(n){if(n.nodeType===1&&n.isConnected){one(n);all(n)}})}
@@ -91,7 +92,8 @@ n = 0
 for p in args[1:]:
     s = io.open(p, encoding='utf-8').read()
     if 'id="rlBdx"' in s:
-        continue
+        import re
+        s = re.sub(r'<style id="rlBdxCss">.*?</style><script id="rlBdx">.*?</script>', '', s, count=1, flags=re.S)
     i = s.lower().find('</head>')
     if i < 0:
         continue
