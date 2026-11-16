@@ -37,6 +37,12 @@ html.bdx-www .ftw .wa{background:transparent!important;color:#fff!important;bord
 html.bdx-www .ftw-x{background:#4A0F1C!important;border-color:rgba(255,255,255,.35)!important}
 html.bdx.bdx-bk,html.bdx.bdx-bk[data-th]{--gold:#7A1F33!important;--gold2:#5E1426!important;--goldbg:#F7EDEF!important;--bg:#FBF7F6!important;--line:#EBDDE0!important;--ink:#1E0E12!important;--card:#fff!important}
 html.bdx-bk li::before{background:#F1D9DE!important}
+html.bdx #rlBv{background:#FFFFFF!important}
+html.bdx #rlBv .lg{width:210px!important;height:210px!important;border-radius:46px!important;box-shadow:0 24px 60px -18px rgba(122,31,51,.5)!important}
+html.bdx #rlBv .lg img{content:url(https://equipe.rafai-limousine.com/icon-512.png)}
+html.bdx #rlBv .tx{margin-top:34px!important;font-size:28px!important;color:#2B0C14!important}
+html.bdx #rlBv .tx b{background:none!important;color:#7A1F33!important;-webkit-text-fill-color:#7A1F33!important}
+html.bdx #rlBv .ln{width:96px!important;background:linear-gradient(90deg,transparent,#7A1F33,transparent)!important}
 html.bdx.bdx-drv:not(.rllight){--bg:#5A1426!important;--card:#FFFFFF!important;--line:#84304A!important;--txt:#fff!important;--mut:#E6C7CF!important;--dim:#BC96A0!important;--gold:#fff!important;--gold2:#F1D9DE!important;--bdxS1:#3A0B16;--bdxS2:#4A0F1C;--bdxS3:#5A1426;--bdxS4:#6B1A2E;--bdxS5:#7A2438}
 html.bdx-drv:not(.rllight),html.bdx-drv:not(.rllight) body{background:#5A1426!important}
 html.bdx-drv:not(.rllight) #rlgbg{background-color:#5A1426!important}
@@ -102,6 +108,7 @@ function one(el){var cs=getComputedStyle(el),c=rgb(cs.color),bg=rgb(cs.backgroun
  ['Top','Right','Bottom','Left'].forEach(function(s){var w=parseFloat(cs['border'+s+'Width']);if(w>0&&gold(rgb(cs['border'+s+'Color'])))set(el,'border-'+s.toLowerCase()+'-color',D()?'rgba(255,255,255,.6)':B)});
  var sh=cs.boxShadow;if(sh&&sh!=='none'&&(sh.match(/rgba?\([^)]+\)/g)||[]).map(rgb).some(gold))set(el,'box-shadow','0 6px 22px rgba(122,31,51,.22)');
  if(el.tagName==='IMG'&&/\/img\/logo\.png/.test(el.getAttribute('src')||'')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none');set(el,'border-radius','22%')}return}
+ if(el.tagName==='IMG'&&el.closest('#rlBv')){var U5='https://equipe.rafai-limousine.com/icon-512.png';if(el.src!==U5){el.src=U5;set(el,'filter','none')}return}
  if(APP==='team'&&el.tagName==='IMG'&&el.closest('.brand')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none')}return}
  if((APP==='bk'||APP==='drv'||APP==='trk')&&el.tagName==='IMG'&&/logo|icon/i.test(el.getAttribute('src')||'')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none');set(el,'border-radius','22%')}return}
  if(el.tagName==='IMG'&&/logo/i.test((el.getAttribute('src')||'')+' '+el.className+' '+el.alt)&&!/App Store|Google Play/i.test(el.alt))set(el,'filter',D()?'brightness(0) invert(1)':'brightness(0) saturate(100%) invert(14%) sepia(60%) saturate(3500%) hue-rotate(325deg) brightness(85%) contrast(98%)');
