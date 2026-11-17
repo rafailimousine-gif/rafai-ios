@@ -49,6 +49,19 @@ def state(v): return v['attributes'].get('appVersionState') or v['attributes'].g
 for v in vs: print('  version existante', v['attributes']['versionString'], state(v))
 EDIT = ('PREPARE_FOR_SUBMISSION', 'DEVELOPER_REJECTED', 'REJECTED', 'METADATA_REJECTED', 'INVALID_BINARY', 'READY_FOR_REVIEW')
 v = next((x for x in vs if x['attributes']['versionString'] == VER), None)
+REPLACE = os.environ.get('REPLACE') == '1'
+if v and REPLACE and state(v) in ('WAITING_FOR_REVIEW', 'IN_REVIEW', 'UNRESOLVED_ISSUES'):
+    # remplacement du build d'une version en attente (Yassine, 17 nov. 2026 : nouvelles icônes)
+    for s in ('WAITING_FOR_REVIEW', 'IN_REVIEW', 'UNRESOLVED_ISSUES'):
+        for r in api('GET', '/v1/reviewSubmissions?filter[app]=%s&filter[platform]=IOS&filter[state]=%s' % (AID, s))['data']:
+            api('PATCH', '/v1/reviewSubmissions/' + r['id'], {'data': {'type': 'reviewSubmissions', 'id': r['id'], 'attributes': {'canceled': True}}})
+            print('Retiré de l\'examen :', r['id'], s)
+    for i in range(40):
+        time.sleep(15)
+        v = next(x for x in api('GET', '/v1/apps/%s/appStoreVersions?filter[platform]=IOS&limit=50' % AID)['data'] if x['attributes']['versionString'] == VER)
+        print('  état', state(v))
+        if state(v) in EDIT: break
+    else: print('::error::version toujours %s' % state(v)); sys.exit(1)
 if v and state(v) in ('WAITING_FOR_REVIEW', 'IN_REVIEW', 'PENDING_DEVELOPER_RELEASE', 'READY_FOR_SALE', 'READY_FOR_DISTRIBUTION', 'ACCEPTED', 'PROCESSING_FOR_DISTRIBUTION'):
     print('Version %s déjà %s : rien à faire' % (VER, state(v))); sys.exit(0)
 if not v:
