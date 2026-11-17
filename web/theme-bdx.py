@@ -14,7 +14,7 @@ html.bdx.bdx-www{--bg:#fff!important;--bg-alt:#f7f1ef!important;--surface:#fff!i
 html.bdx-www header.hdr .appbar{background:#3A0B16!important}
 html.bdx-www header.hdr.solid{background:rgba(74,15,28,.96)!important;border-color:rgba(255,255,255,.12)!important}
 html.bdx-www header.hdr.solid *{color:#fff!important}
-html.bdx-www header.hdr .logo img,html.bdx-www header.hdr img.logo-dark{filter:brightness(0) invert(1)!important}
+html.bdx-www header.hdr .logo img,html.bdx-www header.hdr img.logo-dark{filter:none!important}
 html.bdx-www header.hdr .btn.book{background:#7A1F33!important;background-image:none!important;color:#fff!important;border-color:#7A1F33!important}
 html.bdx-www header.hdr.solid .btn.book{background:#fff!important;color:#6E1A2B!important}
 html.bdx-www footer{background:#4A0F1C!important;border-color:rgba(255,255,255,.1)!important}
@@ -185,6 +185,7 @@ function one(el){if(el.matches&&el.matches('.pf img.av,.bdxGn,.bdxNum,.tk .btn,.
  if(el.tagName==='IMG'&&el.closest('#rlBv')){var U5='https://equipe.rafai-limousine.com/icon-512.png?v=or1';if(el.src!==U5){el.src=U5;set(el,'filter','none')}return}
  if(APP==='team'&&el.tagName==='IMG'&&el.closest('.brand')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none')}return}
  if((APP==='bk'||APP==='drv'||APP==='trk')&&el.tagName==='IMG'&&(/logo|icon/i.test(el.getAttribute('src')||'')||el.classList.contains('glogo'))){var IC=el.classList.contains('glogo')?'https://equipe.rafai-limousine.com/icon-512.png?v=or1':ICON;if(el.src!==IC){el.src=IC;set(el,'filter','none');set(el,'border-radius','22%')}return}
+ if(APP==='www'&&el.tagName==='IMG'&&/logo/i.test((el.getAttribute('src')||'')+' '+el.className+' '+el.alt)&&!/App Store|Google Play/i.test(el.alt)){var LO='https://equipe.rafai-limousine.com/logo-or.png?v=or1';if(el.getAttribute('src')!==LO){var pp=el.parentElement;if(pp&&pp.tagName==='PICTURE')pp.querySelectorAll('source').forEach(function(x){x.remove()});el.removeAttribute('srcset');el.src=LO;set(el,'filter','none');set(el,'object-fit','contain');if(!el.closest('header')&&!D()){set(el,'background','#4A0F1C');set(el,'padding','20px 26px');set(el,'border-radius','24px');set(el,'box-sizing','content-box');set(el,'box-shadow','0 18px 44px -18px rgba(74,15,28,.55)')}}return}
  if(el.tagName==='IMG'&&/logo/i.test((el.getAttribute('src')||'')+' '+el.className+' '+el.alt)&&!/App Store|Google Play/i.test(el.alt))set(el,'filter',D()?'brightness(0) invert(1)':'brightness(0) saturate(100%) invert(14%) sepia(60%) saturate(3500%) hue-rotate(325deg) brightness(85%) contrast(98%)');
  if(el.closest('svg')){var f=rgb(cs.fill),s2=rgb(cs.stroke);if(gold(f))set(el,'fill',D()?W:B);if(gold(s2))set(el,'stroke',D()?W:B)}
  if(APP==='bk'&&LT()&&bg&&bg.a>.6&&lum(bg)<40&&el.getBoundingClientRect().width<1000&&!el.querySelector('input,select,textarea')){var lightIn=false;el.querySelectorAll('*').forEach(function(x){var b2=rgb(getComputedStyle(x).backgroundColor);if(b2&&b2.a>.6&&lum(b2)>200)lightIn=true});if(!lightIn&&el.children.length){set(el,'background-color',B);el.querySelectorAll('*').forEach(function(x){if(!x.closest('svg'))set(x,'color','#F6E9EC')})}}
