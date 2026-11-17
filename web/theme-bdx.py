@@ -64,6 +64,7 @@ html.bdx.bdx-bk .gate .btn:not(.gold):not(.sso){background:#fff!important;color:
 html.bdx.bdx-bk .gate .gme,html.bdx.bdx-bk .gate .gme a,html.bdx.bdx-bk .gate .glg a{color:#fff!important}
 html.bdx.bdx-bk .gate .seg{background:rgba(255,255,255,.12)!important;border-color:rgba(255,255,255,.25)!important}html.bdx.bdx-bk .gate .seg button{color:#fff!important}html.bdx.bdx-bk .gate .seg button.on{background:#fff!important;color:#5A1426!important}
 html.bdx.bdx-bk .gate .chip,html.bdx.bdx-bk .gate .acl button{background:rgba(255,255,255,.1)!important;border-color:rgba(255,255,255,.28)!important;color:#fff!important}html.bdx.bdx-bk .gate .acl button small{color:#F1D9DE!important}
+@media (min-width:900px){html.bdx.bdx-bk .gate #gateF{background:rgba(74,15,28,.82)!important;border:1px solid rgba(255,255,255,.16)!important}html.bdx.bdx-bk body{background:#2B0C14!important}}
 html.bdx #rlBv{background:#FFFFFF!important}
 html.bdx #rlBv .lg{width:210px!important;height:210px!important;border-radius:46px!important;box-shadow:0 24px 60px -18px rgba(122,31,51,.5)!important}
 html.bdx #rlBv .lg img{content:url(https://equipe.rafai-limousine.com/icon-512.png)}
