@@ -9,8 +9,11 @@ m = re.search(r'-----BEGIN PRIVATE KEY-----(.*?)-----END PRIVATE KEY-----', raw,
 body = re.sub(r'[^A-Za-z0-9+/=]', '', m.group(1) if m else raw)
 KEY = '-----BEGIN PRIVATE KEY-----\n' + '\n'.join(textwrap.wrap(body, 64)) + '\n-----END PRIVATE KEY-----\n'
 BUNDLE, VER, DIR = os.environ['BUNDLE'], os.environ['VERSION'], os.environ['DIR']
-FILES = sorted(glob.glob(os.path.join(DIR, '*-1206x2622.png')))
-if not FILES: print('::error::aucune capture dans', DIR); sys.exit(1)
+# DIR=live : reprendre les captures de la version en ligne (noir et or d'avant le bordeaux, Yassine 17 nov. 2026) ; FALLBACK = dossier si pas de version en ligne
+LIVE = DIR == 'live'
+FALLBACK = os.environ.get('FALLBACK', '')
+FILES = sorted(glob.glob(os.path.join(FALLBACK if LIVE else DIR, '*-1206x2622.png')))
+if not FILES and not LIVE: print('::error::aucune capture dans', DIR); sys.exit(1)
 def tok():
     n = int(time.time())
     return jwt.encode({'iss': ISS, 'iat': n, 'exp': n + 1000, 'aud': 'appstoreconnect-v1'}, KEY, algorithm='ES256', headers={'kid': KID, 'typ': 'JWT'})
@@ -45,6 +48,27 @@ def plan():
             if ok: out.append((loc['attributes']['locale'], dt, ss['id'], [o['id'] for o in old]))
     return out
 TARGETS = plan()
+LIVEFILES = {}
+if LIVE:
+    import tempfile
+    tmp = tempfile.mkdtemp()
+    lv = [x for x in api('GET', '/v1/apps/%s/appStoreVersions?filter[platform]=IOS&limit=50' % AID)['data']
+          if (x['attributes'].get('appStoreState') or x['attributes'].get('appVersionState')) in ('READY_FOR_SALE', 'READY_FOR_DISTRIBUTION')]
+    if lv:
+        print('Version en ligne', lv[0]['attributes']['versionString'])
+        for loc in api('GET', '/v1/appStoreVersions/%s/appStoreVersionLocalizations?limit=50' % lv[0]['id'])['data']:
+            for ss in api('GET', '/v1/appStoreVersionLocalizations/%s/appScreenshotSets?limit=50' % loc['id'])['data']:
+                fs = []
+                for k, o in enumerate(api('GET', '/v1/appScreenshotSets/%s/appScreenshots?limit=50' % ss['id'])['data']):
+                    a = o['attributes'].get('imageAsset') or {}
+                    if not a.get('templateUrl'): continue
+                    u = a['templateUrl'].replace('{w}', str(a['width'])).replace('{h}', str(a['height'])).replace('{f}', 'png')
+                    f = os.path.join(tmp, '%s-%s-%02d-%dx%d.png' % (loc['attributes']['locale'], ss['attributes']['screenshotDisplayType'], k, a['width'], a['height']))
+                    open(f, 'wb').write(urllib.request.urlopen(u).read()); fs.append(f)
+                print('  en ligne', loc['attributes']['locale'], ss['attributes']['screenshotDisplayType'], len(fs), 'capture(s)')
+                if fs: LIVEFILES[(loc['attributes']['locale'], ss['attributes']['screenshotDisplayType'])] = fs
+    else: print('Pas de version en ligne : captures du dossier', FALLBACK, len(FILES))
+    if not LIVEFILES and not FILES: print('::error::aucune capture d\'origine trouvée : rien changé'); sys.exit(1)
 if not TARGETS: print('::error::aucun jeu de captures 1206x2622 : rien changé, version laissée en examen'); sys.exit(1)
 EDIT = ('PREPARE_FOR_SUBMISSION', 'DEVELOPER_REJECTED', 'REJECTED', 'METADATA_REJECTED', 'INVALID_BINARY', 'READY_FOR_REVIEW')
 # 1. retirer de l'examen si besoin
@@ -70,7 +94,9 @@ def upload(set_id, f):
     return s['id']
 for locale, dt, sid, old in TARGETS:
     for o in old: api('DELETE', '/v1/appScreenshots/' + o, ok=(404, 409))
-    ids = [upload(sid, f) for f in FILES]
+    src = LIVEFILES.get((locale, dt)) or (next(iter(LIVEFILES.values())) if LIVEFILES and not FILES else FILES)
+    print(' ', locale, dt, ':', len(src), 'capture(s) d\'origine')
+    ids = [upload(sid, f) for f in src]
     for k in range(40):
         states = [api('GET', '/v1/appScreenshots/' + i)['data']['attributes'].get('assetDeliveryState', {}).get('state') for i in ids]
         if all(x == 'COMPLETE' for x in states): break
@@ -78,6 +104,7 @@ for locale, dt, sid, old in TARGETS:
         time.sleep(6)
     print(' ', locale, dt, ': nouvelles captures', states)
 # 3. renvoi à la validation
+if os.environ.get('NO_SUBMIT') == '1': print('Captures remplacées, version laissée modifiable (le nouveau build sera joint ensuite)'); sys.exit(0)
 rs = api('GET', '/v1/reviewSubmissions?filter[app]=%s&filter[platform]=IOS&filter[state]=READY_FOR_REVIEW' % AID)['data']
 RID = rs[0]['id'] if rs else api('POST', '/v1/reviewSubmissions', {'data': {'type': 'reviewSubmissions', 'attributes': {'platform': 'IOS'},
     'relationships': {'app': {'data': {'type': 'apps', 'id': AID}}}}})['data']['id']

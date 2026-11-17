@@ -23,7 +23,7 @@ jobs:
           import json, os, subprocess, sys
           ok = True
           for d in json.load(open('appstore/captures.json')):
-              env = dict(os.environ, BUNDLE=d['bundle'], VERSION=d['version'], DIR=d['dir'])
+              env = dict(os.environ, BUNDLE=d['bundle'], VERSION=d['version'], DIR=d['dir'], FALLBACK=d.get('fallback', ''), NO_SUBMIT='1' if d.get('nosubmit') else '0')
               print('==', d['bundle'], d['version'], flush=True)
               ok = subprocess.call([sys.executable, 'appstore/asc_shots.py'], env=env) == 0 and ok
           sys.exit(0 if ok else 1)
