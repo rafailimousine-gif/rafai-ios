@@ -1,8 +1,8 @@
 [
- {"bundle": "com.rafailimousine.client", "version": "1.1", "build": 47, "soumettre": true, "remplacer": true,
-  "fr": "Nouvelle identité Rafai Limousine : bordeaux, blanc et or. Nouveau logo, icône et écran d'accueil redessinés.",
-  "en": "New Rafai Limousine look: burgundy, white and gold. New logo, redesigned icon and launch screen."},
- {"bundle": "com.rafailimousine.driver", "version": "1.2", "build": 48, "soumettre": true, "remplacer": true,
-  "fr": "Nouvelles couleurs bordeaux, blanc et or, nouveau logo et nouvel écran d'accueil. Modes Sombre et Clair plus lisibles.",
-  "en": "New burgundy, white and gold colours, new logo and launch screen. Easier-to-read Dark and Light modes."}
+ {"bundle": "com.rafailimousine.client", "version": "1.1", "build": 49, "soumettre": true, "remplacer": true,
+  "fr": "Améliorations et corrections.",
+  "en": "Improvements and fixes."},
+ {"bundle": "com.rafailimousine.driver", "version": "1.2", "build": 50, "soumettre": true, "remplacer": true,
+  "fr": "Améliorations et corrections. Étapes de course plus visibles.",
+  "en": "Improvements and fixes. Clearer trip steps."}
 ]
