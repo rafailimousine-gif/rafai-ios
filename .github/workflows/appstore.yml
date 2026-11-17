@@ -23,7 +23,7 @@ jobs:
           import json, os, subprocess, sys
           ok = True
           for d in json.load(open('appstore/demande.json')):
-              env = dict(os.environ, BUNDLE=d['bundle'], VERSION=d['version'], BUILD=str(d['build']), NOTES_FR=d['fr'], NOTES_EN=d['en'], SUBMIT='1' if d.get('soumettre') else '0')
+              env = dict(os.environ, BUNDLE=d['bundle'], VERSION=d['version'], BUILD=str(d['build']), NOTES_FR=d['fr'], NOTES_EN=d['en'], SUBMIT='1' if d.get('soumettre') else '0', REPLACE='1' if d.get('remplacer') else '0')
               print('==', d['bundle'], d['version'], 'build', d['build'], flush=True)
               ok = subprocess.call([sys.executable, 'appstore/asc_submit.py'], env=env) == 0 and ok
           sys.exit(0 if ok else 1)
