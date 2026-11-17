@@ -50,6 +50,20 @@ html.bdx.bdx-bk .seg button.on{background:#7A1F33!important;color:#fff!important
 html.bdx.bdx-bk label.f>span{color:#5A1426!important;font-size:13px!important;letter-spacing:.02em!important}
 html.bdx.bdx-bk .chip.g{border-color:#E3C3CB!important}
 html.bdx.bdx-bk input::placeholder,html.bdx.bdx-bk textarea::placeholder{color:#8A767C!important;opacity:1!important}
+/* écran de connexion (Yassine 17 nov.) : bordeaux, texte blanc, logo visible */
+html.bdx.bdx-bk .gate,html.bdx.bdx-bk .gate.on{background:#4A0F1C!important;color:#fff!important}
+html.bdx.bdx-bk .gate::after{background:linear-gradient(180deg,rgba(74,15,28,.45) 0,rgba(74,15,28,.1) 12%,rgba(74,15,28,.16) 35%,rgba(74,15,28,.24) 55%,rgba(74,15,28,.62) 78%,#4A0F1C 100%)!important}
+html.bdx.bdx-bk .gate .glogo{filter:none!important;border-radius:22%!important;box-shadow:0 10px 30px rgba(0,0,0,.35)!important}
+html.bdx.bdx-bk .gate h1{color:#fff!important}html.bdx.bdx-bk .gate .gs,html.bdx.bdx-bk .gate .hint,html.bdx.bdx-bk .gate .mini,html.bdx.bdx-bk .gate .tcc{color:#F1D9DE!important}
+html.bdx.bdx-bk .gate label.f>span,html.bdx.bdx-bk .gate div.f>span{color:#F1D9DE!important}
+html.bdx.bdx-bk .gate .in,html.bdx.bdx-bk .gate textarea.in{background:rgba(255,255,255,.1)!important;border-color:rgba(255,255,255,.3)!important;color:#fff!important}
+html.bdx.bdx-bk .gate .in::placeholder,html.bdx.bdx-bk .gate textarea.in::placeholder{color:rgba(255,255,255,.62)!important}
+html.bdx.bdx-bk .gate .gor{color:#F1D9DE!important}html.bdx.bdx-bk .gate .gor::before,html.bdx.bdx-bk .gate .gor::after{background:rgba(255,255,255,.28)!important}
+html.bdx.bdx-bk .gate .glang,html.bdx.bdx-bk .gate .gback{background:rgba(255,255,255,.16)!important;border-color:rgba(255,255,255,.3)!important;color:#fff!important}
+html.bdx.bdx-bk .gate .btn:not(.gold):not(.sso){background:#fff!important;color:#5A1426!important}
+html.bdx.bdx-bk .gate .gme,html.bdx.bdx-bk .gate .gme a,html.bdx.bdx-bk .gate .glg a{color:#fff!important}
+html.bdx.bdx-bk .gate .seg{background:rgba(255,255,255,.12)!important;border-color:rgba(255,255,255,.25)!important}html.bdx.bdx-bk .gate .seg button{color:#fff!important}html.bdx.bdx-bk .gate .seg button.on{background:#fff!important;color:#5A1426!important}
+html.bdx.bdx-bk .gate .chip,html.bdx.bdx-bk .gate .acl button{background:rgba(255,255,255,.1)!important;border-color:rgba(255,255,255,.28)!important;color:#fff!important}html.bdx.bdx-bk .gate .acl button small{color:#F1D9DE!important}
 html.bdx #rlBv{background:#FFFFFF!important}
 html.bdx #rlBv .lg{width:210px!important;height:210px!important;border-radius:46px!important;box-shadow:0 24px 60px -18px rgba(122,31,51,.5)!important}
 html.bdx #rlBv .lg img{content:url(https://equipe.rafai-limousine.com/icon-512.png)}
@@ -145,7 +159,7 @@ function one(el){if(el.matches&&el.matches('.pf img.av'))return;var cs=getComput
  if(el.tagName==='IMG'&&/\/img\/logo\.png/.test(el.getAttribute('src')||'')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none');set(el,'border-radius','22%')}return}
  if(el.tagName==='IMG'&&el.closest('#rlBv')){var U5='https://equipe.rafai-limousine.com/icon-512.png';if(el.src!==U5){el.src=U5;set(el,'filter','none')}return}
  if(APP==='team'&&el.tagName==='IMG'&&el.closest('.brand')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none')}return}
- if((APP==='bk'||APP==='drv'||APP==='trk')&&el.tagName==='IMG'&&/logo|icon/i.test(el.getAttribute('src')||'')){if(el.src!==ICON){el.src=ICON;set(el,'filter','none');set(el,'border-radius','22%')}return}
+ if((APP==='bk'||APP==='drv'||APP==='trk')&&el.tagName==='IMG'&&(/logo|icon/i.test(el.getAttribute('src')||'')||el.classList.contains('glogo'))){var IC=el.classList.contains('glogo')?'https://equipe.rafai-limousine.com/icon-512.png':ICON;if(el.src!==IC){el.src=IC;set(el,'filter','none');set(el,'border-radius','22%')}return}
  if(el.tagName==='IMG'&&/logo/i.test((el.getAttribute('src')||'')+' '+el.className+' '+el.alt)&&!/App Store|Google Play/i.test(el.alt))set(el,'filter',D()?'brightness(0) invert(1)':'brightness(0) saturate(100%) invert(14%) sepia(60%) saturate(3500%) hue-rotate(325deg) brightness(85%) contrast(98%)');
  if(el.closest('svg')){var f=rgb(cs.fill),s2=rgb(cs.stroke);if(gold(f))set(el,'fill',D()?W:B);if(gold(s2))set(el,'stroke',D()?W:B)}
  if(APP==='bk'&&LT()&&bg&&bg.a>.6&&lum(bg)<40&&el.getBoundingClientRect().width<1000&&!el.querySelector('input,select,textarea')){var lightIn=false;el.querySelectorAll('*').forEach(function(x){var b2=rgb(getComputedStyle(x).backgroundColor);if(b2&&b2.a>.6&&lum(b2)>200)lightIn=true});if(!lightIn&&el.children.length){set(el,'background-color',B);el.querySelectorAll('*').forEach(function(x){if(!x.closest('svg'))set(x,'color','#F6E9EC')})}}
