@@ -15,8 +15,7 @@ for d in site-www booking suivi equipe; do cp -r ~/$d/public "$B/$d-public"; don
 echo "sauvegarde : $B"
 live() { find "$1/public" -name '*.html' -not -path '*/public/e/*' -print0 | xargs -0 python3 ~/theme-bdx.py --live "$2"; }
 echo "== SITE";        live ~/site-www www;  (cd ~/site-www && FIREBASE_HOSTING_UPLOAD_CONCURRENCY=6 firebase deploy --only hosting:www --project rafai-suivi < /dev/null 2>&1 | tail -1)
-echo "== RESERVATION"; live ~/booking bk;    (cd ~/booking && firebase deploy --only hosting --project rafai-suivi < /dev/null 2>&1 | tail -1)
-echo "== RL DRIVER";   live ~/suivi suivi;   (cd ~/suivi && firebase deploy --only hosting --project rafai-suivi < /dev/null 2>&1 | tail -1)
+# Réservation et RL Driver : retour au noir et or (Yassine, 17 nov. 2026) — plus de bordeaux ici
 echo "== EQUIPE";      live ~/equipe team;   (cd ~/equipe && firebase deploy --only hosting --project rafai-suivi < /dev/null 2>&1 | tail -1)
 sleep 10
 for u in https://www.rafai-limousine.com/fr https://booking.rafai-limousine.com/ https://team.rafai-limousine.com/chauffeur/; do echo "$u : $(curl -s "$u?_=$(date +%s)" | grep -c 'rlBdx v1')"; done

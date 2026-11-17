@@ -22,7 +22,7 @@ put "$T/equipe-logo.png" ~/equipe/public/logo.png force
 put "$T/equipe-logo.webp" ~/equipe/public/logo.webp force
 put "$T/logo-or.png" ~/equipe/public/logo-or.png force
 # Réservation, RL Driver / suivi, site : seulement les fichiers d'icône déjà présents
-for d in booking suivi site-www; do
+for d in site-www; do  # réservation et RL Driver gardent l'ancien logo doré (17 nov. 2026)
   for f in icon-192.png icon-512.png icon-512.webp apple-touch-icon.png favicon-32.png; do put "$T/$f" ~/$d/public/$f; done
   put "$T/icon-192.png" ~/$d/public/icon.png
   put "$T/apple-touch-icon.png" ~/$d/public/apple-touch-icon-precomposed.png
