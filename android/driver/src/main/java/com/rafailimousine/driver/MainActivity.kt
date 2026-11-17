@@ -177,11 +177,11 @@ class MainActivity : ComponentActivity() {
     private fun showOffline() {
         val html = """
             <html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-            <body style="margin:0;background:#5A1426;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center">
+            <body style="margin:0;background:#111113;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center">
             <div style="padding:28px;max-width:420px">
             <h2 style="margin:0 0 10px">Pas de connexion internet</h2>
-            <p style="color:#EAD3D9;margin:0 0 22px">Vos missions s’afficheront dès que le réseau revient. En cas d’urgence, appelez Rafai Limousine.</p>
-            <a href="$HOME" style="display:block;background:#fff;color:#5A1426;font-weight:700;padding:16px;border-radius:16px;text-decoration:none;margin-bottom:12px">Réessayer</a>
+            <p style="color:#C9C2B8;margin:0 0 22px">Vos missions s’afficheront dès que le réseau revient. En cas d’urgence, appelez Rafai Limousine.</p>
+            <a href="$HOME" style="display:block;background:#C9A063;color:#111113;font-weight:700;padding:16px;border-radius:16px;text-decoration:none;margin-bottom:12px">Réessayer</a>
             <a href="tel:+33667099494" style="display:block;border:1px solid #444;color:#fff;padding:16px;border-radius:16px;text-decoration:none">Appeler Rafai Limousine</a>
             </div></body></html>
         """.trimIndent()
