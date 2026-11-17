@@ -125,6 +125,30 @@ html.bdx-team .btn.gold:hover{background:#6E1A2B!important;border-color:#6E1A2B!
 html.bdx-team .lvpin{background:#7A1F33!important}
 html.bdx-team .brand img{border-radius:22%!important}
 html.bdx-team #rlLogin button.ghost{background:transparent!important;color:#fff!important;border:1px solid rgba(255,255,255,.6)!important}
+/* rlLux : bordeaux et or « luxe » (Yassine, 17 nov. 2026) */
+@keyframes bdxShine{0%{background-position:200% 50%}100%{background-position:-200% 50%}}
+@keyframes bdxPulse{0%,100%{box-shadow:0 6px 18px -6px rgba(212,175,106,.55),0 0 0 0 rgba(212,175,106,.45)}50%{box-shadow:0 10px 26px -6px rgba(212,175,106,.75),0 0 0 7px rgba(212,175,106,0)}}
+@keyframes bdxBar{0%{background-position:200% 50%}100%{background-position:-200% 50%}}
+html.bdx .bdxGn{background:linear-gradient(110deg,#C9A063 0%,#F3DFA2 22%,#D4AF6A 45%,#F7E7B4 62%,#C9A063 82%,#E8C77E 100%)!important;background-size:250% 100%!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;-webkit-text-fill-color:transparent!important;animation:bdxShine 7s linear infinite;font-weight:800}
+html.bdx .bdxNum{color:#A8792F!important;-webkit-text-fill-color:#A8792F!important;font-weight:700}
+html.bdx .bdxNum.L{color:#E8C77E!important;-webkit-text-fill-color:#E8C77E!important}
+html.bdx-drv:not(.rllight) .bdxNum{color:#E8C77E!important;-webkit-text-fill-color:#E8C77E!important}
+html.bdx-drv a[href*="waze.com"],html.bdx-drv a[href*="waze.com"] *,html.bdx-bk a[href*="waze.com"],html.bdx-bk a[href*="waze.com"] *{color:#A8792F!important;-webkit-text-fill-color:#A8792F!important;fill:currentColor}
+html.bdx-drv:not(.rllight) a[href*="waze.com"],html.bdx-drv:not(.rllight) a[href*="waze.com"] *{color:#E8C77E!important;-webkit-text-fill-color:#E8C77E!important}
+html.bdx-drv a[href*="waze.com"] svg *{stroke:currentColor}
+html.bdx .tk .btn.gold,html.bdx .tk a.btn.gold,html.bdx-drv .btn.gold{background:linear-gradient(110deg,#B8904F 0%,#E9CF8E 28%,#F7E7B4 44%,#D4AF6A 60%,#B8904F 80%,#E9CF8E 100%)!important;background-size:250% 100%!important;color:#3A0B16!important;-webkit-text-fill-color:#3A0B16!important;border:1px solid #C9A063!important;font-weight:800!important;letter-spacing:.02em;animation:bdxShine 3.6s linear infinite,bdxPulse 2.4s ease-in-out infinite!important}
+html.bdx .tk .btn[disabled]{background:linear-gradient(110deg,#E9D9B4 0%,#F6ECD2 35%,#E3CC97 60%,#E9D9B4 100%)!important;background-size:250% 100%!important;color:#7A5A22!important;-webkit-text-fill-color:#7A5A22!important;border:1px dashed #C9A063!important;opacity:1!important;animation:bdxShine 6s linear infinite!important}
+html.bdx-drv:not(.rllight) .tk .btn[disabled]{background:linear-gradient(110deg,rgba(212,175,106,.18),rgba(243,223,162,.32) 45%,rgba(212,175,106,.18))!important;background-size:250% 100%!important;color:#F3DFA2!important;-webkit-text-fill-color:#F3DFA2!important}
+html.bdx .tkstp{gap:6px!important}
+html.bdx .tkstp i{display:block!important;height:5px!important;border-radius:5px!important;background:rgba(201,160,99,.32)!important;margin:0 0 8px!important;box-shadow:inset 0 0 0 1px rgba(201,160,99,.35)!important}
+html.bdx .tkstp .on i{background:linear-gradient(90deg,#B8904F,#F3DFA2 40%,#D4AF6A 60%,#B8904F)!important;background-size:250% 100%!important;animation:bdxBar 2.8s linear infinite;box-shadow:0 0 10px rgba(212,175,106,.6)!important}
+html.bdx .tkstp div{color:#7A5A22!important}html.bdx .tkstp .on{color:#A8792F!important}
+html.bdx-drv:not(.rllight) .tkstp div{color:#F1D9DE!important}html.bdx-drv:not(.rllight) .tkstp .on{color:#E8C77E!important}
+html.bdx .tkstp small,html.bdx .tkh b{color:#A8792F!important;-webkit-text-fill-color:#A8792F!important}
+html.bdx-drv:not(.rllight) .tkstp small,html.bdx-drv:not(.rllight) .tkh b{color:#E8C77E!important;-webkit-text-fill-color:#E8C77E!important}
+html.bdx #rlBv .tx b{background:linear-gradient(110deg,#9C7434,#D4AF6A 40%,#B8904F 70%,#9C7434)!important;background-size:250% 100%!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;-webkit-text-fill-color:transparent!important;animation:bdxShine 6s linear infinite}
+html.bdx-bk .dAv+div>b{color:#A8792F!important}
+@media (prefers-reduced-motion:reduce){html.bdx .bdxGn,html.bdx .tk .btn,html.bdx-drv .btn.gold,html.bdx .tkstp .on i,html.bdx #rlBv .tx b{animation:none!important}}
 '''
 JS = r'''(function(){try{
 var on=%LIVE%||/--bordeaux/.test(location.hostname)||/[?&]bdx=1/.test(location.search);if(/[?&]bdx=0/.test(location.search))on=false;if(!on)return;
@@ -145,7 +169,7 @@ function lum(c){return .3*c.r+.59*c.g+.11*c.b}
 function dark(el){if((APP==='drv'||APP==='bk')&&!LT())return true;if(el.closest&&el.closest('.menu,.langmenu'))return false;if(el.closest&&el.closest(APP==='team'?'#rlLogin,#nwb':'header.hdr,.hero,[class*=hero],footer,.hl.dark,.team .tv,#rlLogin,.ftw-box,#rlch,body:not(.rllift)>header'))return true;var p=el.parentElement;while(p&&p!==H){var cs=getComputedStyle(p),b=rgb(cs.backgroundColor);if(b&&b.a>.5)return lum(b)<110;p=p.parentElement}return false}
 function set(el,k,v){var o=T.get(el);if(!o){o={};T.set(el,o)}if(!(k in o))o[k]=[el.style.getPropertyValue(k),el.style.getPropertyPriority(k)];el.style.setProperty(k,v,'important')}
 function reset(){T.forEach(function(o,el){for(var k in o){if(o[k][0])el.style.setProperty(k,o[k][0],o[k][1]);else el.style.removeProperty(k)}});T=new Map()}
-function one(el){if(el.matches&&el.matches('.pf img.av'))return;var cs=getComputedStyle(el),c=rgb(cs.color),bg=rgb(cs.backgroundColor),bi=cs.backgroundImage,d=null;function D(){if(d===null)d=dark(el);return d}
+function one(el){if(el.matches&&el.matches('.pf img.av,.bdxGn,.bdxNum,.tk .btn,.tkstp,.tkstp *,.tkh b,a[href*="waze.com"],a[href*="waze.com"] *,#rlBv .tx b'))return;var cs=getComputedStyle(el),c=rgb(cs.color),bg=rgb(cs.backgroundColor),bi=cs.backgroundImage,d=null;function D(){if(d===null)d=dark(el);return d}
  if((APP==='drv'||APP==='bk')&&!LT()){if(bg&&bg.a>.03&&lum(bg)<75&&neu(bg)){set(el,'background-color',bg.a>=.99?sv(bg):bord(bg));bg=null}if(c&&c.a>.3&&neu(c)&&lum(c)>85&&lum(c)<200)set(el,'color','var(--mut)');else if(c&&c.a>.5&&neu(c)&&lum(c)>=200&&!effDk(el))set(el,'color','var(--txt)')}
  if(APP==='drv'&&c&&c.a>.3&&lum(c)<80&&(!bg||bg.a<.3)&&effDk(el))set(el,'color',W);
  if((APP==='drv'||(APP==='bk'&&LT()))&&(isB(bg)||(bi&&bi.indexOf('122, 31, 51')>=0))&&c&&lum(c)<90)set(el,'color',W);
@@ -193,8 +217,14 @@ function conv(root){if(APP!=='www'||document.body.classList.contains('rllift'))r
  if(bg&&bg.a>.5&&lum(bg)<60&&cs.backgroundImage.indexOf('url(')<0){var L0=lum(bg);set(el,'background-color',L0<22?'#FFFFFF':'#F7F1EF');if(L0>=22)set(el,'border-color','rgba(122,31,51,.16)')}
  var c=rgb(cs.color);if(c&&!gold(c)&&!onDk(el)){var L=lum(c);if(L>165)set(el,'color',/^H[1-4]$/.test(el.tagName)?'#2B0C14':'#4B3A3F');else if(L>100&&Math.abs(c.r-c.b)<45)set(el,'color','#7F6B70')}
  ['Top','Right','Bottom','Left'].forEach(function(s){var w=parseFloat(cs['border'+s+'Width']),b=rgb(cs['border'+s+'Color']);if(w>0&&b&&lum(b)>150&&!gold(b))set(el,'border-'+s.toLowerCase()+'-color','rgba(122,31,51,.18)')})})}
-function all(root){swapTh();conv(root);try{(root||document.body).querySelectorAll('*').forEach(one)}catch(e){}}
-var q=[],t=0;function flush(){var l=q;q=[];t=0;l.forEach(function(n){if(n.nodeType===1&&n.isConnected){one(n);all(n)}})}
+function bdxEsc(x){return String(x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function luxHi(){if(APP!=='drv')return;var el=document.getElementById('hi');if(!el||el.querySelector('.bdxGn'))return;var m=(el.textContent||'').match(/^(Bonjour|Bonsoir|Hello|Hi|Hola|你好|مرحبا)\s+(.+)$/);if(m)el.innerHTML=bdxEsc(m[1])+' <span class="bdxGn">'+bdxEsc(m[2])+'</span>'}
+function luxTitle(root){if(APP!=='bk')return;(root||document).querySelectorAll('.gate h1').forEach(function(h){if(h.querySelector('.bdxGn'))return;var t=h.textContent||'',i=t.indexOf('Rafai Limousine');if(i<0)return;h.innerHTML=bdxEsc(t.slice(0,i))+'<span class="bdxGn">Rafai Limousine</span>'+bdxEsc(t.slice(i+15))})}
+var NUMRE=/(\b\d{1,2}[:h]\d{2}\b|\d[\d   .,]*\s?€|€\s?\d[\d.,]*)/;
+function luxNum(root){if(APP!=='drv'&&APP!=='bk')return;var r=root||document.body;if(!r||!r.ownerDocument)return;var w=document.createTreeWalker(r,NodeFilter.SHOW_TEXT,null),l=[],n;while((n=w.nextNode())){if(NUMRE.test(n.data))l.push(n)}l.forEach(function(n){var p=n.parentElement;if(!p||p.closest('script,style,textarea,input,select,option,button,svg,code,title,.bdxNum,.bdxGn,[contenteditable],a,.gate,.seg,.tkstp,label'))return;var parts=n.data.split(NUMRE);if(parts.length<2)return;var f=document.createDocumentFragment(),dk=dark(p);parts.forEach(function(x,i){if(!x)return;if(i%2){var s=document.createElement('span');s.className='bdxNum'+(dk?' L':'');s.textContent=x;f.appendChild(s)}else f.appendChild(document.createTextNode(x))});p.replaceChild(f,n)})}
+function lux(root){try{luxHi();luxTitle(root);luxNum(root)}catch(e){}}
+function all(root){swapTh();conv(root);try{(root||document.body).querySelectorAll('*').forEach(one)}catch(e){}lux(root)}
+var q=[],t=0;function flush(){var l=q;q=[];t=0;l.forEach(function(n){if(n.nodeType===1&&n.isConnected){one(n);all(n)}else if(n.nodeType===3&&n.parentElement&&n.isConnected){lux(n.parentElement)}})}
 var LK=null;function mode(){var k=LT();if(LK===null){LK=k;return}if(k!==LK){LK=k;reset();rw();topbar();all()}}
 function fav(){document.querySelectorAll('link[rel~=icon],link[rel=apple-touch-icon]').forEach(function(l){if(l.getAttribute('href')!==ICON){l.setAttribute('href',ICON);l.removeAttribute('type')}})}
 function go(){fav();rw();drvbg();LK=LT();new MutationObserver(mode).observe(H,{attributes:true,attributeFilter:['class','data-th']});var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#4A0F1C');topbar();all();new MutationObserver(function(ms){ms.forEach(function(x){x.addedNodes.forEach(function(n){q.push(n)})});if(!t)t=setTimeout(flush,250)}).observe(document.body,{childList:true,subtree:true});setTimeout(function(){rw();drvbg();topbar();all()},1200);setTimeout(all,3500)}
