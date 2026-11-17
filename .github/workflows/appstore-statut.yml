@@ -1,0 +1,17 @@
+name: App Store (état)
+# Lecture seule : lancé par un envoi sur la branche « appstore-statut ».
+on:
+  push:
+    branches: [appstore-statut]
+jobs:
+  etat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID || '22UZ38MH33' }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID || 'c21c0ed2-11e3-4992-a0b9-72a8b99066f9' }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install --quiet pyjwt cryptography
+      - run: python3 appstore/asc_statut.py
