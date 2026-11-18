@@ -26,6 +26,12 @@ html.bdx-www .team .tv{background:radial-gradient(ellipse at 50% 30%,#7A1F33,#4A
 html.bdx-www .team .tv :is(b,span,.n){color:#F6E9EC!important}
 html.bdx-www .team .tv .who b{color:#fff!important}
 html.bdx-www body:not(.rllift){background:#fff!important}
+/* pages secondaires (Flotte, services, à propos, contact, CGV…) : fonds de section blancs comme l'accueil (Yassine, 19 nov. 2026) */
+html.bdx-www:has(body:not(.rllift)),html.bdx-www body:not(.rllift){background:#fff!important;color-scheme:light!important}
+html.bdx-www body:not(.rllift) .yaqOZd:not(footer .yaqOZd):not(:has(.IFuOkc[style*="background-image"]))::before{background-color:#fff!important;background-image:none!important}
+html.bdx-www body:not(.rllift) .yaqOZd.qeLZfd:not(footer .yaqOZd):not(:has(.IFuOkc[style*="background-image"]))::before{background-color:#F7F1EF!important}
+html.bdx-www body:not(.rllift) footer .yaqOZd::before{background:#4A0F1C!important}
+html.bdx-www footer img:is([alt*="Stripe"],[alt*="stripe"],[alt*="App Store"],[alt*="Google Play"],[alt*="Instagram"],[alt*="Visa"]){filter:none!important}
 html.bdx-www body:not(.rllift)>header{background:rgba(74,15,28,.97)!important;border-color:rgba(255,255,255,.12)!important}
 html.bdx-www body:not(.rllift)>header :is(a,span,button,b,div){color:#fff!important}
 html.bdx-www body:not(.rllift)>div:first-child{background:#3A0B16!important}
