@@ -10,6 +10,16 @@ curl -sLf -o "$N/app.html" "$API?teamapp=1"
 grep -q 'Configuration de l’appli RL Driver' "$N/app.html" || { echo "ARRET nouvelle version absente du serveur"; exit 1; }
 python3 ~/equipe/patch-equipe.py "$N/app.html" "$API" "$N/public/index.html" < /dev/null
 python3 ~/theme-bdx.py --live team "$N/public/index.html"
+# garde le logo actuellement en ligne (remplacé par le logo or le 17 nov.)
+python3 - "$N/public/index.html" <<'PY'
+import io, os, re, sys
+cur = io.open(os.path.expanduser('~/equipe/public/index.html'), encoding='utf-8').read()
+p = sys.argv[1]; new = io.open(p, encoding='utf-8').read()
+m = re.search(r"var LOGO='[^']*'", cur); n = re.search(r"var LOGO='[^']*'", new)
+if m and n:
+    new = new[:n.start()] + m.group(0) + new[n.end():]
+    io.open(p, 'w', encoding='utf-8').write(new); print('logo actuel conservé')
+PY
 node -e "const fs=require('fs'),d=process.argv[1];const s=fs.readFileSync(d+'/index.html','utf8')+fs.readdirSync(d).filter(f=>/^app\..*\.js$/.test(f)).map(f=>'<script>'+fs.readFileSync(d+'/'+f,'utf8')+'</script>').join('');const m=[...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)];m.forEach((x,i)=>{try{new Function(x[1])}catch(e){console.log('ERREUR script',i,e.message);process.exit(1)}});console.log('scripts ok',m.length)" "$N/public"
 echo "== fichiers différents :"; diff -rq ~/equipe/public "$N/public" | sed 's#'"$HOME"'/##' | head -20
 OLD=$(ls ~/equipe/public/app.*.js | head -1); NEW=$(ls "$N"/public/app.*.js | head -1)
